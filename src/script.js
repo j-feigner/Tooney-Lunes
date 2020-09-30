@@ -5,19 +5,19 @@ createPiano(sounds);
 // Expects properly formatted instrument string
 function createSoundArray(instrument) {
     var sound_srcs = [
-        "sound_files/" + "C_" + instrument + ".mp3",
-        "sound_files/" + "Cs_" + instrument + ".mp3",
-        "sound_files/" + "D_" + instrument + ".mp3",
-        "sound_files/" + "Ds_" + instrument + ".mp3",
-        "sound_files/" + "E_" + instrument + ".mp3",
-        "sound_files/" + "F_" + instrument + ".mp3",
-        "sound_files/" + "Fs_" + instrument + ".mp3",
-        "sound_files/" + "G_" + instrument + ".mp3",
-        "sound_files/" + "Gs_" + instrument + ".mp3",
-        "sound_files/" + "A_" + instrument + ".mp3",
-        "sound_files/" + "As_" + instrument + ".mp3",
-        "sound_files/" + "B_" + instrument + ".mp3",
-        "sound_files/" + "octave_" + instrument + ".mp3",
+        "sound_files/" + "C_5_" + instrument + ".mp3",
+        "sound_files/" + "Cs_5_" + instrument + ".mp3",
+        "sound_files/" + "D_5_" + instrument + ".mp3",
+        "sound_files/" + "Ds_5_" + instrument + ".mp3",
+        "sound_files/" + "E_5_" + instrument + ".mp3",
+        "sound_files/" + "F_5_" + instrument + ".mp3",
+        "sound_files/" + "Fs_5_" + instrument + ".mp3",
+        "sound_files/" + "G_5_" + instrument + ".mp3",
+        "sound_files/" + "Gs_5_" + instrument + ".mp3",
+        "sound_files/" + "A_5_" + instrument + ".mp3",
+        "sound_files/" + "As_5_" + instrument + ".mp3",
+        "sound_files/" + "B_5_" + instrument + ".mp3",
+        "sound_files/" + "C_6" + instrument + ".mp3",
     ];
 
     var sounds = [];
