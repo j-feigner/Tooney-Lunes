@@ -17,7 +17,7 @@ function createSoundArray(instrument) {
         "sound_files/" + "A_5_" + instrument + ".mp3",
         "sound_files/" + "As_5_" + instrument + ".mp3",
         "sound_files/" + "B_5_" + instrument + ".mp3",
-        "sound_files/" + "C_6" + instrument + ".mp3",
+        "sound_files/" + "C_6_" + instrument + ".mp3",
     ];
 
     var sounds = [];
