@@ -1,23 +1,47 @@
-var sounds = createSoundArray("piano_grand");
+var sounds = createSoundArray("piano");
 createPiano(sounds);
 
 // Fills and returns an array of js Audio objects with correpsonding file locations
 // Expects properly formatted instrument string
 function createSoundArray(instrument) {
     var sound_srcs = [
-        "sound_files/" + "C_" + instrument + ".mp3",
-        "sound_files/" + "Cs_" + instrument + ".mp3",
-        "sound_files/" + "D_" + instrument + ".mp3",
-        "sound_files/" + "Ds_" + instrument + ".mp3",
-        "sound_files/" + "E_" + instrument + ".mp3",
-        "sound_files/" + "F_" + instrument + ".mp3",
-        "sound_files/" + "Fs_" + instrument + ".mp3",
-        "sound_files/" + "G_" + instrument + ".mp3",
-        "sound_files/" + "Gs_" + instrument + ".mp3",
-        "sound_files/" + "A_" + instrument + ".mp3",
-        "sound_files/" + "As_" + instrument + ".mp3",
-        "sound_files/" + "B_" + instrument + ".mp3",
-        "sound_files/" + "octave_" + instrument + ".mp3",
+        "sound_files/" + instrument + "/C_3.mp3",
+        "sound_files/" + instrument + "/Cs_3.mp3",
+        "sound_files/" + instrument + "/D_3.mp3",
+        "sound_files/" + instrument + "/Ds_3.mp3",
+        "sound_files/" + instrument + "/E_3.mp3",
+        "sound_files/" + instrument + "/F_3.mp3",
+        "sound_files/" + instrument + "/Fs_3.mp3",
+        "sound_files/" + instrument + "/G_3.mp3",
+        "sound_files/" + instrument + "/Gs_3.mp3",
+        "sound_files/" + instrument + "/A_3.mp3",
+        "sound_files/" + instrument + "/As_3.mp3",
+        "sound_files/" + instrument + "/B_3.mp3",
+        "sound_files/" + instrument + "/C_4.mp3",
+        "sound_files/" + instrument + "/Cs_4.mp3",
+        "sound_files/" + instrument + "/D_4.mp3",
+        "sound_files/" + instrument + "/Ds_4.mp3",
+        "sound_files/" + instrument + "/E_4.mp3",
+        "sound_files/" + instrument + "/F_4.mp3",
+        "sound_files/" + instrument + "/Fs_4.mp3",
+        "sound_files/" + instrument + "/G_4.mp3",
+        "sound_files/" + instrument + "/Gs_4.mp3",
+        "sound_files/" + instrument + "/A_4.mp3",
+        "sound_files/" + instrument + "/As_4.mp3",
+        "sound_files/" + instrument + "/B_4.mp3",
+        "sound_files/" + instrument + "/C_5.mp3",
+        "sound_files/" + instrument + "/Cs_5.mp3",
+        "sound_files/" + instrument + "/D_5.mp3",
+        "sound_files/" + instrument + "/Ds_5.mp3",
+        "sound_files/" + instrument + "/E_5.mp3",
+        "sound_files/" + instrument + "/F_5.mp3",
+        "sound_files/" + instrument + "/Fs_5.mp3",
+        "sound_files/" + instrument + "/G_5.mp3",
+        "sound_files/" + instrument + "/Gs_5.mp3",
+        "sound_files/" + instrument + "/A_5.mp3",
+        "sound_files/" + instrument + "/As_5.mp3",
+        "sound_files/" + instrument + "/B_5.mp3",
+        "sound_files/" + instrument + "/C_6.mp3"
     ];
 
     var sounds = [];
@@ -38,13 +62,27 @@ function createPiano(sounds) {
 
     // Initialize piano key array
     var keys = [];
-    for(var i = 0; i < 13; i++) {
+    for(var i = 0; i < 37; i++) {
         // Create new key div element at keys[i]
         keys.push(document.createElement("div"));
         keys[i].id = i;
         
         // Check if current key is white or black and assigns css class
-        if(i == 1 || i == 3 || i == 6 || i == 8 || i == 10) {
+        if( i == 1  || 
+            i == 3  || 
+            i == 6  || 
+            i == 8  || 
+            i == 10 ||
+            i == 13 ||
+            i == 15 ||
+            i == 18 ||
+            i == 20 ||
+            i == 22 ||
+            i == 25 ||
+            i == 27 ||
+            i == 30 ||
+            i == 32 ||
+            i == 34) {
             keys[i].className = "black-key";
         } 
         else {
