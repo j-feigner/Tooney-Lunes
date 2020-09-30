@@ -72,3 +72,12 @@ function createPiano(sounds) {
         piano_container.appendChild(keys[i]);
     }
 }
+
+function slide_piano() {
+	var piano_container = document.getElementById("pianoBlock");
+	var pi_cont_marginL = piano_container.style.marginLeft;
+	if (pi_cont_marginL == '0px')
+		piano_container.style.marginLeft = 'auto';
+	else
+		piano_container.style.marginLeft = '0px';
+}
