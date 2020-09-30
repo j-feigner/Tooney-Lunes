@@ -5,8 +5,7 @@ body {
 }
 
 .piano-block {
-    background-color: grey;
-    width: 800px;
+    width: auto;
     height: 400px;
     margin-left: auto;
     margin-right: auto;
@@ -15,8 +14,8 @@ body {
 .white-key {
     background-color: white;
     border: 1px solid black;
-    width: 98px;
-    height: 398px;
+    width: 48px;
+    height: 198px;
     position: relative;
     display: inline-block;
 }
@@ -24,12 +23,12 @@ body {
 .black-key {
     background-color: black;
     border: 1px solid black;
-    width: 48px;
-    height: 258px;
+    width: 23px;
+    height: 123px;
     position: relative;
-    bottom: 140px;
-    left: 25px;
+    bottom: 75px;
+    left: 12.5px;
     display: inline-block;
-    margin-left: -50px;
+    margin-left: -25px;
     z-index: 2;
 }
