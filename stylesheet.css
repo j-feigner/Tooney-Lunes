@@ -2,7 +2,31 @@ body {
   background-color: lightblue;
 }
 
-h1 {
-  color: navy;
-  margin-left: 20px;
+.piano-block {
+    background-color: grey;
+    width: 800px;
+    height: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.white-key {
+    background-color: white;
+    border: 1px solid black;
+    width: 98px;
+    height: 398px;
+    position: relative;
+    display: inline-block;
+}
+
+.black-key {
+    background-color: black;
+    width: 50px;
+    height: 260px;
+    position: relative;
+    bottom: 140px;
+    left: 25px;
+    display: inline-block;
+    margin-left: -50px;
+    z-index: 2;
 }
