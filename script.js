@@ -1,6 +1,8 @@
 var sounds = createSoundArray("piano_grand");
 createPiano(sounds);
 
+// Fills and returns an array of js Audio objects with correpsonding file locations
+// Expects properly formatted instrument string
 function createSoundArray(instrument) {
     var sound_srcs = [
         "sound_files/" + "C_" + instrument + ".mp3",
@@ -49,13 +51,17 @@ function createPiano(sounds) {
             keys[i].className = "white-key";
         }
 
+        // Create click listener to play corresponding sound in sounds array
         keys[i].addEventListener('click', function(){
-            var sound = sounds[this.id];
+            var key = this;
+            var sound = sounds[key.id];
+
+            // Play audio
             sound.currentTime = 0;
             sound.play();
         });
 
-        // Add key element to pianoBlock div
+        // Add key element to pianoBlock container
         piano_container.appendChild(keys[i]);
     }
 }

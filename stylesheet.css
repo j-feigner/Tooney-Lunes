@@ -23,8 +23,9 @@ body {
 
 .black-key {
     background-color: black;
-    width: 50px;
-    height: 260px;
+    border: 1px solid black;
+    width: 48px;
+    height: 258px;
     position: relative;
     bottom: 140px;
     left: 25px;
