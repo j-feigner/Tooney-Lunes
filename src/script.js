@@ -56,9 +56,16 @@ function createPiano(sounds) {
             var key = this;
             var sound = sounds[key.id];
 
+            key.style.backgroundColor = "grey";
+
             // Play audio
             sound.currentTime = 0;
             sound.play();
+
+            // Reset key color after delay
+            setTimeout(function(){
+                key.style.backgroundColor = "";
+            }, 200);
         });
 
         // Add key element to pianoBlock container
