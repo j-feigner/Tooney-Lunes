@@ -62,13 +62,27 @@ function createPiano(sounds) {
 
     // Initialize piano key array
     var keys = [];
-    for(var i = 0; i < 13; i++) {
+    for(var i = 0; i < 37; i++) {
         // Create new key div element at keys[i]
         keys.push(document.createElement("div"));
         keys[i].id = i;
         
         // Check if current key is white or black and assigns css class
-        if(i == 1 || i == 3 || i == 6 || i == 8 || i == 10) {
+        if( i == 1  || 
+            i == 3  || 
+            i == 6  || 
+            i == 8  || 
+            i == 10 ||
+            i == 13 ||
+            i == 15 ||
+            i == 18 ||
+            i == 20 ||
+            i == 22 ||
+            i == 25 ||
+            i == 27 ||
+            i == 30 ||
+            i == 32 ||
+            i == 34) {
             keys[i].className = "black-key";
         } 
         else {
