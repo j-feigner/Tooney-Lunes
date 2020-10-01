@@ -1,54 +1,70 @@
-var sounds = createSoundArray("piano");
-createPiano(sounds);
+var piano_sounds = createSoundArray("piano");
+createPiano(piano_sounds);
+/*var drum_sounds = createSoundArray("drums");
+createDrums(drum_sounds);*/
+
 
 // Fills and returns an array of js Audio objects with correpsonding file locations
 // Expects properly formatted instrument string
 function createSoundArray(instrument) {
-    var sound_srcs = [
-        "sound_files/" + instrument + "/C_3.mp3",
-        "sound_files/" + instrument + "/Cs_3.mp3",
-        "sound_files/" + instrument + "/D_3.mp3",
-        "sound_files/" + instrument + "/Ds_3.mp3",
-        "sound_files/" + instrument + "/E_3.mp3",
-        "sound_files/" + instrument + "/F_3.mp3",
-        "sound_files/" + instrument + "/Fs_3.mp3",
-        "sound_files/" + instrument + "/G_3.mp3",
-        "sound_files/" + instrument + "/Gs_3.mp3",
-        "sound_files/" + instrument + "/A_3.mp3",
-        "sound_files/" + instrument + "/As_3.mp3",
-        "sound_files/" + instrument + "/B_3.mp3",
-        "sound_files/" + instrument + "/C_4.mp3",
-        "sound_files/" + instrument + "/Cs_4.mp3",
-        "sound_files/" + instrument + "/D_4.mp3",
-        "sound_files/" + instrument + "/Ds_4.mp3",
-        "sound_files/" + instrument + "/E_4.mp3",
-        "sound_files/" + instrument + "/F_4.mp3",
-        "sound_files/" + instrument + "/Fs_4.mp3",
-        "sound_files/" + instrument + "/G_4.mp3",
-        "sound_files/" + instrument + "/Gs_4.mp3",
-        "sound_files/" + instrument + "/A_4.mp3",
-        "sound_files/" + instrument + "/As_4.mp3",
-        "sound_files/" + instrument + "/B_4.mp3",
-        "sound_files/" + instrument + "/C_5.mp3",
-        "sound_files/" + instrument + "/Cs_5.mp3",
-        "sound_files/" + instrument + "/D_5.mp3",
-        "sound_files/" + instrument + "/Ds_5.mp3",
-        "sound_files/" + instrument + "/E_5.mp3",
-        "sound_files/" + instrument + "/F_5.mp3",
-        "sound_files/" + instrument + "/Fs_5.mp3",
-        "sound_files/" + instrument + "/G_5.mp3",
-        "sound_files/" + instrument + "/Gs_5.mp3",
-        "sound_files/" + instrument + "/A_5.mp3",
-        "sound_files/" + instrument + "/As_5.mp3",
-        "sound_files/" + instrument + "/B_5.mp3",
-        "sound_files/" + instrument + "/C_6.mp3"
-    ];
+	if (instrument == 'piano') {
+		var piano_srcs = [
+			"sound_files/" + instrument + "/C_3.mp3",
+			"sound_files/" + instrument + "/Cs_3.mp3",
+			"sound_files/" + instrument + "/D_3.mp3",
+			"sound_files/" + instrument + "/Ds_3.mp3",
+			"sound_files/" + instrument + "/E_3.mp3",
+			"sound_files/" + instrument + "/F_3.mp3",
+			"sound_files/" + instrument + "/Fs_3.mp3",
+			"sound_files/" + instrument + "/G_3.mp3",
+			"sound_files/" + instrument + "/Gs_3.mp3",
+			"sound_files/" + instrument + "/A_3.mp3",
+			"sound_files/" + instrument + "/As_3.mp3",
+			"sound_files/" + instrument + "/B_3.mp3",
+			"sound_files/" + instrument + "/C_4.mp3",
+			"sound_files/" + instrument + "/Cs_4.mp3",
+			"sound_files/" + instrument + "/D_4.mp3",
+			"sound_files/" + instrument + "/Ds_4.mp3",
+			"sound_files/" + instrument + "/E_4.mp3",
+			"sound_files/" + instrument + "/F_4.mp3",
+			"sound_files/" + instrument + "/Fs_4.mp3",
+			"sound_files/" + instrument + "/G_4.mp3",
+			"sound_files/" + instrument + "/Gs_4.mp3",
+			"sound_files/" + instrument + "/A_4.mp3",
+			"sound_files/" + instrument + "/As_4.mp3",
+			"sound_files/" + instrument + "/B_4.mp3",
+			"sound_files/" + instrument + "/C_5.mp3",
+			"sound_files/" + instrument + "/Cs_5.mp3",
+			"sound_files/" + instrument + "/D_5.mp3",
+			"sound_files/" + instrument + "/Ds_5.mp3",
+			"sound_files/" + instrument + "/E_5.mp3",
+			"sound_files/" + instrument + "/F_5.mp3",
+			"sound_files/" + instrument + "/Fs_5.mp3",
+			"sound_files/" + instrument + "/G_5.mp3",
+			"sound_files/" + instrument + "/Gs_5.mp3",
+			"sound_files/" + instrument + "/A_5.mp3",
+			"sound_files/" + instrument + "/As_5.mp3",
+			"sound_files/" + instrument + "/B_5.mp3",
+			"sound_files/" + instrument + "/C_6.mp3"
+		];
 
-    var sounds = [];
-    for(var i = 0; i < sound_srcs.length; i++) {
-        var sound = new Audio(sound_srcs[i]);
-        sounds.push(sound);
-    }
+		var sounds = [];
+		for(var i = 0; i < piano_srcs.length; i++) {
+			var sound = new Audio(piano_srcs[i]);
+			sounds.push(sound);
+		}
+	} else if (insrument == 'drums') {
+		var drum_srcs = [
+			"sound_files/" + insrument + "/hi_hat.mp3",
+			"sound_files/" + insrument + "/kick.mp3",
+			"sound_files/" + insrument + "/snare.mp3"
+		];
+		var sounds = [];
+		for(var i = 0; i < drum_srcs.length; i++) {
+			var sound = new Audio(drum_srcs[i]);
+			sounds.push(sound);
+		}
+	}
 
     return sounds;
 }
@@ -62,7 +78,7 @@ function createPiano(sounds) {
 
     // Initialize piano key array
     var keys = [];
-    for(var i = 0; i < 37; i++) {
+    for(var i = 0; i < sounds.length; i++) {
         // Create new key div element at keys[i]
         keys.push(document.createElement("div"));
         keys[i].id = i;
@@ -111,11 +127,41 @@ function createPiano(sounds) {
     }
 }
 
-function slide_piano() {
-	var piano_container = document.getElementById("pianoBlock");
-	var pi_cont_marginL = piano_container.style.marginLeft;
-	if (pi_cont_marginL == '0px')
-		piano_container.style.marginLeft = 'auto';
-	else
-		piano_container.style.marginLeft = '0px';
+/*
+function createDrums(sounds) {
+	var drum_container = document.getElementById("drumBlock");
+	
+	// Initializes drum kit array
+	var kit = [];
+	for(var i = 0; i < sounds.length; i++) {
+        // Create new drum div element at kit[i]
+        kit.push(document.createElement("div"));
+        kit[i].id = i;
+		if (i == 0) kit[i].style.backgroundColor = "yellow";
+		if (i == 1) kit[i].style.backgroundColor = "blue";
+		if (i == 2) kit[i].style.backgroundColor = "red";
+		
+		// Create click listener to play corresponding sound in sounds array
+		kit[i].addEventListener('click', function() {
+			var drum = this;
+			var sound = sounds[drum.id];
+		
+			drum.style.backgroundColor = "grey";
+		
+			// Play audio
+			sound.currentTime = 0;
+			sound.play();
+		
+			// Reset drum color after delay
+			setTimeout(function() {
+				drum.style.backgroundColor = "";
+			}, 200);
+		});
+	
+		// Add drum element to drumBlock container
+		drum_container.appendChild(kit[i]);
+	}
 }
+*/
+
+
