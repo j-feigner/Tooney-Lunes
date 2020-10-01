@@ -11,6 +11,10 @@ body {
     margin-right: auto;
 }
 
+.chord-block {
+    margin-top: 50px;
+}
+
 .white-key {
     background-color: white;
     border: 1px solid black;
