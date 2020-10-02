@@ -6,9 +6,13 @@ body {
 
 .piano-block {
     width: auto;
-    height: 400px;
+    height: 200px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.chord-block {
+    margin-top: 50px;
 }
 
 .white-key {
