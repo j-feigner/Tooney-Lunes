@@ -1,8 +1,18 @@
 var sounds = createSoundArray("piano");
+
+// Piano Renderer
 createPiano(sounds);
 
-// Fills and returns an array of js Audio objects with correpsonding file locations
-// Expects properly formatted instrument string
+// Chord Player
+var chord_button = document.getElementById("playChord");
+chord_button.addEventListener('click', function() { // Play Chord button is clicked
+    var chord_selection = document.getElementById("chords").selectedIndex; // Get chord root from dropdown
+    var degree_selection = document.querySelector("input[name=chord-degree]:checked").value; // Get value from radio button group
+
+    playChord(sounds, chord_selection + 12, degree_selection);
+});
+
+// Fills and returns an array of js Audio objects with correpsonding file locations / instrument
 function createSoundArray(instrument) {
     var sound_srcs = [
         "sound_files/" + instrument + "/C_3.mp3",
@@ -54,9 +64,7 @@ function createSoundArray(instrument) {
 }
 
 // Creates html elements corresponding to piano keys based on supplied sounds array.
-// Each key is a <div> element with an attached <audio> tag and clickListener.
-// Expects a filled array of 13 notes to assign to piano keys (order: C -> B).
-// TODO: error checks for supplied array.
+// Each key is a <div> element with an attached clickListener to play corresponding audio.
 function createPiano(sounds) {
     var piano_container = document.getElementById("pianoBlock");
 
@@ -109,4 +117,28 @@ function createPiano(sounds) {
         // Add key element to pianoBlock container
         piano_container.appendChild(keys[i]);
     }
+}
+
+// Plays a three note chord from given array of sounds and a given root note index
+function playChord(sounds, root_index, third_degree) {
+    var root, third, fifth;
+
+    root = sounds[root_index];
+
+    if(third_degree == "major") {
+        third = sounds[root_index + 4];
+    }
+    else if (third_degree == "minor") {
+        third = sounds[root_index + 3];
+    }
+
+    fifth = sounds[root_index + 7];
+
+    root.play();
+    third.play();
+    fifth.play();
+
+    root.currentTime = 0;
+    third.currentTime = 0;
+    fifth.currentTime = 0;
 }
