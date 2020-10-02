@@ -121,24 +121,43 @@ function createPiano(sounds) {
 
 // Plays a three note chord from given array of sounds and a given root note index
 function playChord(sounds, root_index, third_degree) {
-    var root, third, fifth;
+    var root_note, third_note, fifth_note;
+    var root_key, third_key, fifth_key;
+    var piano = document.getElementById("pianoBlock");
 
-    root = sounds[root_index];
+    // Assign sounds to given scale degrees (1, 3, 5) and keys
+    root_note = sounds[root_index];
+    root_key = piano.children[root_index];
 
     if(third_degree == "major") {
-        third = sounds[root_index + 4];
+        third_note = sounds[root_index + 4];
+        third_key = piano.children[root_index + 4];
     }
     else if (third_degree == "minor") {
-        third = sounds[root_index + 3];
+        third_note = sounds[root_index + 3];
+        third_key = piano.children[root_index + 3];
     }
 
-    fifth = sounds[root_index + 7];
+    fifth_note = sounds[root_index + 7];
+    fifth_key = piano.children[root_index + 7];
 
-    root.play();
-    third.play();
-    fifth.play();
+    // Play tones together and highlight keys
+    root_note.play();
+    root_key.style.backgroundColor = "grey";
+    root_note.currentTime = 0;
 
-    root.currentTime = 0;
-    third.currentTime = 0;
-    fifth.currentTime = 0;
+    third_note.play();
+    third_key.style.backgroundColor = "grey";
+    third_note.currentTime = 0;
+
+    fifth_note.play();
+    fifth_key.style.backgroundColor = "grey";
+    fifth_note.currentTime = 0;
+
+    // Reset key color after delay
+    setTimeout(function(){
+        root_key.style.backgroundColor = "";
+        third_key.style.backgroundColor = "";
+        fifth_key.style.backgroundColor = "";
+    }, 400);
 }
