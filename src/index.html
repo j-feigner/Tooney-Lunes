@@ -6,12 +6,14 @@
   <meta charset="utf-8">
   <title>Tooney Lunes</title>
   <link rel="stylesheet" href="stylesheet.css">
+  <script src="animation.js"></script>
 </head>
 
-<body>
+<body
   <h1>Tooney Lunes</h1>
   <h2>By Brian Corbett, Matthew Nicholson, James Pelligra, Jordan Feigner</h2>
-
+  
+  <div id="drumBlock" class="drum-block"></div>
   <div id="pianoBlock" class="piano-block"></div>
 
   <div id="chordBlock" class="chord-block">
@@ -37,6 +39,8 @@
   </div>
 
   <script src="script.js"></script>
+  
+  <button type="button" id="inst_switch" onclick="slide_piano()">Switch Instruments</button>
 </body>
 
 </html>

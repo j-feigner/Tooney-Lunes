@@ -4,6 +4,14 @@ body {
   background-color: lightblue;
 }
 
+#inst_switch {
+	height: 25px;
+	width: auto;
+	margin-top: 30px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
 .piano-block {
     width: auto;
     height: 200px;
@@ -36,3 +44,6 @@ body {
     margin-left: -25px;
     z-index: 2;
 }
+
+
+
