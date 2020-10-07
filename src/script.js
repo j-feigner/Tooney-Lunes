@@ -1,9 +1,4 @@
 
-var piano_sounds = createSoundArray("piano");
-createPiano(piano_sounds);
-/*var drum_sounds = createSoundArray("drums");
-createDrums(drum_sounds);*/
-
 var sounds = createSoundArray("piano");
 
 // Piano Renderer
