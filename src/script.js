@@ -6,12 +6,22 @@ createPiano(sounds);
 
 // Chord Player
 var chord_button = document.getElementById("playChord");
-chord_button.addEventListener('click', function() { // Play Chord button is clicked
-    var chord_selection = document.getElementById("chords").selectedIndex; // Get chord root from dropdown
-    var degree_selection = document.querySelector("input[name=chord-degree]:checked").value; // Get value from radio button group
+chord_button.addEventListener('click', function() {
+    var chord_selection = document.getElementById("chords").selectedIndex;
+    var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
 
     playChord(sounds, chord_selection + 12, degree_selection);
 });
+
+var song = {
+    beats: [],
+    tempo: 120,
+    playSong: function() {
+        for(var beat = 1; beat <= this.beats.length; beat++) {
+
+        }
+    }
+};
 
 // Fills and returns an array of js Audio objects with correpsonding file locations / instrument
 function createSoundArray(instrument) {
@@ -116,11 +126,10 @@ function createPiano(sounds) {
             var key = this;
             var sound = sounds[key.id];
 
-            key.style.backgroundColor = "grey";
-
             // Play audio
-            sound.currentTime = 0;
             sound.play();
+            key.style.backgroundColor = "grey";
+            sound.currentTime = 0;
 
             // Reset key color after delay
             setTimeout(function(){
