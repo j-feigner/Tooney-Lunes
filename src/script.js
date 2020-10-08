@@ -1,8 +1,8 @@
 
-var sounds = createSoundArray("piano");
+var piano_sounds = createSoundArray("piano");
 
 // Piano Renderer
-createPiano(sounds);
+createPiano(piano_sounds);
 
 // Chord Player
 var chord_button = document.getElementById("playChord");
@@ -10,7 +10,7 @@ chord_button.addEventListener('click', function() { // Play Chord button is clic
     var chord_selection = document.getElementById("chords").selectedIndex; // Get chord root from dropdown
     var degree_selection = document.querySelector("input[name=chord-degree]:checked").value; // Get value from radio button group
 
-    playChord(sounds, chord_selection + 12, degree_selection);
+    playChord(piano_sounds, chord_selection + 12, degree_selection);
 });
 
 // Fills and returns an array of js Audio objects with correpsonding file locations / instrument
@@ -55,13 +55,12 @@ function createSoundArray(instrument) {
 			"sound_files/" + instrument + "/B_5.mp3",
 			"sound_files/" + instrument + "/C_6.mp3"
 		];
-
 		var sounds = [];
 		for(var i = 0; i < piano_srcs.length; i++) {
 			var sound = new Audio(piano_srcs[i]);
 			sounds.push(sound);
 		}
-	} else if (insrument == 'drums') {
+	} else if (instrument == 'drums') {
 		var drum_srcs = [
 			"sound_files/" + insrument + "/hi_hat.mp3",
 			"sound_files/" + insrument + "/kick.mp3",
@@ -91,7 +90,7 @@ function createPiano(sounds) {
         
         // Check if current key is white or black and assigns css class
         if( i == 1  || 
-            i == 3  || 
+            i == 3  ||
             i == 6  || 
             i == 8  || 
             i == 10 ||
@@ -106,8 +105,7 @@ function createPiano(sounds) {
             i == 32 ||
             i == 34) {
             keys[i].className = "black-key";
-        } 
-        else {
+        } else {
             keys[i].className = "white-key";
         }
 
@@ -133,7 +131,9 @@ function createPiano(sounds) {
     }
 }
 
-/*
+var drum_sounds = createSoundArray("drums");
+createDrums(drum_sounds);
+
 function createDrums(sounds) {
 	var drum_container = document.getElementById("drumBlock");
 	
@@ -141,11 +141,11 @@ function createDrums(sounds) {
 	var kit = [];
 	for(var i = 0; i < sounds.length; i++) {
         // Create new drum div element at kit[i]
-        kit.push(document.createElement("div"));
+        kit.push(document.createElement("img"));
         kit[i].id = i;
-		if (i == 0) kit[i].style.backgroundColor = "yellow";
-		if (i == 1) kit[i].style.backgroundColor = "blue";
-		if (i == 2) kit[i].style.backgroundColor = "red";
+		if (i == 0) kit[i].src = "/image_files/snare.png";
+		if (i == 1) kit[i].src = "/image_files/kick.png";
+		if (i == 2) kit[i].src = "/image_files/hi_hat.png";
 		
 		// Create click listener to play corresponding sound in sounds array
 		kit[i].addEventListener('click', function() {
@@ -168,7 +168,6 @@ function createDrums(sounds) {
 		drum_container.appendChild(kit[i]);
 	}
 }
-*/
 
 // Plays a three note chord from given array of sounds and a given root note index
 function playChord(sounds, root_index, third_degree) {
@@ -183,8 +182,7 @@ function playChord(sounds, root_index, third_degree) {
     if(third_degree == "major") {
         third_note = sounds[root_index + 4];
         third_key = piano.children[root_index + 4];
-    }
-    else if (third_degree == "minor") {
+    } else if (third_degree == "minor") {
         third_note = sounds[root_index + 3];
         third_key = piano.children[root_index + 3];
     }

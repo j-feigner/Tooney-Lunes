@@ -12,6 +12,20 @@ body {
 	margin-left: auto;
 }
 
+.instrument-block {
+	display: table;
+	transform: translate(30%);
+}
+
+.Drum {
+	float: right;
+	transform: translate(1500%);
+}
+
+.Piano {
+	float: right;
+}
+
 .piano-block {
     width: auto;
     height: 200px;

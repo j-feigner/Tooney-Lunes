@@ -3,44 +3,56 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Tooney Lunes</title>
-  <link rel="stylesheet" href="stylesheet.css">
-  <script src="animation.js"></script>
+	<meta charset="utf-8">
+	<title>Tooney Lunes</title>
+	<link rel="stylesheet" href="stylesheet.css">
+	<script src="animation.js"></script>
 </head>
 
 <body
-  <h1>Tooney Lunes</h1>
-  <h2>By Brian Corbett, Matthew Nicholson, James Pelligra, Jordan Feigner</h2>
+	<h1>Tooney Lunes</h1>
+	<h2>By Brian Corbett, Matthew Nicholson, James Pelligra, Jordan Feigner</h2>
+	
+	<div id="instrumentBlock" class="instrument-block">
+		<div id="drum" class="Drum">
+			<div id="drumBlock" class="drum-block">
+				<img src="image_files/hi_hat.png" id="hi_hat" height="50px" width="50px">
+				<img src="image_files/kick.png" id="kick" height="50px" width="50px">
+				<img src="image_files/snare.png" id="snare" height="50px" width="50px">
+			</div>
+		</div>
+
+		<div id="piano" class="Piano">
+			<div id="pianoBlock" class="piano-block"></div>
+
+			<div id="chordBlock" class="chord-block">
+				<select id="chords" name="chords">
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+				</select>
+
+				<input type="radio" name="chord-degree" id="d1" value="major" checked> Major 
+				<input type="radio" name="chord-degree" id="d2" value="minor"> Minor
+
+				<input type="button" id="playChord" value="Play Chord">
+			</div>
+		</div>
+	</div>
+
+	<script src="script.js"></script>
   
-  <div id="drumBlock" class="drum-block"></div>
-  <div id="pianoBlock" class="piano-block"></div>
+	<button type="button" id="inst_switch" onclick="slide_piano()">Switch Instruments</button>
 
-  <div id="chordBlock" class="chord-block">
-    <select id="chords" name="chords">
-      <option value="C">C</option>
-      <option value="C#">C#</option>
-      <option value="D">D</option>
-      <option value="D#">D#</option>
-      <option value="E">E</option>
-      <option value="F">F</option>
-      <option value="F#">F#</option>
-      <option value="G">G</option>
-      <option value="G#">G#</option>
-      <option value="A">A</option>
-      <option value="A#">A#</option>
-      <option value="B">B</option>
-    </select>
-
-    <input type="radio" name="chord-degree" id="d1" value="major" checked> Major 
-    <input type="radio" name="chord-degree" id="d2" value="minor"> Minor
-
-    <input type="button" id="playChord" value="Play Chord">
-  </div>
-
-  <script src="script.js"></script>
-  
-  <button type="button" id="inst_switch" onclick="slide_piano()">Switch Instruments</button>
 </body>
 
 </html>
