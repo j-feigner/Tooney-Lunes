@@ -8,9 +8,7 @@ createPiano(sounds);
 var chord_button = document.getElementById("playChord");
 chord_button.addEventListener('click', function() {
     var chord_selection = document.getElementById("chords").selectedIndex;
-    var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
-
-    playChord(sounds, chord_selection + 12, degree_selection);
+    playChord(sounds, chord_selection + 12);
 });
 
 var song = {
@@ -177,7 +175,8 @@ function playNote(sounds, selected_key) {
     var note_index = selected_key.id;
 
     var sound = new Audio;
-    sound = sounds[note_index];
+    
+    sound.src = sounds[note_index].src;
 
     sound.play();
     selected_key.style.backgroundColor = "grey";
@@ -185,57 +184,38 @@ function playNote(sounds, selected_key) {
 
     setTimeout(function(){
         selected_key.style.backgroundColor = "";
-    }, 200);
+    }, 300);
+
+    delete sound;
 }
 
 // Plays a three note chord from given array of sounds and a given root note index
-function playChord(sounds, root_index, third_degree) {
-    var root_note, third_note, fifth_note;
+function playChord(sounds, root_index) {
     var root_key, third_key, fifth_key;
-    var piano = document.getElementById("pianoBlock");
 
-    // Assign sounds to given scale degrees (1, 3, 5) and keys
-    root_note = sounds[root_index];
+    var piano = document.getElementById("pianoBlock");
+    var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
+
     root_key = piano.children[root_index];
 
-    if(third_degree == "major") {
-        third_note = sounds[root_index + 4];
-        third_key = piano.children[root_index + 4];
-    }
-    else if (third_degree == "minor") {
-        third_note = sounds[root_index + 3];
+    if(degree_selection == "minor") {
         third_key = piano.children[root_index + 3];
     }
+    else {
+        third_key = piano.children[root_index + 4];
+    }
 
-    fifth_note = sounds[root_index + 7];
     fifth_key = piano.children[root_index + 7];
-
-    // Play tones together and highlight keys
-    root_note.play();
-    root_key.style.backgroundColor = "grey";
-    root_note.currentTime = 0;
-
-    third_note.play();
-    third_key.style.backgroundColor = "grey";
-    third_note.currentTime = 0;
-
-    fifth_note.play();
-    fifth_key.style.backgroundColor = "grey";
-    fifth_note.currentTime = 0;
-
-    // Reset key color after delay
-    setTimeout(function(){
-        root_key.style.backgroundColor = "";
-        third_key.style.backgroundColor = "";
-        fifth_key.style.backgroundColor = "";
-    }, 400);
+    
+    playNote(sounds, root_key);
+    playNote(sounds, third_key);
+    playNote(sounds, fifth_key);
 }
 
 function playClickChord(sounds, selected_key) {
     var root_key, third_key, fifth_key;
 
     var piano = document.getElementById("pianoBlock");
-
     var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
 
     root_key = piano.children[parseInt(selected_key.id)];
