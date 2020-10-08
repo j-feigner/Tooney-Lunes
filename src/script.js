@@ -123,18 +123,12 @@ function createPiano(sounds) {
 
         // Create click listener to play corresponding sound in sounds array
         keys[i].addEventListener('click', function(){
-            var key = this;
-            var sound = sounds[key.id];
-
-            // Play audio
-            sound.play();
-            key.style.backgroundColor = "grey";
-            sound.currentTime = 0;
-
-            // Reset key color after delay
-            setTimeout(function(){
-                key.style.backgroundColor = "";
-            }, 200);
+            if(document.getElementById("mode").selectedIndex == 0) {
+                playNote(sounds, this);
+            }
+            else if(document.getElementById("mode").selectedIndex == 1) {
+                playClickChord(sounds, this);
+            }
         });
 
         // Add key element to pianoBlock container
@@ -179,6 +173,21 @@ function createDrums(sounds) {
 }
 */
 
+function playNote(sounds, selected_key) {
+    var note_index = selected_key.id;
+
+    var sound = new Audio;
+    sound = sounds[note_index];
+
+    sound.play();
+    selected_key.style.backgroundColor = "grey";
+    sound.currentTime = 0;
+
+    setTimeout(function(){
+        selected_key.style.backgroundColor = "";
+    }, 200);
+}
+
 // Plays a three note chord from given array of sounds and a given root note index
 function playChord(sounds, root_index, third_degree) {
     var root_note, third_note, fifth_note;
@@ -220,4 +229,27 @@ function playChord(sounds, root_index, third_degree) {
         third_key.style.backgroundColor = "";
         fifth_key.style.backgroundColor = "";
     }, 400);
+}
+
+function playClickChord(sounds, selected_key) {
+    var root_key, third_key, fifth_key;
+
+    var piano = document.getElementById("pianoBlock");
+
+    var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
+
+    root_key = piano.children[parseInt(selected_key.id)];
+
+    if(degree_selection == "minor") {
+        third_key = piano.children[parseInt(selected_key.id) + 3];
+    }
+    else {
+        third_key = piano.children[parseInt(selected_key.id) + 4];
+    }
+
+    fifth_key = piano.children[parseInt(selected_key.id) + 7];
+    
+    playNote(sounds, root_key);
+    playNote(sounds, third_key);
+    playNote(sounds, fifth_key);
 }
