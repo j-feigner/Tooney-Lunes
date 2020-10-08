@@ -7,9 +7,8 @@ createPiano(sounds);
 // Chord Player
 var chord_button = document.getElementById("playChord");
 chord_button.addEventListener('click', function() {
-    //var chord_selection = document.getElementById("chords").selectedIndex;
-    //playChord(sounds, chord_selection + 12);
-    playSong(sounds, beats, tempo);
+    var chord_selection = document.getElementById("chords").selectedIndex;
+    playChord(sounds, chord_selection + 12);
 });
 
 // Demo Song Player
