@@ -4,22 +4,30 @@ var sounds = createSoundArray("piano");
 // Piano Renderer
 createPiano(sounds);
 
+// Test song object (Happy Birthday)
+var beats = [7, 7, 9, 0, 12, 11];
+var tempo = 120;
+
+function playSong(sounds, beats, tempo) {
+    for(var i = 0; i < beats.length; i++) {
+        playBeat(sounds, beats[i], tempo, i);
+    }
+};
+
+function playBeat(sounds, beat, tempo, i) {
+    var key = document.getElementById(beat);
+    setTimeout(function() {
+        playNote(sounds, key);
+    }, tempo * i * 4)
+}
+
 // Chord Player
 var chord_button = document.getElementById("playChord");
 chord_button.addEventListener('click', function() {
-    var chord_selection = document.getElementById("chords").selectedIndex;
-    playChord(sounds, chord_selection + 12);
+    //var chord_selection = document.getElementById("chords").selectedIndex;
+    //playChord(sounds, chord_selection + 12);
+    playSong(sounds, beats, tempo);
 });
-
-var song = {
-    beats: [],
-    tempo: 120,
-    playSong: function() {
-        for(var beat = 1; beat <= this.beats.length; beat++) {
-
-        }
-    }
-};
 
 // Fills and returns an array of js Audio objects with correpsonding file locations / instrument
 function createSoundArray(instrument) {
