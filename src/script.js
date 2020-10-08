@@ -4,28 +4,19 @@ var sounds = createSoundArray("piano");
 // Piano Renderer
 createPiano(sounds);
 
-// Test song object (Happy Birthday)
-var beats = [7, 7, 9, 0, 12, 11];
-var tempo = 120;
-
-function playSong(sounds, beats, tempo) {
-    for(var i = 0; i < beats.length; i++) {
-        playBeat(sounds, beats[i], tempo, i);
-    }
-};
-
-function playBeat(sounds, beat, tempo, i) {
-    var key = document.getElementById(beat);
-    setTimeout(function() {
-        playNote(sounds, key);
-    }, tempo * i * 4)
-}
-
 // Chord Player
 var chord_button = document.getElementById("playChord");
 chord_button.addEventListener('click', function() {
     //var chord_selection = document.getElementById("chords").selectedIndex;
     //playChord(sounds, chord_selection + 12);
+    playSong(sounds, beats, tempo);
+});
+
+// Demo Song Player
+var beats = [7, 7, 9, null, 7, null, 12, null, 11, null, null, null, 7, 7, 9, null, 7, null, 14, null, 12, null, null, null, 7, 7, 19, null, 16, null, 12, null, 11, null, 9, null, null, null, 17, 17, 16, null, 12, null, 14, null, 12];
+var tempo = 120;
+var song_button = document.getElementById("playSong");
+song_button.addEventListener('click', function() {
     playSong(sounds, beats, tempo);
 });
 
@@ -180,6 +171,8 @@ function createDrums(sounds) {
 */
 
 function playNote(sounds, selected_key) {
+
+
     var note_index = selected_key.id;
 
     var sound = new Audio;
@@ -240,4 +233,23 @@ function playClickChord(sounds, selected_key) {
     playNote(sounds, root_key);
     playNote(sounds, third_key);
     playNote(sounds, fifth_key);
+}
+
+function playSong(sounds, beats, tempo) {
+    for(var i = 0; i < beats.length; i++) {
+        playBeat(sounds, beats[i], tempo, i);
+    }
+};
+
+function playBeat(sounds, beat, tempo, i) {
+    if(beat == null) {
+        setTimeout(function() {
+        }, tempo * i * 4)
+    }
+    else {
+        var key = document.getElementById(beat);
+        setTimeout(function() {
+            playNote(sounds, key);
+        }, tempo * i * 4)
+    }
 }
