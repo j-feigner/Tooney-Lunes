@@ -1,7 +1,7 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-  background-color: lightblue;
+  background-color: rgb(165, 165, 185);
 }
 
 #inst_switch {
@@ -12,11 +12,30 @@ body {
 	margin-left: auto;
 }
 
-.piano-block {
+.top-bar {
+    position: relative;
+    width: 365px;
+    height: 150px;
+    bottom: 50px;
+    margin-bottom: 50px;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 25px;
+}
+
+.title-image {
     width: auto;
-    height: 200px;
+    height: auto;
+    position: relative;
+    top: 55px;
+}
+
+.piano-block {
+    width: 1200px;
+    height: 260px;
     margin-left: auto;
     margin-right: auto;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 25px;
 }
 
 .chord-block {
@@ -29,6 +48,7 @@ body {
     width: 48px;
     height: 198px;
     position: relative;
+    top: 10px;
     display: inline-block;
 }
 
@@ -38,7 +58,7 @@ body {
     width: 23px;
     height: 123px;
     position: relative;
-    bottom: 75px;
+    bottom: 65px;
     left: 12.5px;
     display: inline-block;
     margin-left: -25px;

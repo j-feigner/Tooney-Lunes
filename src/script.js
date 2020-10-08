@@ -241,14 +241,17 @@ function playSong(sounds, beats, tempo) {
 };
 
 function playBeat(sounds, beat, tempo, i) {
+    var beat_length = 60000.0 / tempo;
+    // Rest beat
     if(beat == null) {
         setTimeout(function() {
-        }, tempo * i * 4)
+        }, tempo * beat_length)
     }
+    // Beat with notes
     else {
         var key = document.getElementById(beat);
         setTimeout(function() {
             playNote(sounds, key);
-        }, tempo * i * 4)
+        }, (i * beat_length));
     }
 }
