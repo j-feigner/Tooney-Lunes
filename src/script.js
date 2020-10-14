@@ -1,11 +1,13 @@
 
-var sounds = createSoundArray("piano");
+
+var piano_sounds = createSoundArray("piano");
 
 // Piano Renderer
-createPiano(sounds);
+createPiano(piano_sounds);
 
 // Chord Player
 var chord_button = document.getElementById("playChord");
+
 chord_button.addEventListener('click', function() {
     var chord_selection = document.getElementById("chords").selectedIndex;
     playChord(sounds, chord_selection + 12);
@@ -61,17 +63,16 @@ function createSoundArray(instrument) {
 			"sound_files/" + instrument + "/B_5.mp3",
 			"sound_files/" + instrument + "/C_6.mp3"
 		];
-
 		var sounds = [];
 		for(var i = 0; i < piano_srcs.length; i++) {
 			var sound = new Audio(piano_srcs[i]);
 			sounds.push(sound);
 		}
-	} else if (insrument == 'drums') {
+	} else if (instrument == 'drums') {
 		var drum_srcs = [
-			"sound_files/" + insrument + "/hi_hat.mp3",
-			"sound_files/" + insrument + "/kick.mp3",
-			"sound_files/" + insrument + "/snare.mp3"
+			"sound_files/" + instrument + "/hi_hat.mp3",
+			"sound_files/" + instrument + "/kick.mp3",
+			"sound_files/" + instrument + "/snare.mp3"
 		];
 		var sounds = [];
 		for(var i = 0; i < drum_srcs.length; i++) {
@@ -97,7 +98,7 @@ function createPiano(sounds) {
         
         // Check if current key is white or black and assigns css class
         if( i == 1  || 
-            i == 3  || 
+            i == 3  ||
             i == 6  || 
             i == 8  || 
             i == 10 ||
@@ -112,8 +113,7 @@ function createPiano(sounds) {
             i == 32 ||
             i == 34) {
             keys[i].className = "black-key";
-        } 
-        else {
+        } else {
             keys[i].className = "white-key";
         }
 
@@ -132,42 +132,26 @@ function createPiano(sounds) {
     }
 }
 
-/*
 function createDrums(sounds) {
 	var drum_container = document.getElementById("drumBlock");
+	var kit            = drum_container.children;
 	
-	// Initializes drum kit array
-	var kit = [];
-	for(var i = 0; i < sounds.length; i++) {
-        // Create new drum div element at kit[i]
-        kit.push(document.createElement("div"));
-        kit[i].id = i;
-		if (i == 0) kit[i].style.backgroundColor = "yellow";
-		if (i == 1) kit[i].style.backgroundColor = "blue";
-		if (i == 2) kit[i].style.backgroundColor = "red";
-		
+	for(var i = 0; i < kit.length; i++) {
 		// Create click listener to play corresponding sound in sounds array
 		kit[i].addEventListener('click', function() {
-			var drum = this;
-			var sound = sounds[drum.id];
-		
-			drum.style.backgroundColor = "grey";
+			var drum_sound = this.id;
+			var drum       = this;
+			var sound      = new Audio("sound_files/drums/" + drum_sound + ".mp3");
 		
 			// Play audio
 			sound.currentTime = 0;
 			sound.play();
-		
-			// Reset drum color after delay
-			setTimeout(function() {
-				drum.style.backgroundColor = "";
-			}, 200);
 		});
-	
-		// Add drum element to drumBlock container
-		drum_container.appendChild(kit[i]);
 	}
 }
-*/
+
+var drum_sounds = createSoundArray("drums");
+createDrums(drum_sounds);
 
 function playNote(sounds, selected_key) {
 
