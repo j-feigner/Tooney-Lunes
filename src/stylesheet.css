@@ -14,23 +14,27 @@ body {
 
 .instrument-block {
 	display: table;
-	transform: translate(30%);
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .Drum {
 	float: right;
-	transform: translate(1500%);
+	transform: translate(260%);
 }
 
 .Piano {
 	float: right;
+	transform: translate(27%);
 }
+
+.drum-block {
+	display: table;
+}	
 
 .piano-block {
     width: auto;
     height: 200px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .chord-block {

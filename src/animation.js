@@ -1,9 +1,8 @@
 var off_screen = false;
 
-<<<<<<< Updated upstream
-function slide_piano() {
+function slidePiano() {
 	var inst_container = document.getElementById("instrumentBlock");
-	var slide_x = 125;
+	var slide_x        = 125;
 	
 	if (off_screen == false) {
 		var x_sofar = 0;

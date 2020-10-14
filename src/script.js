@@ -7,7 +7,7 @@ createPiano(piano_sounds);
 // Chord Player
 var chord_button = document.getElementById("playChord");
 chord_button.addEventListener('click', function() { // Play Chord button is clicked
-    var chord_selection = document.getElementById("chords").selectedIndex; // Get chord root from dropdown
+    var chord_selection  = document.getElementById("chords").selectedIndex; // Get chord root from dropdown
     var degree_selection = document.querySelector("input[name=chord-degree]:checked").value; // Get value from radio button group
 
     playChord(piano_sounds, chord_selection + 12, degree_selection);
@@ -62,9 +62,9 @@ function createSoundArray(instrument) {
 		}
 	} else if (instrument == 'drums') {
 		var drum_srcs = [
-			"sound_files/" + insrument + "/hi_hat.mp3",
-			"sound_files/" + insrument + "/kick.mp3",
-			"sound_files/" + insrument + "/snare.mp3"
+			"sound_files/" + instrument + "/hi_hat.mp3",
+			"sound_files/" + instrument + "/kick.mp3",
+			"sound_files/" + instrument + "/snare.mp3"
 		];
 		var sounds = [];
 		for(var i = 0; i < drum_srcs.length; i++) {
@@ -111,7 +111,7 @@ function createPiano(sounds) {
 
         // Create click listener to play corresponding sound in sounds array
         keys[i].addEventListener('click', function(){
-            var key = this;
+            var key   = this;
             var sound = sounds[key.id];
 
             key.style.backgroundColor = "grey";
@@ -131,43 +131,26 @@ function createPiano(sounds) {
     }
 }
 
-var drum_sounds = createSoundArray("drums");
-createDrums(drum_sounds);
-
 function createDrums(sounds) {
 	var drum_container = document.getElementById("drumBlock");
+	var kit            = drum_container.children;
 	
-	// Initializes drum kit array
-	var kit = [];
-	for(var i = 0; i < sounds.length; i++) {
-        // Create new drum div element at kit[i]
-        kit.push(document.createElement("img"));
-        kit[i].id = i;
-		if (i == 0) kit[i].src = "/image_files/snare.png";
-		if (i == 1) kit[i].src = "/image_files/kick.png";
-		if (i == 2) kit[i].src = "/image_files/hi_hat.png";
-		
+	for(var i = 0; i < kit.length; i++) {
 		// Create click listener to play corresponding sound in sounds array
 		kit[i].addEventListener('click', function() {
-			var drum = this;
-			var sound = sounds[drum.id];
-		
-			drum.style.backgroundColor = "grey";
+			var drum_sound = this.id;
+			var drum       = this;
+			var sound      = new Audio("sound_files/drums/" + drum_sound + ".mp3");
 		
 			// Play audio
 			sound.currentTime = 0;
 			sound.play();
-		
-			// Reset drum color after delay
-			setTimeout(function() {
-				drum.style.backgroundColor = "";
-			}, 200);
 		});
-	
-		// Add drum element to drumBlock container
-		drum_container.appendChild(kit[i]);
 	}
 }
+
+var drum_sounds = createSoundArray("drums");
+createDrums(drum_sounds);
 
 // Plays a three note chord from given array of sounds and a given root note index
 function playChord(sounds, root_index, third_degree) {
@@ -177,35 +160,35 @@ function playChord(sounds, root_index, third_degree) {
 
     // Assign sounds to given scale degrees (1, 3, 5) and keys
     root_note = sounds[root_index];
-    root_key = piano.children[root_index];
+    root_key  = piano.children[root_index];
 
     if(third_degree == "major") {
         third_note = sounds[root_index + 4];
-        third_key = piano.children[root_index + 4];
+        third_key  = piano.children[root_index + 4];
     } else if (third_degree == "minor") {
         third_note = sounds[root_index + 3];
-        third_key = piano.children[root_index + 3];
+        third_key  = piano.children[root_index + 3];
     }
 
     fifth_note = sounds[root_index + 7];
-    fifth_key = piano.children[root_index + 7];
+    fifth_key  = piano.children[root_index + 7];
 
     // Play tones together and highlight keys
     root_note.play();
     root_key.style.backgroundColor = "grey";
-    root_note.currentTime = 0;
+    root_note.currentTime          = 0;
 
     third_note.play();
     third_key.style.backgroundColor = "grey";
-    third_note.currentTime = 0;
+    third_note.currentTime          = 0;
 
     fifth_note.play();
     fifth_key.style.backgroundColor = "grey";
-    fifth_note.currentTime = 0;
+    fifth_note.currentTime          = 0;
 
     // Reset key color after delay
     setTimeout(function(){
-        root_key.style.backgroundColor = "";
+        root_key.style.backgroundColor  = "";
         third_key.style.backgroundColor = "";
         fifth_key.style.backgroundColor = "";
     }, 400);
