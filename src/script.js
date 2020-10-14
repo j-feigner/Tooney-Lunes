@@ -18,7 +18,7 @@ var beats = [7, 7, 9, null, 7, null, 12, null, 11, null, null, null, 7, 7, 9, nu
 var tempo = 120;
 var song_button = document.getElementById("playSong");
 song_button.addEventListener('click', function() {
-    playSong(sounds, beats, tempo);
+    playSong(piano_sounds, beats, tempo);
 });
 
 // Fills and returns an array of js Audio objects with correpsonding file locations / instrument
