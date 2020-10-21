@@ -1,35 +1,90 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-  background-color: lightblue;
+  background-color: rgb(165, 165, 185);
+  overflow: hidden;
+}
+
+#inst_switch {
+	height: 25px;
+	width: auto;
+	margin-top: 30px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.instrument-block {
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.Drum {
+	float: right;
+	transform: translate(200%);
+}
+
+.Piano {
+	float: right;
+	transform: translate(27%);
+}
+
+.drum-block {
+	display: table;
+}	
+
+.top-bar {
+    position: relative;
+    width: 365px;
+    height: 150px;
+    bottom: 50px;
+    margin-bottom: 50px;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 25px;
+}
+
+.title-image {
+    width: auto;
+    height: auto;
+    position: relative;
+    top: 55px;
 }
 
 .piano-block {
-    background-color: grey;
-    width: 800px;
-    height: 400px;
+    width: 1200px;
+    height: 260px;
     margin-left: auto;
     margin-right: auto;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 25px;
+}
+
+.chord-block {
+    margin-top: 50px;
 }
 
 .white-key {
     background-color: white;
     border: 1px solid black;
-    width: 98px;
-    height: 398px;
+    width: 48px;
+    height: 198px;
     position: relative;
+    top: 10px;
     display: inline-block;
 }
 
 .black-key {
     background-color: black;
     border: 1px solid black;
-    width: 48px;
-    height: 258px;
+    width: 23px;
+    height: 123px;
     position: relative;
-    bottom: 140px;
-    left: 25px;
+    bottom: 65px;
+    left: 12.5px;
     display: inline-block;
-    margin-left: -50px;
+    margin-left: -25px;
     z-index: 2;
 }
+
+
+
