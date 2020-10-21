@@ -6,8 +6,56 @@ createPiano(piano_sounds);
 createDrums(drum_sounds);
 
 // Demo Song Player
-var beats = [7, 7, 9, null, 7, null, 12, null, 11, null, null, null, 7, 7, 9, null, 7, null, 14, null, 12, null, null, null, 7, 7, 19, null, 16, null, 12, null, 11, null, 9, null, null, null, 17, 17, 16, null, 12, null, 14, null, 12];
-var tempo = 120;
+var beats = [
+    [19], 
+    [19], 
+    [21], 
+    null, 
+    [19], 
+    null, 
+    [24], 
+    null, 
+    [23], 
+    null, 
+    null, 
+    null, 
+    [19], 
+    [19], 
+    [21], 
+    null,
+    [19], 
+    null, 
+    [26], 
+    null, 
+    [24], 
+    null, 
+    null, 
+    null, 
+    [19], 
+    [19], 
+    [31], 
+    null, 
+    [28],
+    null, 
+    [24], 
+    null, 
+    [23], 
+    null, 
+    [21], 
+    null, 
+    null, 
+    null, 
+    [29], 
+    [29], 
+    [28], 
+    null, 
+    [24], 
+    null, 
+    [26], 
+    null, 
+    [24]
+];
+var tempo = 180;
 var song_button = document.getElementById("playSong");
 song_button.addEventListener('click', function() {
     playSong(piano_sounds, beats, tempo);
@@ -143,8 +191,6 @@ function createDrums(sounds) {
 }
 
 function playNote(sounds, selected_key) {
-
-
     var note_index = selected_key.id;
 
     var sound = new Audio;
@@ -186,23 +232,24 @@ function playChord(sounds, selected_key) {
 }
 
 function playSong(sounds, beats, tempo) {
-    for(var i = 0; i < beats.length; i++) {
-        playBeat(sounds, beats[i], tempo, i);
+    for(var beat_num = 0; beat_num < beats.length; beat_num++) {
+        var current_beat = beats[beat_num];
+        playBeat(sounds, current_beat, beat_num, tempo);
     }
-};
+}
 
-function playBeat(sounds, beat, tempo, i) {
-    var beat_length = 60000.0 / tempo;
-    // Rest beat
-    if(beat == null) {
-        setTimeout(function() {
-        }, tempo * beat_length)
-    }
-    // Beat with notes
-    else {
-        var key = document.getElementById(beat);
-        setTimeout(function() {
-            playNote(sounds, key);
-        }, (i * beat_length));
-    }
+function playBeat(sounds, current_beat, beat_num, tempo) {
+    var beat_length_ms = 60000.0 / tempo;
+    setTimeout(function() {
+        if(current_beat == null) {
+            // Empty for rest beat
+        }
+        else {
+            for(var note_num = 0; note_num < current_beat.length; note_num++) {
+                var current_note = current_beat[note_num];
+                var key = document.getElementById(current_note);
+                playNote(sounds, key);
+            }
+        }
+    }, beat_num * beat_length_ms) // Sets wait time between each beat
 }
