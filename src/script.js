@@ -1,17 +1,9 @@
-
-
 var piano_sounds = createSoundArray("piano");
+var drum_sounds = createSoundArray("drums");
 
 // Piano Renderer
 createPiano(piano_sounds);
-
-// Chord Player
-var chord_button = document.getElementById("playChord");
-
-chord_button.addEventListener('click', function() {
-    var chord_selection = document.getElementById("chords").selectedIndex;
-    playChord(sounds, chord_selection + 12);
-});
+createDrums(drum_sounds);
 
 // Demo Song Player
 var beats = [7, 7, 9, null, 7, null, 12, null, 11, null, null, null, 7, 7, 9, null, 7, null, 14, null, 12, null, null, null, 7, 7, 19, null, 16, null, 12, null, 11, null, 9, null, null, null, 17, 17, 16, null, 12, null, 14, null, 12];
@@ -123,7 +115,7 @@ function createPiano(sounds) {
                 playNote(sounds, this);
             }
             else if(document.getElementById("mode").selectedIndex == 1) {
-                playClickChord(sounds, this);
+                playChord(sounds, this);
             }
         });
 
@@ -150,9 +142,6 @@ function createDrums(sounds) {
 	}
 }
 
-var drum_sounds = createSoundArray("drums");
-createDrums(drum_sounds);
-
 function playNote(sounds, selected_key) {
 
 
@@ -174,29 +163,7 @@ function playNote(sounds, selected_key) {
 }
 
 // Plays a three note chord from given array of sounds and a given root note index
-function playChord(sounds, root_index) {
-    var root_key, third_key, fifth_key;
-
-    var piano = document.getElementById("pianoBlock");
-    var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
-
-    root_key = piano.children[root_index];
-
-    if(degree_selection == "minor") {
-        third_key = piano.children[root_index + 3];
-    }
-    else {
-        third_key = piano.children[root_index + 4];
-    }
-
-    fifth_key = piano.children[root_index + 7];
-    
-    playNote(sounds, root_key);
-    playNote(sounds, third_key);
-    playNote(sounds, fifth_key);
-}
-
-function playClickChord(sounds, selected_key) {
+function playChord(sounds, selected_key) {
     var root_key, third_key, fifth_key;
 
     var piano = document.getElementById("pianoBlock");
