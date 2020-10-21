@@ -2,6 +2,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   background-color: rgb(165, 165, 185);
+  overflow: hidden;
 }
 
 #inst_switch {
@@ -20,7 +21,7 @@ body {
 
 .Drum {
 	float: right;
-	transform: translate(260%);
+	transform: translate(200%);
 }
 
 .Piano {
