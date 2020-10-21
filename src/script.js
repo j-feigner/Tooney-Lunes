@@ -172,6 +172,7 @@ function createPiano(sounds) {
     }
 }
 
+// Creates clickListeners for each kit piece in the drum block
 function createDrums(sounds) {
 	var drum_container = document.getElementById("drumBlock");
 	var kit            = drum_container.children;
@@ -190,6 +191,8 @@ function createDrums(sounds) {
 	}
 }
 
+// Plays a given sound file when a key is clicked on the piano
+// Expects an array of sound sources and the selected key div element
 function playNote(sounds, selected_key) {
     var note_index = selected_key.id;
 
@@ -231,6 +234,10 @@ function playChord(sounds, selected_key) {
     playNote(sounds, fifth_key);
 }
 
+// Plays a song with a specified instrument at a specified tempo
+// Expects an array of sound source files
+// Expects a two dimensional array of song data
+// Expects an integer tempo value in beats per minute
 function playSong(sounds, beats, tempo) {
     for(var beat_num = 0; beat_num < beats.length; beat_num++) {
         var current_beat = beats[beat_num];
@@ -238,6 +245,7 @@ function playSong(sounds, beats, tempo) {
     }
 }
 
+// Timeout function called in playSong() to create tempo
 function playBeat(sounds, current_beat, beat_num, tempo) {
     var beat_length_ms = 60000.0 / tempo;
     setTimeout(function() {
@@ -245,6 +253,7 @@ function playBeat(sounds, current_beat, beat_num, tempo) {
             // Empty for rest beat
         }
         else {
+            // Loop through and play all notes in current beat
             for(var note_num = 0; note_num < current_beat.length; note_num++) {
                 var current_note = current_beat[note_num];
                 var key = document.getElementById(current_note);
