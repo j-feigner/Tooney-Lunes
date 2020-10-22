@@ -6,9 +6,16 @@ function main() {
     
     var sounds = createGuitarSoundArray();
 
+    var is_strumming = false;
+    var mouse_x = 0;
+    var mouse_y = 0;
+
+    // Create string line
+    var string1 = new GuitarString(100, 100, 700, 40, sounds, canvas);
+    string1.drawString();
 }
 
-function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds) {
+function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     this.rect = {
         x: rect_x,
         y: rect_y,
@@ -20,7 +27,14 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds) {
     this.is_strumming = false;
 
     this.drawString = function() {
-
+        canvas_context = canvas.getContext("2d");
+        canvas_context.lineWidth = 10;
+        canvas_context.lineCap = "round";
+        canvas_context.beginPath();
+        canvas_context.moveTo(this.rect.x, this.rect.y);
+        canvas_context.lineTo(this.rect.x + this.rect.width, this.rect.y);
+        canvas_context.stroke();
+        canvas_context.closePath();
     };
 
     this.pluckString = function() {
