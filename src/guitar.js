@@ -22,6 +22,9 @@ function main() {
     });
 }
 
+// A GuitarString object consists of a rectangular bounding box for registering click events,
+// and an array of sounds the string is capable of producing. This sound produced by the string changes
+// depending on the fret value.
 function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     this.rect = {
         x: rect_x,
@@ -33,10 +36,11 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     this.fret = 0;
     this.is_strumming = false;
 
+    // Renders the string to the canvas
     this.drawString = function() {
         ctx = canvas.getContext("2d");
 
-        // Draw stroke for string 
+        // Draw stroke for string visual
         ctx.lineWidth = 10;
         ctx.lineCap = "round";
         ctx.beginPath();
@@ -45,7 +49,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         ctx.stroke();
         ctx.closePath();
 
-        // Outline bounding rectangle
+        // Outline for rectangular bounding box
         ctx.lineWidth = 1;
         ctx.strokeStyle = "red";
         ctx.beginPath();
@@ -54,6 +58,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         ctx.closePath();
     };
 
+    // Plays string audio based on current fret value
     this.pluckString = function() {
         var sound = new Audio();
         sound.src = sounds[this.fret].src;
@@ -61,6 +66,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         delete sound;
     };
 
+    // Boolean function to determine if a given x,y pair is within the string's bounding box
     this.isStrummed = function(x, y) {
         var x_lower = this.rect.x;
         var x_upper = this.rect.x + this.rect.width;
@@ -75,6 +81,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     };
 }
 
+// Creates canvas elemtn in script too enable IntelliSense in VS Code, can be moved to main() later
 function createCanvas() {
     var guitar_block = document.getElementById("guitarBlock");
     var canvas = document.createElement("canvas");
@@ -87,6 +94,7 @@ function createCanvas() {
     return canvas;
 }
 
+// Creates initial array of guitar sound sources from source files
 function createGuitarSoundArray() {
     var sound_srcs = [
         "sound_files/guitar/1_0_E3.mp3",
