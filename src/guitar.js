@@ -10,7 +10,7 @@ function main() {
     var mouse_x = 0;
     var mouse_y = 0;
 
-    var string1 = new GuitarString(100, 100, 800, 10, sounds, canvas);
+    var string1 = new GuitarString(100, 100, 800, 20, sounds, canvas);
     string1.drawString();
 
     canvas.addEventListener("click", function(event) {
@@ -36,11 +36,21 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
 
     this.drawString = function() {
         ctx = canvas.getContext("2d");
+
+        // Draw stroke for string 
         ctx.lineWidth = 10;
         ctx.lineCap = "round";
         ctx.beginPath();
         ctx.moveTo(this.rect.x, this.rect.y);
         ctx.lineTo(this.rect.x + this.rect.width, this.rect.y);
+        ctx.stroke();
+        ctx.closePath();
+
+        // Outline bounding rectangle
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "red";
+        ctx.beginPath();
+        ctx.rect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
         ctx.stroke();
         ctx.closePath();
     };
