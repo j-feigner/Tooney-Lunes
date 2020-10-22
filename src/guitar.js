@@ -12,6 +12,15 @@ function main() {
 
     var string1 = new GuitarString(100, 100, 800, 10, sounds, canvas);
     string1.drawString();
+
+    canvas.addEventListener("click", function(event) {
+        var mouse_x = event.offsetX;
+        var mouse_y = event.offsetY;
+        if(string1.isStrummed(mouse_x, mouse_y)) {
+            sounds[0].play();
+            sounds[0].currentTime = 0;
+        }
+    });
 }
 
 function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
