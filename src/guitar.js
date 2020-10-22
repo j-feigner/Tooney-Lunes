@@ -2,23 +2,32 @@ window.onload = main;
 
 function main() {
     var canvas = createCanvas();
-    var canvas_context = canvas.getContext("2d");
     
     var sounds = createGuitarSoundArray();
 
-    var is_strumming = false;
-    var mouse_x = 0;
-    var mouse_y = 0;
+    var strings = [];
+    var string_width = 800;
+    var string_height = 20;
+    var string_offset = 50;
 
-    var string1 = new GuitarString(100, 100, 800, 20, sounds, canvas);
-    string1.drawString();
+    for(var i = 0; i < 6; i++) {
+        strings[i] = new GuitarString(string_offset, 
+                                      string_offset + string_offset * i,
+                                      string_width,
+                                      string_height,
+                                      sounds,
+                                      canvas);
+        strings[i].drawString();
+    }
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
         var mouse_y = event.offsetY;
-        if(string1.isStrummed(mouse_x, mouse_y)) {
-            string1.pluckString();
-        }
+        strings.forEach(function(string) {
+            if(string.isStrummed(mouse_x, mouse_y)) {
+                string.pluckString();
+            }
+        });
     });
 }
 
@@ -43,6 +52,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         // Draw stroke for string visual
         ctx.lineWidth = 10;
         ctx.lineCap = "round";
+        ctx.strokeStyle = "black";
         ctx.beginPath();
         ctx.moveTo(this.rect.x, this.rect.y);
         ctx.lineTo(this.rect.x + this.rect.width, this.rect.y);
