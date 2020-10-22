@@ -17,8 +17,7 @@ function main() {
         var mouse_x = event.offsetX;
         var mouse_y = event.offsetY;
         if(string1.isStrummed(mouse_x, mouse_y)) {
-            sounds[0].play();
-            sounds[0].currentTime = 0;
+            string1.pluckString();
         }
     });
 }
@@ -56,7 +55,10 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     };
 
     this.pluckString = function() {
-
+        var sound = new Audio();
+        sound.src = sounds[this.fret].src;
+        sound.play();
+        delete sound;
     };
 
     this.isStrummed = function(x, y) {
