@@ -31,6 +31,7 @@ function Guitar(sounds, canvas) {
     this.string_width = canvas.width - 100;
     this.string_height = 20;
     this.string_offset = 50;
+    this.strum_delay = 25;
     this.is_strumming = false;
 
     this.createStrings = function() {
@@ -57,9 +58,15 @@ function Guitar(sounds, canvas) {
 
     this.strum = function() {
         for(var i = 0; i < this.strings.length; i++) {
-            this.strings[i].pluck();
+            this.strumDelay(i);
         }
-    }
+    };
+
+    this.strumDelay = function(i) {
+        setTimeout(function() {
+            this.strings[i].pluck();
+        }.bind(this), this.strum_delay * i);
+    };
 }
 
 // A GuitarString object consists of a rectangular bounding box for registering click events,
