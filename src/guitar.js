@@ -31,6 +31,21 @@ function main() {
     });
 }
 
+function Guitar(canvas) {
+    this.strings = [];
+    this.createStrings = function() {
+
+    };
+
+    this.drawFretboard = function() {
+
+    };
+
+    this.drawStrings = function() {
+
+    };
+}
+
 // A GuitarString object consists of a rectangular bounding box for registering click events,
 // and an array of sounds the string is capable of producing. This sound produced by the string changes
 // depending on the fret value.
@@ -99,8 +114,8 @@ function createCanvas() {
     var canvas = document.createElement("canvas");
     guitar_block.appendChild(canvas);
 
-    canvas.height = 600;
-    canvas.width = 1000;
+    canvas.height = window.innerHeight - 50;
+    canvas.width = window.innerWidth - 50;
     canvas.style.border = "1px solid black";
 
     return canvas;
