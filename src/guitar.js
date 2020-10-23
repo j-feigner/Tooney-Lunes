@@ -15,7 +15,7 @@ function main() {
                                       string_offset + string_offset * i,
                                       string_width,
                                       string_height,
-                                      sounds,
+                                      sounds[i],
                                       canvas);
         strings[i].drawString();
     }
@@ -71,7 +71,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     // Plays string audio based on current fret value
     this.pluckString = function() {
         var sound = new Audio();
-        sound.src = sounds[this.fret].src;
+        sound.src = sounds.src;
         sound.play();
         delete sound;
     };
