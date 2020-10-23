@@ -5,25 +5,14 @@ function main() {
     
     var sounds = createGuitarSoundArray();
 
-    var strings = [];
-    var string_width = 800;
-    var string_height = 20;
-    var string_offset = 50;
-
-    for(var i = 0; i < 6; i++) {
-        strings[i] = new GuitarString(string_offset, 
-                                      string_offset + string_offset * i,
-                                      string_width,
-                                      string_height,
-                                      sounds[i],
-                                      canvas);
-        strings[i].drawString();
-    }
+    var guitar = new Guitar(sounds, canvas);
+    guitar.createStrings();
+    guitar.drawStrings();
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
         var mouse_y = event.offsetY;
-        strings.forEach(function(string) {
+        guitar.strings.forEach(function(string) {
             if(string.isStrummed(mouse_x, mouse_y)) {
                 string.pluckString();
             }
@@ -31,10 +20,23 @@ function main() {
     });
 }
 
-function Guitar(canvas) {
+function Guitar(sounds, canvas) {
+    this.sounds = sounds;
     this.strings = [];
-    this.createStrings = function() {
 
+    this.string_width = 800;
+    this.string_height = 20;
+    this.string_offset = 50;
+
+    this.createStrings = function() {
+        for(var i = 0; i < 6; i++) {
+            this.strings[i] = new GuitarString(this.string_offset, 
+                                          this.string_offset + this.string_offset * i,
+                                          this.string_width,
+                                          this.string_height,
+                                          sounds[i],
+                                          canvas);
+        }
     };
 
     this.drawFretboard = function() {
@@ -42,8 +44,14 @@ function Guitar(canvas) {
     };
 
     this.drawStrings = function() {
-
+        for(var i = 0; i < this.strings.length; i++) {
+            this.strings[i].drawString();
+        }
     };
+
+    this.strum = function() {
+        
+    }
 }
 
 // A GuitarString object consists of a rectangular bounding box for registering click events,
