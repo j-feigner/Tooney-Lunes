@@ -63,8 +63,31 @@ function Guitar(sounds, canvas) {
 
     this.drawFretboard = function() {
         ctx = canvas.getContext("2d");
+        // Draw fretboard background
         ctx.fillStyle = "rgb(75, 60, 60)";
         ctx.fillRect(this.fretboard.x, this.fretboard.y, this.fretboard.width, this.fretboard.height);
+        // Draw individual frets
+        ctx.strokeStyle = "silver";
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(100, 100);
+        ctx.lineTo(100, 370);
+        ctx.moveTo(200, 100);
+        ctx.lineTo(200, 370);
+        ctx.moveTo(300, 100);
+        ctx.lineTo(300, 370);
+        ctx.moveTo(400, 100);
+        ctx.lineTo(400, 370);
+        ctx.moveTo(500, 100);
+        ctx.lineTo(500, 370);
+        ctx.moveTo(600, 100);
+        ctx.lineTo(600, 370);
+        ctx.moveTo(700, 100);
+        ctx.lineTo(700, 370);
+        ctx.stroke();
+        ctx.closePath();
+
     };
 
     // Creates and draws all approoriate guitar elements to the canvas
@@ -121,12 +144,14 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         ctx.closePath();
 
         // Outline for rectangular bounding box 
+        /*
         ctx.lineWidth = 1;
         ctx.strokeStyle = "red";
         ctx.beginPath();
         ctx.rect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
         ctx.stroke();
         ctx.closePath();
+        */
     };
 
     // Plays string audio based on current fret value
