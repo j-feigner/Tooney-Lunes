@@ -34,14 +34,17 @@ function Guitar(sounds, canvas) {
     this.strum_delay = 25;
     this.is_strumming = false;
 
+    // Initializes array of GuitarString objects, called in Guitar.draw()
     this.createStrings = function() {
         for(var i = 0; i < 6; i++) {
-            this.strings[i] = new GuitarString(this.string_offset, 
-                                          300 + this.string_offset * i,
-                                          this.string_width,
-                                          this.string_height,
-                                          sounds[i],
-                                          canvas);
+            this.strings[i] = new GuitarString(
+                this.string_offset, 
+                200 + 70 * i,
+                this.string_width,
+                this.string_height,
+                sounds[i],
+                canvas
+            );
         }
     };
 
@@ -49,6 +52,7 @@ function Guitar(sounds, canvas) {
 
     };
 
+    // Creates and draws all approoriate guitar elements to the canvas
     this.draw = function() {
         this.createStrings();
         for(var i = 0; i < this.strings.length; i++) {
@@ -56,12 +60,14 @@ function Guitar(sounds, canvas) {
         }
     };
 
+    // Plucks all strings of the guitar with a given delay
     this.strum = function() {
         for(var i = 0; i < this.strings.length; i++) {
             this.strumDelay(i);
         }
     };
 
+    // Helper function for Guitar.strum() to allow for delay between each sring pluck
     this.strumDelay = function(i) {
         setTimeout(function() {
             this.strings[i].pluck();
@@ -98,14 +104,12 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         ctx.closePath();
 
         // Outline for rectangular bounding box 
-        /*
         ctx.lineWidth = 1;
         ctx.strokeStyle = "red";
         ctx.beginPath();
         ctx.rect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
         ctx.stroke();
         ctx.closePath();
-        */
     };
 
     // Plays string audio based on current fret value
