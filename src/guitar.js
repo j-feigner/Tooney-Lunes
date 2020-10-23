@@ -9,13 +9,31 @@ function main() {
     guitar.draw();
 
     canvas.addEventListener("click", function(event) {
-        var mouse_x = event.offsetX;
-        var mouse_y = event.offsetY;
-        guitar.strings.forEach(function(string) {
-            if(string.isStrummed(mouse_x, mouse_y)) {
-                string.pluck();
-            }
-        });
+
+    });
+
+    canvas.addEventListener("mousedown", function() {
+        if(!guitar.is_strumming) {
+            guitar.is_strumming = true;
+        }
+    });
+
+    canvas.addEventListener("mousemove", function(event) {
+        if(guitar.is_strumming) {
+            var mouse_x = event.offsetX;
+            var mouse_y = event.offsetY;
+            guitar.strings.forEach(function(string) {
+                if(string.isStrummed(mouse_x, mouse_y)) {
+                    string.pluck();
+                }
+            });
+        }
+    });
+
+    canvas.addEventListener("mouseup", function() {
+        if(guitar.is_strumming) {
+            guitar.is_strumming = false;
+        }
     });
 
     document.addEventListener("keydown", function(event){
