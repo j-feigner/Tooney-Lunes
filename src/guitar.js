@@ -6,32 +6,37 @@ function main() {
     var sounds = createGuitarSoundArray();
 
     var guitar = new Guitar(sounds, canvas);
-    guitar.createStrings();
-    guitar.drawStrings();
+    guitar.draw();
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
         var mouse_y = event.offsetY;
         guitar.strings.forEach(function(string) {
             if(string.isStrummed(mouse_x, mouse_y)) {
-                string.pluckString();
+                string.pluck();
             }
         });
+    });
+
+    document.addEventListener("keydown", function(event){
+        if(event.key == "Enter") {
+            guitar.strum();
+        }
     });
 }
 
 function Guitar(sounds, canvas) {
     this.sounds = sounds;
     this.strings = [];
-
-    this.string_width = 800;
+    this.string_width = canvas.width - 100;
     this.string_height = 20;
     this.string_offset = 50;
+    this.is_strumming = false;
 
     this.createStrings = function() {
         for(var i = 0; i < 6; i++) {
             this.strings[i] = new GuitarString(this.string_offset, 
-                                          this.string_offset + this.string_offset * i,
+                                          300 + this.string_offset * i,
                                           this.string_width,
                                           this.string_height,
                                           sounds[i],
@@ -43,14 +48,17 @@ function Guitar(sounds, canvas) {
 
     };
 
-    this.drawStrings = function() {
+    this.draw = function() {
+        this.createStrings();
         for(var i = 0; i < this.strings.length; i++) {
             this.strings[i].drawString();
         }
     };
 
     this.strum = function() {
-        
+        for(var i = 0; i < this.strings.length; i++) {
+            this.strings[i].pluck();
+        }
     }
 }
 
@@ -94,7 +102,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     };
 
     // Plays string audio based on current fret value
-    this.pluckString = function() {
+    this.pluck = function() {
         var sound = new Audio();
         sound.src = sounds[this.fret];
         sound.play();
