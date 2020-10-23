@@ -71,7 +71,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     // Plays string audio based on current fret value
     this.pluckString = function() {
         var sound = new Audio();
-        sound.src = sounds.src;
+        sound.src = sounds[this.fret];
         sound.play();
         delete sound;
     };
@@ -107,19 +107,49 @@ function createCanvas() {
 // Creates initial array of guitar sound sources from source files
 function createGuitarSoundArray() {
     var sound_srcs = [
-        "sound_files/guitar/1_0_E3.mp3",
-        "sound_files/guitar/2_0_A3.mp3",
-        "sound_files/guitar/3_0_D4.mp3",
-        "sound_files/guitar/4_0_G4.mp3",
-        "sound_files/guitar/5_0_B4.mp3",
-        "sound_files/guitar/6_0_E5.mp3"
+        [
+            "sound_files/guitar/1_0_E3.mp3",
+            "sound_files/guitar/1_1_F3.mp3",
+            "sound_files/guitar/1_2_Fs3.mp3",
+            "sound_files/guitar/1_3_G3.mp3",
+            "sound_files/guitar/1_4_Gs3.mp3"
+        ],
+        [
+            "sound_files/guitar/2_0_A3.mp3",
+            "sound_files/guitar/2_1_As3.mp3",
+            "sound_files/guitar/2_2_B3.mp3",
+            "sound_files/guitar/2_3_C4.mp3",
+            "sound_files/guitar/2_4_Cs4.mp3"
+        ],
+        [
+            "sound_files/guitar/3_0_D4.mp3",
+            "sound_files/guitar/3_1_Ds4.mp3",
+            "sound_files/guitar/3_2_E4.mp3",
+            "sound_files/guitar/3_3_F4.mp3",
+            "sound_files/guitar/3_4_Fs4.mp3"
+        ],
+        [
+            "sound_files/guitar/4_0_G4.mp3",
+            "sound_files/guitar/4_1_Gs4.mp3",
+            "sound_files/guitar/4_2_A4.mp3",
+            "sound_files/guitar/4_3_As4.mp3",
+            "sound_files/guitar/4_4_B4.mp3"
+        ],
+        [
+            "sound_files/guitar/5_0_B4.mp3",
+            "sound_files/guitar/5_1_C5.mp3",
+            "sound_files/guitar/5_2_Cs5.mp3",
+            "sound_files/guitar/5_3_D5.mp3",
+            "sound_files/guitar/5_4_Ds5.mp3"
+        ],
+        [
+            "sound_files/guitar/6_0_E5.mp3",
+            "sound_files/guitar/6_1_F5.mp3",
+            "sound_files/guitar/6_2_Fs5.mp3",
+            "sound_files/guitar/6_3_G5.mp3",
+            "sound_files/guitar/6_4_Gs5.mp3"
+        ]
     ];
 
-    var sounds = [];
-    for(var i = 0; i < sound_srcs.length; i++) {
-        var sound = new Audio(sound_srcs[i]);
-        sounds.push(sound);
-    }
-
-    return sounds;
+    return sound_srcs;
 }
