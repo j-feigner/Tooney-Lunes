@@ -54,18 +54,20 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         ctx.lineCap = "round";
         ctx.strokeStyle = "black";
         ctx.beginPath();
-        ctx.moveTo(this.rect.x, this.rect.y);
-        ctx.lineTo(this.rect.x + this.rect.width, this.rect.y);
+        ctx.moveTo(this.rect.x, this.rect.y + this.rect.height / 2);
+        ctx.lineTo(this.rect.x + this.rect.width, this.rect.y + this.rect.height / 2);
         ctx.stroke();
         ctx.closePath();
 
-        // Outline for rectangular bounding box
+        // Outline for rectangular bounding box 
+        /*
         ctx.lineWidth = 1;
         ctx.strokeStyle = "red";
         ctx.beginPath();
         ctx.rect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
         ctx.stroke();
         ctx.closePath();
+        */
     };
 
     // Plays string audio based on current fret value
