@@ -30,19 +30,17 @@ function Guitar(sounds, canvas) {
     this.strings = [];
 
     // Fretboard properties
-    this.fretboard= {
-        margin_x: 10,
-        margin_y: 10,
-        x: this.fretboard.margin_x,
-        y: this.fretboard.margin_y,
-        width: canvas.width - this.fretboard.margin_x * 2,
-        height: canvas.height - this.fretboard.margin_y * 2
+    this.fretboard = {
+        x: 100,
+        y: 100,
+        width: 600,
+        height: 270
     };
 
     // String properties
     this.string_height = this.fretboard_height / 50;
     this.string_width = this.fretboard_width;
-    this.string_gap = this.fretboard_height / 8;
+    this.string_gap = 30;
     this.string_offset = this.string_height * 4;
 
     // Strum properties
@@ -53,10 +51,10 @@ function Guitar(sounds, canvas) {
     this.createStrings = function() {
         for(var i = 0; i < 6; i++) {
             this.strings[i] = new GuitarString(
-                this.fretboard.x, 
-                this.fretboard.y,
-                this.fretboard.width,
-                this.fretboard.height,
+                100, 
+                50 * i + 100,
+                600,
+                20,
                 sounds[i],
                 canvas
             );
@@ -113,24 +111,22 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         ctx = canvas.getContext("2d");
 
         // Draw stroke for string visual
-        ctx.lineWidth = this.rect.height / 50;
+        ctx.lineWidth = 10;
         ctx.lineCap = "round";
         ctx.strokeStyle = "white";
         ctx.beginPath();
-        ctx.moveTo(this.rect.x, this.rect.y + this.rect.height);
-        ctx.lineTo(this.rect.x + this.rect.width, this.rect.y + this.rect.height);
+        ctx.moveTo(this.rect.x, this.rect.y + this.rect.height / 2);
+        ctx.lineTo(this.rect.x + this.rect.width, this.rect.y + this.rect.height / 2);
         ctx.stroke();
         ctx.closePath();
 
         // Outline for rectangular bounding box 
-        /*
         ctx.lineWidth = 1;
         ctx.strokeStyle = "red";
         ctx.beginPath();
         ctx.rect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
         ctx.stroke();
         ctx.closePath();
-        */
     };
 
     // Plays string audio based on current fret value
