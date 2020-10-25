@@ -48,7 +48,6 @@ function main() {
 function Guitar(sounds, canvas) {
     this.sounds = sounds;
     this.strings = [];
-    this.frets = [];
 
     // Fretboard properties
     this.fretboard_rect = {
@@ -57,6 +56,7 @@ function Guitar(sounds, canvas) {
         width: 600,
         height: 270
     };
+    this.fret_width = 0;
 
     // String properties
     this.string_height = this.fretboard_height / 50;
@@ -83,8 +83,10 @@ function Guitar(sounds, canvas) {
     };
 
     this.createFrets = function() {
-        for(var i = 0; i < 4; I++) {
+        for(var i = 0; i < 4; i++) {
+            for(var j = 0; j < 6; j++) {
 
+            }
         }
     }
 
@@ -144,17 +146,32 @@ function Guitar(sounds, canvas) {
 // and an array of sounds the string is capable of producing. This sound produced by the string changes
 // depending on the fret value.
 function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
-    this.rect = {
+    this.string_rect = {
         x: rect_x,
         y: rect_y,
         width: rect_w,
         height: rect_h
     };
     this.sounds = sounds;
-    this.fret = 0;
+    this.current_fret = 0;
     this.is_playing = false;
     this.play_delay = 300;
     this.pluck_intensity = 100;
+
+    this.createFrets = function() {
+        var frets = [];
+        for(var i = 0; i < 6; i++) {
+            frets[i] = {
+                x: this.string_rect.x * i,
+                y: this.string_rect.y,
+                width: this.string_rect.width / 6,
+                height: this.string_rect.height * 2
+            };
+        }
+        return frets;
+    };
+
+    this.frets = this.createFrets();
 
     // Renders the string to the canvas
     this.drawString = function() {
@@ -170,27 +187,34 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
             ctx.strokeStyle = "white";
         }
         ctx.beginPath();
-        ctx.moveTo(this.rect.x, this.rect.y + this.rect.height / 2);
-        ctx.lineTo(this.rect.x + this.rect.width, this.rect.y + this.rect.height / 2);
+        ctx.moveTo(this.string_rect.x, this.string_rect.y + this.string_rect.height / 2);
+        ctx.lineTo(this.string_rect.x + this.string_rect.width, this.string_rect.y + this.string_rect.height / 2);
         ctx.stroke();
         ctx.closePath();
 
         // Outline for rectangular bounding box 
-        /*
         ctx.lineWidth = 1;
         ctx.strokeStyle = "red";
         ctx.beginPath();
-        ctx.rect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
+        ctx.rect(this.string_rect.x, this.string_rect.y, this.string_rect.width, this.string_rect.height);
         ctx.stroke();
         ctx.closePath();
-        */
+
+        // Outline for fret bounding boxes
+        ctx.strokeStyle = "orange";
+        ctx.beginPath();
+        for(var i = 0; i < this.frets.length; i++) {
+            ctx.rect(this.frets[i].x, this.frets[i].y, this.frets[i].width, this.frets[i].height);
+            ctx.stroke();
+        }
+        ctx.closePath();
     };
 
     // Plays string audio based on current fret value
     this.pluck = function() {
         if(!this.is_playing) {
             var sound = new Audio();        // Play note
-            sound.src = sounds[this.fret];
+            sound.src = sounds[this.current_fret];
             sound.play();
             delete sound;
 
@@ -205,32 +229,10 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
 
     // Boolean function to determine if a given x,y pair is within the string's bounding box
     this.isStrummed = function(x, y) {
-        var x_lower = this.rect.x;
-        var x_upper = this.rect.x + this.rect.width;
-        var y_lower = this.rect.y;
-        var y_upper = this.rect.y + this.rect.height;
-        if(x > x_lower && x < x_upper && y > y_lower && y < y_upper ) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    };
-}
-
-function GuitarFret(rect_x, rect_y, rect_width, rect_height) {
-    this.rect = {
-        x: rect_x,
-        y: rect_y,
-        width: rect_width,
-        height: rect_height
-    };
-
-    this.isFretted = function() {
-        var x_lower = this.rect.x;
-        var x_upper = this.rect.x + this.rect.width;
-        var y_lower = this.rect.y;
-        var y_upper = this.rect.y + this.rect.height;
+        var x_lower = this.string_rect.x;
+        var x_upper = this.string_rect.x + this.string_rect.width;
+        var y_lower = this.string_rect.y;
+        var y_upper = this.string_rect.y + this.string_rect.height;
         if(x > x_lower && x < x_upper && y > y_lower && y < y_upper ) {
             return true;
         }
