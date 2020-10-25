@@ -10,7 +10,11 @@ function main() {
     guitar.draw();
 
     canvas.addEventListener("click", function(event) {
-
+        var mouse_x = event.offsetX;
+        var mouse_y = event.offsetY;
+        guitar.strings.forEach(function(string) {
+            string.fretString(mouse_x, mouse_y);
+        });
     });
 
     canvas.addEventListener("mousedown", function() {
@@ -158,12 +162,13 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     this.play_delay = 300;
     this.pluck_intensity = 100;
 
+    // Creates array of rectangular bounding boxes that determine fretting of string
     this.createFrets = function() {
         var frets = [];
         for(var i = 0; i < 6; i++) {
             frets[i] = {
-                x: this.string_rect.x * i,
-                y: this.string_rect.y,
+                x: this.string_rect.x * i + 100,
+                y: this.string_rect.y - 10,
                 width: this.string_rect.width / 6,
                 height: this.string_rect.height * 2
             };
@@ -231,6 +236,14 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     this.isStrummed = function(x, y) {
         return isInBounds(x, y, this.string_rect);
     };
+
+    this.fretString = function(x, y) {
+        for(var i = 0; i < this.frets.length; i++) {
+            if(isInBounds(x, y, this.frets[i])) {
+                this.current_fret = i;
+            }
+        }
+    }
 }
 
 // Creates canvas elemtn in script too enable IntelliSense in VS Code, can be moved to main() later
