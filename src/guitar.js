@@ -70,7 +70,7 @@ function Guitar(sounds, canvas) {
         for(var i = 0; i < 6; i++) {
             this.strings[i] = new GuitarString(
                 100, 
-                50 * i + 100,
+                350 - (i * 50),
                 600,
                 20,
                 sounds[i],
@@ -175,12 +175,12 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     // Plays string audio based on current fret value
     this.pluck = function() {
         if(!this.is_playing) {
-            var sound = new Audio();
+            var sound = new Audio();        // Play note
             sound.src = sounds[this.fret];
             sound.play();
             delete sound;
 
-            this.is_playing = true;
+            this.is_playing = true;         // Delay click sensitivity
             setTimeout(function() {
                 this.is_playing = false;
             }.bind(this), 250);
