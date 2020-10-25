@@ -145,7 +145,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     };
     this.sounds = sounds;
     this.fret = 0;
-    this.is_strumming = false;
+    this.is_playing = false;
 
     // Renders the string to the canvas
     this.drawString = function() {
@@ -174,10 +174,17 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
 
     // Plays string audio based on current fret value
     this.pluck = function() {
-        var sound = new Audio();
-        sound.src = sounds[this.fret];
-        sound.play();
-        delete sound;
+        if(!this.is_playing) {
+            var sound = new Audio();
+            sound.src = sounds[this.fret];
+            sound.play();
+            delete sound;
+
+            this.is_playing = true;
+            setTimeout(function() {
+                this.is_playing = false;
+            }.bind(this), 250);
+        }
     };
 
     // Boolean function to determine if a given x,y pair is within the string's bounding box
