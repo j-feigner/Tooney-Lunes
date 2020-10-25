@@ -28,8 +28,8 @@ function main() {
                     string.pluck();
                 }
             });
+            guitar.draw();
         }
-        window.requestAnimationFrame(guitar.draw());
     });
 
     canvas.addEventListener("mouseup", function() {
@@ -48,9 +48,10 @@ function main() {
 function Guitar(sounds, canvas) {
     this.sounds = sounds;
     this.strings = [];
+    this.frets = [];
 
     // Fretboard properties
-    this.fretboard = {
+    this.fretboard_rect = {
         x: 100,
         y: 100,
         width: 600,
@@ -81,11 +82,17 @@ function Guitar(sounds, canvas) {
         }
     };
 
+    this.createFrets = function() {
+        for(var i = 0; i < 4; I++) {
+
+        }
+    }
+
     this.drawFretboard = function() {
         ctx = canvas.getContext("2d");
         // Draw fretboard background
         ctx.fillStyle = "rgb(75, 60, 60)";
-        ctx.fillRect(this.fretboard.x, this.fretboard.y, this.fretboard.width, this.fretboard.height);
+        ctx.fillRect(this.fretboard_rect.x, this.fretboard_rect.y, this.fretboard_rect.width, this.fretboard_rect.height);
         // Draw individual frets
         ctx.strokeStyle = "silver";
         ctx.lineWidth = 4;
@@ -198,6 +205,28 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
 
     // Boolean function to determine if a given x,y pair is within the string's bounding box
     this.isStrummed = function(x, y) {
+        var x_lower = this.rect.x;
+        var x_upper = this.rect.x + this.rect.width;
+        var y_lower = this.rect.y;
+        var y_upper = this.rect.y + this.rect.height;
+        if(x > x_lower && x < x_upper && y > y_lower && y < y_upper ) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+}
+
+function GuitarFret(rect_x, rect_y, rect_width, rect_height) {
+    this.rect = {
+        x: rect_x,
+        y: rect_y,
+        width: rect_width,
+        height: rect_height
+    };
+
+    this.isFretted = function() {
         var x_lower = this.rect.x;
         var x_upper = this.rect.x + this.rect.width;
         var y_lower = this.rect.y;
