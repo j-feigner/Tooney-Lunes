@@ -6,6 +6,7 @@ function main() {
     var sounds = createGuitarSoundArray();
 
     var guitar = new Guitar(sounds, canvas);
+    guitar.createStrings();
     guitar.draw();
 
     canvas.addEventListener("click", function(event) {
@@ -28,6 +29,7 @@ function main() {
                 }
             });
         }
+        window.requestAnimationFrame(guitar.draw());
     });
 
     canvas.addEventListener("mouseup", function() {
@@ -62,7 +64,7 @@ function Guitar(sounds, canvas) {
     this.string_offset = this.string_height * 4;
 
     // Strum properties
-    this.strum_delay = 25;
+    this.strum_delay = 250;
     this.is_strumming = false;
 
     // Initializes array of GuitarString objects, called in Guitar.draw()
@@ -110,8 +112,6 @@ function Guitar(sounds, canvas) {
 
     // Creates and draws all approoriate guitar elements to the canvas
     this.draw = function() {
-        this.createStrings();
-
         this.drawFretboard();
         for(var i = 0; i < this.strings.length; i++) {
             this.strings[i].drawString();
@@ -146,6 +146,8 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     this.sounds = sounds;
     this.fret = 0;
     this.is_playing = false;
+    this.play_delay = 300;
+    this.pluck_intensity = 100;
 
     // Renders the string to the canvas
     this.drawString = function() {
@@ -154,7 +156,12 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         // Draw stroke for string visual
         ctx.lineWidth = 10;
         ctx.lineCap = "round";
-        ctx.strokeStyle = "white";
+        if(this.is_playing) {
+            ctx.strokeStyle = "yellow";
+        }
+        else {
+            ctx.strokeStyle = "white";
+        }
         ctx.beginPath();
         ctx.moveTo(this.rect.x, this.rect.y + this.rect.height / 2);
         ctx.lineTo(this.rect.x + this.rect.width, this.rect.y + this.rect.height / 2);
@@ -180,10 +187,12 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
             sound.play();
             delete sound;
 
+            
+
             this.is_playing = true;         // Delay click sensitivity
             setTimeout(function() {
                 this.is_playing = false;
-            }.bind(this), 250);
+            }.bind(this), this.play_delay);
         }
     };
 
