@@ -15,6 +15,7 @@ function main() {
         guitar.strings.forEach(function(string) {
             string.fretString(mouse_x, mouse_y);
         });
+        guitar.draw();
     });
 
     canvas.addEventListener("mousedown", function() {
@@ -86,16 +87,8 @@ function Guitar(sounds, canvas) {
         }
     };
 
-    this.createFrets = function() {
-        for(var i = 0; i < 4; i++) {
-            for(var j = 0; j < 6; j++) {
-
-            }
-        }
-    }
-
     this.drawFretboard = function() {
-        ctx = canvas.getContext("2d");
+        var ctx = canvas.getContext("2d");
         // Draw fretboard background
         ctx.fillStyle = "rgb(75, 60, 60)";
         ctx.fillRect(this.fretboard_rect.x, this.fretboard_rect.y, this.fretboard_rect.width, this.fretboard_rect.height);
@@ -123,12 +116,34 @@ function Guitar(sounds, canvas) {
 
     };
 
+    this.drawFrets = function() {
+        var ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "red";
+
+        this.strings.forEach(function(string) {
+            var fret = string.current_fret;
+
+            var fret_x = 100 * fret + 50;
+            var fret_y = string.string_rect.y + 10;
+
+            ctx.beginPath();
+            ctx.arc(fret_x, fret_y, 10, 0, 360);
+            ctx.fill();
+            ctx.closePath();
+        });
+    };
+
     // Creates and draws all approoriate guitar elements to the canvas
     this.draw = function() {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         this.drawFretboard();
         for(var i = 0; i < this.strings.length; i++) {
             this.strings[i].drawString();
         }
+        this.drawFrets();
     };
 
     // Plucks all strings of the guitar with a given delay
@@ -160,14 +175,13 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     this.current_fret = 0;
     this.is_playing = false;
     this.play_delay = 300;
-    this.pluck_intensity = 100;
 
     // Creates array of rectangular bounding boxes that determine fretting of string
     this.createFrets = function() {
         var frets = [];
         for(var i = 0; i < 6; i++) {
             frets[i] = {
-                x: this.string_rect.x * i + 100,
+                x: this.string_rect.x * i,
                 y: this.string_rect.y - 10,
                 width: this.string_rect.width / 6,
                 height: this.string_rect.height * 2
@@ -180,7 +194,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
 
     // Renders the string to the canvas
     this.drawString = function() {
-        ctx = canvas.getContext("2d");
+        var ctx = canvas.getContext("2d");
 
         // Draw stroke for string visual
         ctx.lineWidth = 10;
@@ -198,6 +212,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         ctx.closePath();
 
         // Outline for rectangular bounding box 
+        /*
         ctx.lineWidth = 1;
         ctx.strokeStyle = "red";
         ctx.beginPath();
@@ -213,6 +228,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
             ctx.stroke();
         }
         ctx.closePath();
+        */
     };
 
     // Plays string audio based on current fret value
@@ -222,8 +238,6 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
             sound.src = sounds[this.current_fret];
             sound.play();
             delete sound;
-
-            
 
             this.is_playing = true;         // Delay click sensitivity
             setTimeout(function() {
@@ -237,6 +251,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         return isInBounds(x, y, this.string_rect);
     };
 
+    // Checks each fret bounding box and assigns fret number accordingly
     this.fretString = function(x, y) {
         for(var i = 0; i < this.frets.length; i++) {
             if(isInBounds(x, y, this.frets[i])) {
