@@ -229,16 +229,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
 
     // Boolean function to determine if a given x,y pair is within the string's bounding box
     this.isStrummed = function(x, y) {
-        var x_lower = this.string_rect.x;
-        var x_upper = this.string_rect.x + this.string_rect.width;
-        var y_lower = this.string_rect.y;
-        var y_upper = this.string_rect.y + this.string_rect.height;
-        if(x > x_lower && x < x_upper && y > y_lower && y < y_upper ) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return isInBounds(x, y, this.string_rect);
     };
 }
 
@@ -303,4 +294,17 @@ function createGuitarSoundArray() {
     ];
 
     return sound_srcs;
+}
+
+function isInBounds(x, y, rect) {
+    var x_lower = rect.x;
+    var x_upper = rect.x + rect.width;
+    var y_lower = rect.y;
+    var y_upper = rect.y + rect.height;
+    if(x > x_lower && x < x_upper && y > y_lower && y < y_upper ) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
