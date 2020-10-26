@@ -26,7 +26,8 @@ function main() {
                     string.pluck();
                 }
             });
-            guitar.draw();
+            var play = setInterval(guitar.draw(), 20)
+            setTimeout(clearInterval(play), 400);
         }
     });
     canvas.addEventListener("mouseup", function() {
@@ -34,8 +35,21 @@ function main() {
             guitar.is_strumming = false;
         }
     });
+    document.addEventListener("keydown", function(event) {
+        if(event.key == "Enter") {
+            guitar.strum();
+            var play = setInterval(function(){
+                guitar.draw();
+            }, 20);
+            setTimeout(function() {
+                clearInterval(play);
+                guitar.draw();
+            }, 400)
+        }
+    });
 }
 
+// Main guitar object
 function Guitar(canvas) {
     this.sounds = createGuitarSoundArray();
 
@@ -47,12 +61,13 @@ function Guitar(canvas) {
 
     this.fretboard_rect = {
         x: canvas.width / 2 - this.neck_length / 2,
-        y: canvas.height / 3 - this.neck_width / 2,
+        y: canvas.height / 2 - this.neck_width / 2,
         width: this.neck_length,
         height: this.neck_width
     };
 
-    this.strum_delay = 250;
+    this.strum_delay = 25;
+
     this.is_strumming = false;
 
     // Returns an array of Guitar String objects created based on fretboard dimensions
@@ -248,9 +263,8 @@ function createCanvas() {
     var canvas = document.createElement("canvas");
     guitar_block.appendChild(canvas);
 
-    canvas.height = window.innerHeight;
+    canvas.height = window.innerHeight / 1.5;
     canvas.width = window.innerWidth;
-    canvas.style.border = "1px solid black";
 
     return canvas;
 }
