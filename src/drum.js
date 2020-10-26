@@ -9,3 +9,14 @@ function main() {
 
     ctx = canvas.getContext("2d");
 }
+
+function DrumKit() {
+    this.kick = null;
+    this.snare = null;
+    this.hi_hat = null;
+    this.crash = null;
+    this.ride = null;
+    this.floor_tom = null;
+    this.tom1 = null;
+    this.tom2 = null;
+}
