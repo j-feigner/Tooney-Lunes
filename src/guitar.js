@@ -35,18 +35,7 @@ function main() {
             guitar.is_strumming = false;
         }
     });
-    document.addEventListener("keydown", function(event) {
-        if(event.key == "Enter") {
-            guitar.strum();
-            var play = setInterval(function(){
-                guitar.draw();
-            }, 20);
-            setTimeout(function() {
-                clearInterval(play);
-                guitar.draw();
-            }, 400)
-        }
-    });
+
     var pick_button = document.getElementById("pickButton");
     pick_button.addEventListener("click", function() {
         guitar.pick();
@@ -56,6 +45,18 @@ function main() {
         else {
             pick_button.value = "Start Picking";
         }
+    });
+
+    var strum_button = document.getElementById("strumButton");
+    strum_button.addEventListener("click", function() {
+        guitar.strum();
+        var play = setInterval(function(){
+            guitar.draw();
+        }, 20);
+        setTimeout(function() {
+            clearInterval(play);
+            guitar.draw();
+        }, 400)
     });
 }
 
