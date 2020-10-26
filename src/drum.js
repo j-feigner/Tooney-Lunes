@@ -12,6 +12,15 @@ function main() {
     var drum_kit = new DrumKit();
     drum_kit.snare = new Drum("sound_files/drums/snare.mp3", 100, 100, 25);
     drum_kit.snare.draw();
+
+    canvas.addEventListener("click", function(event) {
+        var mouse_x = event.offsetX;
+        var mouse_y = event.offsetY;
+
+        if(drum_kit.snare.isInBounds(mouse_x, mouse_y)) {
+            drum_kit.snare.play();
+        }
+    });
 }
 
 function DrumKit() {
@@ -50,8 +59,15 @@ function Drum(sound_src, center_x, center_y, radius) {
         ctx.closePath();
     }
 
+    this.play = function() {
+        var play_sound = new Audio();
+        play_sound.src = this.sound.src;
+        play_sound.play();
+        delete play_sound;
+    }
+
     this.isInBounds = function(x, y) {
-        var coord_radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        var coord_radius = Math.sqrt(Math.pow(x - this.arc.x, 2) + Math.pow(y - this.arc.y, 2));
         if(coord_radius <= this.arc.r) {
             return true;
         } else {
