@@ -46,27 +46,15 @@ function main() {
                 guitar.draw();
             }, 400)
         }
-        if(event.key == " ") {
-            var picking_pattern_length = 1000;
-
-            var pick = setInterval(function() {
-                setTimeout(function() {
-                    guitar.strings[0].pluck();
-                }, 0);
-                setTimeout(function() {
-                    guitar.strings[4].pluck();
-                }, 250);
-                setTimeout(function() {
-                    guitar.strings[2].pluck();
-                }, 500);
-                setTimeout(function() {
-                    guitar.strings[3].pluck();
-                }, 750);
-            }, picking_pattern_length);
-
-            setTimeout(function() {
-                clearInterval(pick);
-            }, 10000)
+    });
+    var pick_button = document.getElementById("pickButton");
+    pick_button.addEventListener("click", function() {
+        guitar.pick();
+        if(guitar.is_picking) {
+            pick_button.value = "Stop Picking";
+        }
+        else {
+            pick_button.value = "Start Picking";
         }
     });
 }
@@ -90,7 +78,11 @@ function Guitar(canvas) {
 
     this.strum_delay = 25;
 
+    this.drawing_interval = null;
+    this.picking_interval = null;
+
     this.is_strumming = false;
+    this.is_picking = false;
 
     // Returns an array of Guitar String objects created based on fretboard dimensions
     this.createStrings = function() {
@@ -208,6 +200,36 @@ function Guitar(canvas) {
                     this.strings[i].current_fret = j;
                 }
             }
+        }
+    };
+
+    this.pick = function() {
+        if(this.is_picking) {
+            this.is_picking = false;
+            clearInterval(this.picking_interval);
+            clearInterval(this.drawing_interval);
+        }
+        else{
+            this.is_picking = true;
+
+            this.drawing_interval = setInterval( () => {
+                this.draw();
+            }, 20);
+
+            this.picking_interval = setInterval( () => {
+                setTimeout( () => {
+                    this.strings[0].pluck();
+                }, 0);
+                setTimeout( () => {
+                    this.strings[4].pluck();
+                }, 250);
+                setTimeout( () => {
+                    this.strings[2].pluck();
+                }, 500);
+                setTimeout( () => {
+                    this.strings[3].pluck();
+                }, 750);
+            }, 1000);
         }
     };
 }
