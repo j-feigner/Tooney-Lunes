@@ -10,31 +10,35 @@ function main() {
     canvas.height = window.innerHeight;
 
     var drum_kit = new DrumKit();
-    drum_kit.snare = new Drum("sound_files/drums/snare.mp3", 100, 100, 25);
-    drum_kit.snare.draw();
+    drum_kit.drums[0] = new Drum("snare", "sound_files/drums/snare.mp3", 100, 100, 25);
+    window.requestAnimationFrame(function() {drum_kit.animateDrums()});
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
         var mouse_y = event.offsetY;
 
-        if(drum_kit.snare.isInBounds(mouse_x, mouse_y)) {
-            drum_kit.snare.play();
+        if(drum_kit.drums[0].isInBounds(mouse_x, mouse_y)) {
+            drum_kit.drums[0].play();
         }
     });
 }
 
 function DrumKit() {
-    this.kick = null;
-    this.snare = null;
-    this.hi_hat = null;
-    this.crash = null;
-    this.ride = null;
-    this.floor_tom = null;
-    this.tom1 = null;
-    this.tom2 = null;
+    this.drums = [];
+
+    this.animateDrums = function() {
+        canvas = document.getElementById("drumCanvas");
+        ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.drums.forEach(function(drum) {
+            drum.draw();
+        });
+        window.requestAnimationFrame(() => this.animateDrums());
+    }
 }
 
-function Drum(sound_src, center_x, center_y, radius) {
+function Drum(drum_name, sound_src, center_x, center_y, radius) {
+    this.name = drum_name;
     this.sound = new Audio();
     this.sound.src = sound_src;
     this.arc = {
@@ -44,6 +48,7 @@ function Drum(sound_src, center_x, center_y, radius) {
         s_angle: 0,
         e_angle: 2 * Math.PI
     }
+    this.is_playing = false;
 
     this.draw = function() {
         var canvas = document.getElementById("drumCanvas");
@@ -53,7 +58,13 @@ function Drum(sound_src, center_x, center_y, radius) {
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(this.arc.x, this.arc.y, this.arc.r, this.arc.s_angle, this.arc.e_angle);
+
+        if(this.is_playing) {
+            var radius = this.arc.r * 1.2;
+        } else {
+            var radius = this.arc.r;
+        }
+        ctx.arc(this.arc.x, this.arc.y, radius, this.arc.s_angle, this.arc.e_angle);
         ctx.stroke();
         ctx.fill();
         ctx.closePath();
@@ -64,6 +75,11 @@ function Drum(sound_src, center_x, center_y, radius) {
         play_sound.src = this.sound.src;
         play_sound.play();
         delete play_sound;
+
+        this.is_playing = true;
+        setTimeout( () => {
+            this.is_playing = false;
+        }, 100);
     }
 
     this.isInBounds = function(x, y) {
