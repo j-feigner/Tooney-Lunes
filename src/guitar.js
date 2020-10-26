@@ -2,11 +2,8 @@ window.onload = main;
 
 function main() {
     var canvas = createCanvas();
-    
-    var sounds = createGuitarSoundArray();
 
-    var guitar = new Guitar(sounds, canvas);
-    guitar.createStrings();
+    var guitar = new Guitar(canvas);
     guitar.draw();
 
     canvas.addEventListener("click", function(event) {
@@ -42,17 +39,10 @@ function main() {
             guitar.is_strumming = false;
         }
     });
-
-    document.addEventListener("keydown", function(event){
-        if(event.key == "Enter") {
-            guitar.strum();
-        }
-    });
 }
 
-function Guitar(sounds, canvas) {
-    this.sounds = sounds;
-    this.strings = [];
+function Guitar(canvas) {
+    this.sounds = createGuitarSoundArray();
 
     // Fretboard properties
     this.fretboard_rect = {
@@ -75,17 +65,21 @@ function Guitar(sounds, canvas) {
 
     // Initializes array of GuitarString objects, called in Guitar.draw()
     this.createStrings = function() {
+        var strings = [];
         for(var i = 0; i < 6; i++) {
-            this.strings[i] = new GuitarString(
+            strings[i] = new GuitarString(
                 100, 
                 350 - (i * 50),
                 600,
                 20,
-                sounds[i],
+                this.sounds[i],
                 canvas
             );
         }
+        return strings;
     };
+
+    this.strings = this.createStrings();
 
     this.drawFretboard = function() {
         var ctx = canvas.getContext("2d");
@@ -197,14 +191,15 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         var ctx = canvas.getContext("2d");
 
         // Draw stroke for string visual
-        ctx.lineWidth = 10;
-        ctx.lineCap = "round";
         if(this.is_playing) {
-            ctx.strokeStyle = "yellow";
+            ctx.lineWidth = 10 + 5 * (0.5 * Math.sin(0.1 * Date.now()));
         }
         else {
-            ctx.strokeStyle = "white";
+            ctx.lineWidth = 10;
         }
+        ctx.strokeStyle = "white";
+        ctx.lineCap = "round";
+
         ctx.beginPath();
         ctx.moveTo(this.string_rect.x, this.string_rect.y + this.string_rect.height / 2);
         ctx.lineTo(this.string_rect.x + this.string_rect.width, this.string_rect.y + this.string_rect.height / 2);
