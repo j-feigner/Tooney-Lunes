@@ -46,6 +46,28 @@ function main() {
                 guitar.draw();
             }, 400)
         }
+        if(event.key == " ") {
+            var picking_pattern_length = 1000;
+
+            var pick = setInterval(function() {
+                setTimeout(function() {
+                    guitar.strings[0].pluck();
+                }, 0);
+                setTimeout(function() {
+                    guitar.strings[4].pluck();
+                }, 250);
+                setTimeout(function() {
+                    guitar.strings[2].pluck();
+                }, 500);
+                setTimeout(function() {
+                    guitar.strings[3].pluck();
+                }, 750);
+            }, picking_pattern_length);
+
+            setTimeout(function() {
+                clearInterval(pick);
+            }, 10000)
+        }
     });
 }
 
