@@ -6,6 +6,12 @@ function main() {
     div.appendChild(canvas);
     canvas.id = "drumCanvas";
     canvas.style.border = "1px solid black";
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var drum_kit = new DrumKit();
+    drum_kit.snare = new Drum("sound_files/drums/snare.mp3", 100, 100, 25);
+    drum_kit.snare.draw();
 }
 
 function DrumKit() {
@@ -26,8 +32,22 @@ function Drum(sound_src, center_x, center_y, radius) {
         x: center_x,
         y: center_y,
         r: radius,
-        sAngle: 0,
-        eAngle: 2 * Math.PI
+        s_angle: 0,
+        e_angle: 2 * Math.PI
+    }
+
+    this.draw = function() {
+        var canvas = document.getElementById("drumCanvas");
+        var ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "yellow";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(this.arc.x, this.arc.y, this.arc.r, this.arc.s_angle, this.arc.e_angle);
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
     }
 
     this.isInBounds = function(x, y) {
