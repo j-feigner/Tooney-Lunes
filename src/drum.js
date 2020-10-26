@@ -10,21 +10,30 @@ function main() {
     canvas.height = window.innerHeight;
 
     var drum_kit = new DrumKit();
-    drum_kit.drums[0] = new Drum("snare", "sound_files/drums/snare.mp3", 100, 100, 25);
-    window.requestAnimationFrame(function() {drum_kit.animateDrums()});
+    drum_kit.createDrums();
+
+    window.requestAnimationFrame(function(){drum_kit.animateDrums()});
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
         var mouse_y = event.offsetY;
 
-        if(drum_kit.drums[0].isInBounds(mouse_x, mouse_y)) {
-            drum_kit.drums[0].play();
-        }
+        drum_kit.drums.forEach(function(drum) {
+            if(drum.isInBounds(mouse_x, mouse_y)) {
+                drum.play();
+            }
+        });
     });
 }
 
 function DrumKit() {
     this.drums = [];
+
+    this.createDrums = function() {
+        this.drums[0] = new Drum("kick", "sound_files/drums/kick.mp3", 400, 400, 50);
+        this.drums[1] = new Drum("snare", "sound_files/drums/snare.mp3", 450, 450, 25);
+        this.drums[2] = new Drum("hi_hat", "sound_files/drums/hi_hat.mp3", 350, 350, 25);
+    }
 
     this.animateDrums = function() {
         canvas = document.getElementById("drumCanvas");
@@ -60,7 +69,7 @@ function Drum(drum_name, sound_src, center_x, center_y, radius) {
         ctx.beginPath();
 
         if(this.is_playing) {
-            var radius = this.arc.r * 1.2;
+            var radius = this.arc.r * 1.1;
         } else {
             var radius = this.arc.r;
         }
