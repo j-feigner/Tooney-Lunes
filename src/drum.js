@@ -31,8 +31,12 @@ function DrumKit() {
 
     this.createDrums = function() {
         this.drums[0] = new Drum("kick", "sound_files/drums/kick.mp3", 400, 400, 50);
-        this.drums[1] = new Drum("snare", "sound_files/drums/snare.mp3", 450, 450, 25);
-        this.drums[2] = new Drum("hi_hat", "sound_files/drums/hi_hat.mp3", 350, 350, 25);
+        this.drums[1] = new Drum("snare", "sound_files/drums/snare.mp3", 465, 465, 25);
+        this.drums[2] = new Drum("hi_hat", "sound_files/drums/hi_hat.mp3", 325, 465, 25);
+        this.drums[3] = new Drum("tom1", "sound_files/drums/tom1.mp3", 375, 300, 20);
+        this.drums[4] = new Drum("tom2", "sound_files/drums/tom2.mp3", 425, 300, 20);
+        this.drums[5] = new Drum("crash", "sound_files/drums/crash.mp3", 300, 375, 35);
+        this.drums[6] = new Drum("ride",  "sound_files/drums/ride.mp3", 500, 375, 35);
     }
 
     this.animateDrums = function() {
