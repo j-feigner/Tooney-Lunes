@@ -204,6 +204,7 @@ function Guitar(canvas) {
         }
     };
 
+    // Starts or stops a picking pattern modeled on Travis picking at a fixed tempo
     this.pick = function() {
         if(this.is_picking) {
             this.is_picking = false;
@@ -217,8 +218,8 @@ function Guitar(canvas) {
                 this.draw();
             }, 20);
 
-            this.picking_interval = setInterval( () => {
-                setTimeout( () => {
+            this.picking_interval = setInterval( () => {    // SetInterval sets the entire pattern delay
+                setTimeout( () => {                         // SetTimeout sets the individual note delays within the pattern
                     this.strings[0].pluck();
                 }, 0);
                 setTimeout( () => {
@@ -269,16 +270,6 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
         ctx.lineTo(this.string_rect.x + this.string_rect.width, this.string_rect.y + this.string_rect.height / 2);
         ctx.stroke();
         ctx.closePath();
-
-        // Outline for rectangular bounding box 
-        /*
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "red";
-        ctx.beginPath();
-        ctx.rect(this.string_rect.x, this.string_rect.y, this.string_rect.width, this.string_rect.height);
-        ctx.stroke();
-        ctx.closePath();
-        */
     };
 
     // Plays string audio based on current fret value
