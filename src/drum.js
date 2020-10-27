@@ -28,9 +28,15 @@ function main() {
     var button = document.getElementById("playLoop");
     button.addEventListener("click", function() {
         drum_kit.layItDown();
+        if(drum_kit.is_laying_it_down) {
+            button.value = "Stop Laying that Down!";
+        } else {
+            button.value = "Lay it Down";
+        }
     });
 }
 
+// DrumKit container object
 function DrumKit() {
     this.drums = [];
     this.x = 400;
@@ -41,8 +47,11 @@ function DrumKit() {
     this.center_x = this.x + this.width / 2;
     this.center_y = this.y + this.height / 2;
 
+    this.loop = null;
     this.is_laying_it_down = false;
 
+    // Fills drums array and sets properties of each drum in the kit
+    // Positions and proportions are ratios of the DrumKit bounding box to ensure proper resizing
     this.createDrums = function() {
         this.drums[0] = new Drum("kick", "sound_files/drums/kick.mp3", "image_files/kick.svg", this.center_x - this.width / 3.5 / 2, this.center_y, this.width / 3.5, this.height / 2);
         this.drums[1] = new Drum("snare", "sound_files/drums/snare.mp3", "image_files/snare.svg", this.center_x + this.width / 5.5, this.center_y + this.height / 7, this.width / 6, this.width / 6);
@@ -53,6 +62,7 @@ function DrumKit() {
         this.drums[6] = new Drum("ride",  "sound_files/drums/ride.mp3", "image_files/cymbal.svg", this.center_x + this.width / 10, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
     }
 
+    // Callback function for requestAnimationFrame, draws each drum in the kit
     this.animateDrums = function() {
         canvas = document.getElementById("drumCanvas");
         ctx = canvas.getContext("2d");
@@ -63,6 +73,7 @@ function DrumKit() {
         window.requestAnimationFrame(() => this.animateDrums());
     }
 
+    // Silly function to play a groove rock backing beat
     this.layItDown = function() {
         var interval = 2500;
         var quarter = interval / 4;
@@ -70,9 +81,27 @@ function DrumKit() {
         var sixteenth = interval / 16;
         if(this.is_laying_it_down) {
             this.is_laying_it_down = false;
-            clearInterval(loop);
+            clearInterval(this.loop);
         } else {
-            var loop = setInterval(() => {
+            this.is_laying_it_down = true;
+            // Intro
+            setTimeout(() => {
+                this.drums[2].play();
+            }, interval - quarter);
+            setTimeout(() => {
+                this.drums[2].play();
+            }, interval - eighth - sixteenth);
+            setTimeout(() => {
+                this.drums[3].play();
+            }, interval - eighth);
+            setTimeout(() => {
+                this.drums[3].play();
+            }, interval - sixteenth);
+            setTimeout(() => {
+                this.drums[5].play();
+            }, interval);
+            // Main groove rock loop
+            this.loop = setInterval(() => {
                 setTimeout(() => {
                     this.drums[0].play();
                     this.drums[4].play();
@@ -112,6 +141,7 @@ function DrumKit() {
     }
 }
 
+// Drum object. Contains an Audio and Image object as well as position data
 function Drum(drum_name, sound_src, image_src, center_x, center_y, width, height) {
     this.name = drum_name;
     this.sound = new Audio();
@@ -129,6 +159,7 @@ function Drum(drum_name, sound_src, image_src, center_x, center_y, width, height
     }
     this.is_playing = false;
 
+    // Renders this drum to the canvas
     this.draw = function() {
         var canvas = document.getElementById("drumCanvas");
         var ctx = canvas.getContext("2d");
@@ -139,6 +170,7 @@ function Drum(drum_name, sound_src, image_src, center_x, center_y, width, height
         }
     }
 
+    // Plays sounds and sets play flag variable for 100ms
     this.play = function() {
         var play_sound = new Audio();
         play_sound.src = this.sound.src;
@@ -151,6 +183,7 @@ function Drum(drum_name, sound_src, image_src, center_x, center_y, width, height
         }, 100);
     }
 
+    // Checks if a given x,y pair is within rectangular bounding box
     this.isInBounds = function(x, y) {
         var x_lower = this.arc.x;
         var x_upper = this.arc.x + this.img.width;
