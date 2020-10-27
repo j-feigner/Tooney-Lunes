@@ -7,7 +7,7 @@ function main() {
     canvas.id = "drumCanvas";
     canvas.style.border = "1px solid black";
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = 800;
 
     var drum_kit = new DrumKit();
     drum_kit.createDrums();
@@ -24,17 +24,24 @@ function main() {
             }
         });
     });
+
+    var button = document.getElementById("playLoop");
+    button.addEventListener("click", function() {
+        drum_kit.layItDown();
+    });
 }
 
 function DrumKit() {
     this.drums = [];
-    this.x = 500;
-    this.y = 300;
+    this.x = 400;
+    this.y = 200;
     this.width = 1000;
     this.height = this.width / 2;
 
     this.center_x = this.x + this.width / 2;
     this.center_y = this.y + this.height / 2;
+
+    this.is_laying_it_down = false;
 
     this.createDrums = function() {
         this.drums[0] = new Drum("kick", "sound_files/drums/kick.mp3", "image_files/kick.svg", this.center_x - this.width / 3.5 / 2, this.center_y, this.width / 3.5, this.height / 2);
@@ -54,6 +61,54 @@ function DrumKit() {
             drum.draw();
         });
         window.requestAnimationFrame(() => this.animateDrums());
+    }
+
+    this.layItDown = function() {
+        var interval = 2500;
+        var quarter = interval / 4;
+        var eighth = interval / 8;
+        var sixteenth = interval / 16;
+        if(this.is_laying_it_down) {
+            this.is_laying_it_down = false;
+            clearInterval(loop);
+        } else {
+            var loop = setInterval(() => {
+                setTimeout(() => {
+                    this.drums[0].play();
+                    this.drums[4].play();
+                }, 0);
+                setTimeout(() => {
+                    this.drums[4].play();
+                }, eighth);
+                setTimeout(() => {
+                    this.drums[0].play();
+                }, sixteenth * 3);
+                setTimeout(() => {
+                    this.drums[1].play()
+                    this.drums[4].play();
+                }, quarter);
+                setTimeout(() => {
+                    this.drums[4].play();
+                }, quarter + eighth);
+                setTimeout(() => {
+                    this.drums[0].play(); 
+                }, quarter + eighth + sixteenth);
+                setTimeout(() => {
+                    this.drums[4].play();
+                }, quarter * 2);
+                setTimeout(() => {
+                    this.drums[0].play(); 
+                    this.drums[4].play();
+                }, quarter * 2 + eighth);
+                setTimeout(() => {
+                    this.drums[1].play();
+                    this.drums[4].play();
+                }, quarter * 3);
+                setTimeout(() => {
+                    this.drums[4].play();
+                }, quarter * 3 + eighth);
+            }, interval);
+        }
     }
 }
 
