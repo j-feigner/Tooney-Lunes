@@ -71,7 +71,7 @@ function Drum(drum_name, sound_src, image_src, center_x, center_y, width, height
         var canvas = document.getElementById("drumCanvas");
         var ctx = canvas.getContext("2d");
         if(this.is_playing) {
-            ctx.drawImage(this.img, this.arc.x, this.arc.y, this.img.width * 1.1, this.img.height * 1.1);
+            ctx.drawImage(this.img, this.arc.x, this.arc.y, this.img.width + 3 * Math.sin(Date.now()), this.img.height + 3 * Math.cos(Date.now()));
         } else {
             ctx.drawImage(this.img, this.arc.x, this.arc.y, this.img.width, this.img.height);
         }
