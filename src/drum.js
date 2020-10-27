@@ -28,15 +28,22 @@ function main() {
 
 function DrumKit() {
     this.drums = [];
+    this.x = 500;
+    this.y = 300;
+    this.width = 1000;
+    this.height = this.width / 2;
+
+    this.center_x = this.x + this.width / 2;
+    this.center_y = this.y + this.height / 2;
 
     this.createDrums = function() {
-        this.drums[0] = new Drum("snare", "sound_files/drums/snare.mp3", "image_files/snare.svg", 1150, 650, 200, 200);
-        this.drums[1] = new Drum("kick", "sound_files/drums/kick.mp3", "image_files/kick.svg", 750, 500, 350, 300);
-        this.drums[2] = new Drum("tom1", "sound_files/drums/tom1.mp3", "image_files/tom.svg", 950, 400, 100, 100);
-        this.drums[3] = new Drum("tom2", "sound_files/drums/tom2.mp3", "image_files/tom.svg", 800, 400, 100, 100);
-        this.drums[4] = new Drum("hi_hat", "sound_files/drums/hi_hat.mp3", "image_files/cymbal.svg", 550, 650, 150, 150);
-        this.drums[5] = new Drum("crash", "sound_files/drums/crash.mp3", "image_files/cymbal.svg", 550, 375, 225, 225);
-        this.drums[6] = new Drum("ride",  "sound_files/drums/ride.mp3", "image_files/cymbal.svg", 1050, 375, 225, 225);
+        this.drums[0] = new Drum("kick", "sound_files/drums/kick.mp3", "image_files/kick.svg", this.center_x - this.width / 3.5 / 2, this.center_y, this.width / 3.5, this.height / 2);
+        this.drums[1] = new Drum("snare", "sound_files/drums/snare.mp3", "image_files/snare.svg", this.center_x + this.width / 5.5, this.center_y + this.height / 7, this.width / 6, this.width / 6);
+        this.drums[2] = new Drum("tom1", "sound_files/drums/tom1.mp3", "image_files/tom.svg", this.center_x - this.width / 10, this.center_y - this.height / 6, this.width / 10, this.width / 10);
+        this.drums[3] = new Drum("tom2", "sound_files/drums/tom2.mp3", "image_files/tom.svg", this.center_x, this.center_y - this.height / 6, this.width / 10, this.width / 10);
+        this.drums[4] = new Drum("hi_hat", "sound_files/drums/hi_hat.mp3", "image_files/cymbal.svg", this.center_x - this.width / 3, this.center_y + this.height / 5.5, this.width / 6.5, this.width / 6.5);
+        this.drums[5] = new Drum("crash", "sound_files/drums/crash.mp3", "image_files/cymbal.svg", this.center_x - this.width / 3, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
+        this.drums[6] = new Drum("ride",  "sound_files/drums/ride.mp3", "image_files/cymbal.svg", this.center_x + this.width / 10, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
     }
 
     this.animateDrums = function() {
