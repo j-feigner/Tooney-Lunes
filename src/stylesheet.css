@@ -5,6 +5,20 @@ body {
   overflow: hidden;
 }
 
+table {
+    margin-top: .5em;
+    table-layout: fixed;
+    width: 100%;
+  }
+td {
+    width: 3%;
+  }
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+
 #inst_switch {
 	height: 25px;
 	width: auto;

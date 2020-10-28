@@ -13,7 +13,7 @@
 	<div id="topBar" class="top-bar">
 		<!--https://fontmeme.com/script-fonts/ font: KrinkesDecorPERSOONAL size: 65 -->
         <img id="titleImg" class="title-image" src="image_files/title.png">
-    </div>
+	</div>
 	
 	<div id="instrumentBlock" class="instrument-block">
 		<div id="drum" class="Drum">
@@ -43,6 +43,23 @@
 	<script src="script.js"></script>
   
 	<button type="button" id="inst_switch" onclick="slidePiano()">Switch Instruments</button>
+
+	<div id="songMakerBlock" class="song-maker-block">
+		<table>
+			<script type="text/javascript">
+				for (var row = 0; row <= 12; row++)
+				{
+					document.write("<tr>");
+					for (var col = 0; col <= 31; col++)
+					{
+						document.write("<td height='40'></td>");
+					}
+					document.write("</tr>");
+				}
+			</script>
+		</table>
+	</div>
+
 </body>
 
 </html>
