@@ -14,22 +14,23 @@ function main() {
 
     var ctx = new AudioContext();
     var gain_node = ctx.createGain();
+    var oscillator = ctx.createOscillator();
+    oscillator.type = "square";
+    oscillator.frequency.value = 0;
 
     var volume_control = document.getElementById("volume");
     volume_control.addEventListener("input", function() {
         gain_node.gain.value = this.value;
     });
 
+    var frequency_control = document.getElementById("frequency");
+    frequency_control.addEventListener("input", function() {
+        oscillator.frequency.value = this.value;
+    });
+
     var play = document.getElementById("play");
     play.addEventListener("click", function() {
-        var temp = new Audio();
-        temp.src = my_sound.src;
-        temp.crossOrigin = my_sound.crossOrigin;
-
-        var source_node = ctx.createMediaElementSource(temp);
-        source_node.connect(gain_node).connect(ctx.destination);
-
-        temp.play();
-        delete temp;
+        oscillator.connect(gain_node).connect(ctx.destination);
+        oscillator.start();
     });
 }
