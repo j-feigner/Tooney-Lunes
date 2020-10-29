@@ -22,8 +22,11 @@ function main() {
 
         for(var i = 0; i < grid.columns.length; i++) {
             for(var j = 0; j < grid.columns[i].cells.length; j++) {
-                if(isInBounds(mouse_x, mouse_y, grid.columns[i].cells[j].rect)) {
-                    grid.columns[i].cells[j].play();
+                var cell = grid.columns[i].cells[j];
+                if(isInBounds(mouse_x, mouse_y, cell.rect)) {
+                    cell.play();
+                    cell.is_filled = !cell.is_filled;
+                    cell.draw();
                 }
             }
         }
@@ -55,7 +58,7 @@ function Grid(x, y, width, height) {
 
     this.createColumns = function() {
         for(var i = 0; i < 32; i++) {
-            this.columns[i] = new Column(this.x + this.column_width * i, this.y + this.h, this.column_width, this.row_height, this.sound_srcs);
+            this.columns[i] = new Column(this.x + this.column_width * i, this.y + this.h - 100, this.column_width, this.row_height, this.sound_srcs);
             this.columns[i].fillCells();
         }
     }
@@ -101,6 +104,7 @@ function Cell(x, y, width, height, sound_src) {
     }
     this.sound = new Audio();
     this.sound.src = sound_src;
+    this.is_filled = false;
 
     this.draw = function() {
         var c = document.getElementById("canvas");
@@ -108,9 +112,17 @@ function Cell(x, y, width, height, sound_src) {
 
         ctx.lineWidth = 2;
         ctx.strokeStyle = "black";
+        ctx.fillStyle = "red";
 
+        ctx.clearRect(this.rect.x, this.rect.y, this.rect.w, this.rect.h);
+
+        ctx.beginPath();
         ctx.rect(this.rect.x, this.rect.y, this.rect.w, this.rect.h)
+        if(this.is_filled) {
+            ctx.fill();
+        }
         ctx.stroke();
+        ctx.closePath();
     }
 
     this.play = function() {
