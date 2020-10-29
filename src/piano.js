@@ -150,23 +150,15 @@ function Piano(x, y, width, height) {
         var c = document.getElementById("pianoCanvas");
         var ctx = c.getContext("2d");
 
-        ctx.fillStyle = "black";
-        ctx.beginPath();
-        ctx.rect(this.x, this.y, this.w, this.h);
-        ctx.fill();
-        ctx.closePath();
+        ctx.clearRect(0, 0, c.width, c.height);
 
         this.keys.forEach(function(key) {
-            if(key.type === "white") {
-                key.draw();
-            }
+            key.draw();
         });
 
-        this.keys.forEach(function(key) {
-            if(key.type === "black") {
-                key.draw();
-            }
-        });
+        window.requestAnimationFrame(() => {
+            this.draw();
+        })
     }
 
     this.playNote = function(key) {
@@ -196,7 +188,9 @@ function Piano(x, y, width, height) {
 
 function WhiteKey(key_type, x, y, width, height, piano_sound) {
     this.type = "white";
+    this.is_playing = false;
     this.white_key_type = key_type;
+
     this.upper_offset = (() => {
         if(this.white_key_type === "left") {
             return 0;
@@ -208,6 +202,7 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
             return width / 4;
         }   
     })();
+
     this.upper_width = (() => {
         if(this.white_key_type === "left" || this.white_key_type === "right") {
             return width * 0.75;
@@ -238,7 +233,12 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
 
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
-        ctx.fillStyle = "white";
+        if(this.is_playing) {
+            ctx.fillStyle = "grey";
+        }
+        else {
+            ctx.fillStyle = "white";
+        }
         ctx.beginPath();
         ctx.rect(this.upper_rect.x, this.upper_rect.y, this.upper_rect.w, this.upper_rect.h);
         ctx.rect(this.lower_rect.x, this.lower_rect.y, this.lower_rect.w, this.lower_rect.h);
@@ -248,8 +248,15 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
     }
 
     this.play = function() {
-        this.sound.play();
-        this.sound.currentTime = 0;
+        this.is_playing = true;
+        setTimeout(() => {
+            this.is_playing = false;
+        }, 300);
+
+        var sound_clip = new Audio();
+        sound_clip.src = this.sound.src;
+        sound_clip.play();
+        delete sound_clip;
     }
 
     this.isClicked = function(x, y) {
@@ -264,6 +271,7 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
 
 function BlackKey(x, y, width, height, piano_sound) {
     this.type = "black";
+    this.is_playing = false;
     this.rect = {
         x: x + 0.5,
         y: y + 0.5,
@@ -277,7 +285,12 @@ function BlackKey(x, y, width, height, piano_sound) {
         var c = document.getElementById("pianoCanvas");
         var ctx = c.getContext("2d");
 
-        ctx.fillStyle = "black";
+        if(this.is_playing) {
+            ctx.fillStyle = "grey";
+        }
+        else {
+            ctx.fillStyle = "black";
+        }
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -288,8 +301,15 @@ function BlackKey(x, y, width, height, piano_sound) {
     }
 
     this.play = function() {
-        this.sound.play();
-        this.sound.currentTime = 0;
+        this.is_playing = true;
+        setTimeout(() => {
+            this.is_playing = false;
+        }, 300);
+
+        var sound_clip = new Audio();
+        sound_clip.src = this.sound.src;
+        sound_clip.play();
+        delete sound_clip;
     }
 
     this.isClicked = function(x, y) {
