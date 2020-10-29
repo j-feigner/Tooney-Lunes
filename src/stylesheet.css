@@ -2,7 +2,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   background-color: rgb(165, 165, 185);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 #inst_switch {
@@ -46,6 +46,13 @@ body {
 .title-image {
     width: auto;
     height: auto;
+    position: relative;
+    top: 55px;
+}
+
+.profile-title-image {
+	width: auto;
+	height: auto;
     position: relative;
     top: 55px;
 }
