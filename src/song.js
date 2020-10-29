@@ -6,12 +6,14 @@ function main() {
     div.appendChild(canvas);
     canvas.id = "canvas";
     canvas.style.border = "1px solid black";
-    canvas.width = 1000;
-    canvas.height = 800;
+    canvas.width = 1800;
+    canvas.height = 900;
 
-    var grid = new Grid(50, 50, 600, 600);
-    grid.column_width = 25;
-    grid.row_height = grid.column_width;
+    var num_cols = 32;
+    var column_width = canvas.width / num_cols;
+    var row_height = column_width / 1.5;
+
+    var grid = new Grid(0, 0, canvas.width, canvas.height, num_cols, column_width, row_height);
 
     grid.createColumns();
     grid.draw();
@@ -32,18 +34,19 @@ function main() {
                 }
             }
         }
-    })
+    });
 }
 
-function Grid(x, y, width, height) {
+function Grid(x, y, width, height, num_cols, col_width, row_height) {
     this.x = x;
     this.y = y;
     this.w = width;
     this.h = height; 
 
     this.columns = [];
-    this.column_width = null;
-    this.row_height = null;
+    this.column_number = num_cols;
+    this.column_width = col_width;
+    this.row_height = row_height;
 
     this.createSoundSources = function() {
         var srcs = [];
@@ -59,19 +62,13 @@ function Grid(x, y, width, height) {
     this.sound_srcs = this.createSoundSources();
 
     this.createColumns = function() {
-        for(var i = 0; i < 32; i++) {
-            this.columns[i] = new Column(this.x + this.column_width * i, this.y + this.h - 100, this.column_width, this.row_height, this.sound_srcs);
+        for(var i = 0; i < this.column_number; i++) {
+            this.columns[i] = new Column(this.x + this.column_width * i, this.y, this.column_width, this.row_height, this.sound_srcs);
             this.columns[i].fillCells();
         }
     }
 
     this.draw = function() {
-        var c = document.getElementById("canvas");
-        ctx = c.getContext("2d");
-
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "black";
-
         for(var i = 0; i < this.columns.length; i++) {
             for(var j = 0; j < this.columns[i].cells.length; j++) {
                 this.columns[i].cells[j].draw();
@@ -99,10 +96,10 @@ function Column(x, y, width, row_height, sound_srcs) {
 
 function Cell(x, y, width, height, sound_src) {
     this.rect = {
-        x: x,
-        y: y,
-        w: width,
-        h: height
+        x: x + 0.5,
+        y: y + 0.5,
+        w: width - 0.5,
+        h: height - 0.5
     }
     this.sound = new Audio();
     this.sound.src = sound_src;
@@ -113,8 +110,8 @@ function Cell(x, y, width, height, sound_src) {
         ctx = c.getContext("2d");
 
         ctx.lineWidth = 2;
-        ctx.strokeStyle = "black";
-        ctx.fillStyle = "red";
+        ctx.strokeStyle = "grey";
+        ctx.fillStyle = "coral";
 
         ctx.clearRect(this.rect.x, this.rect.y, this.rect.w, this.rect.h);
 
@@ -129,6 +126,7 @@ function Cell(x, y, width, height, sound_src) {
 
     this.play = function() {
         this.sound.play();
+        this.sound.currentTime = 0;
     }
 }
 
