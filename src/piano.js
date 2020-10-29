@@ -1,4 +1,5 @@
-var url_header = "https://j-feigner.github.io/Tooney-Lunes/sound_files/piano";
+//var url_header = "https://j-feigner.github.io/Tooney-Lunes/sound_files/piano";
+var url_header = "sound_files/piano"
 
 window.onload = main;
 
@@ -24,12 +25,22 @@ function main() {
         var mouse_x = event.offsetX;
         var mouse_y = event.offsetY;
 
-        piano.keys.forEach(function(key) {
+        piano.keys.forEach(function(key, key_index) {
             if(key.isClicked(mouse_x, mouse_y)) {
-                key.play();
+                if(piano.play_mode === "note") {
+                    piano.playNote(key);
+                }
+                if(piano.play_mode === "chord") {
+                    piano.playChord(key_index);
+                }
             }
         })
-    })
+    });
+
+    var mode = document.getElementById("mode");
+    mode.addEventListener("change", function() {
+        piano.play_mode = mode.value;
+    });
 }
 
 function Piano(x, y, width, height) {
@@ -46,7 +57,6 @@ function Piano(x, y, width, height) {
     this.play_mode = "note";
 
     this.createSounds = function() {
-        var instrument = "piano";
         var piano_srcs = [
 			url_header + "/C_3.mp3",
 			url_header + "/Cs_3.mp3",
@@ -79,12 +89,12 @@ function Piano(x, y, width, height) {
 			url_header + "/E_5.mp3",
 			url_header + "/F_5.mp3",
 			url_header + "/Fs_5.mp3",
-			url_header + "/G_5.mp3",
-			url_header + "/Gs_5.mp3",
-			url_header + "/A_5.mp3",
-			url_header + "/As_5.mp3",
-			url_header + "/B_5.mp3",
-			url_header + "/C_6.mp3"
+            url_header + "/G_5.mp3",
+            url_header + "/Gs_5.mp3",
+            url_header + "/A_5.mp3",
+            url_header + "/As_5.mp3",
+            url_header + "/B_5.mp3",
+            url_header + "/C_6.mp3"
         ];
         var sounds = [];
 		for(var i = 0; i < piano_srcs.length; i++) {
@@ -159,8 +169,28 @@ function Piano(x, y, width, height) {
         });
     }
 
-    this.playChord = function() {
+    this.playNote = function(key) {
+        key.play();
+    }
 
+    this.playChord = function(key_index) {
+        var root_key, third_key, fifth_key;
+        var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
+    
+        root_key = this.keys[key_index]
+    
+        if(degree_selection == "minor") {
+            third_key = this.keys[key_index + 3];
+        }
+        else {
+            third_key = this.keys[key_index + 4];
+        }
+    
+        fifth_key = this.keys[key_index + 7];
+        
+        root_key.play();
+        third_key.play();
+        fifth_key.play();
     }
 }
 
