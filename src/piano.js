@@ -1,3 +1,5 @@
+var url_header = "https://j-feigner.github.io/Tooney-Lunes/sound_files/piano";
+
 window.onload = main;
 
 function main() {
@@ -6,10 +8,15 @@ function main() {
     div.appendChild(canvas);
     canvas.id = "pianoCanvas";
     canvas.style.border = "1px solid black";
-    canvas.width = window.innerWidth;
-    canvas.height = 800;
+    canvas.width = 1600;
+    canvas.height = 400;
 
-    var piano = new Piano(50, 50, canvas.width / 1.1, canvas.height / 2);
+    var piano_width = canvas.width / 1.1;
+    var piano_height = canvas.height / 1.3;
+    var x_offset = canvas.width / 2 - piano_width / 2;
+    var y_offset = canvas.height / 2 - piano_height / 2;
+
+    var piano = new Piano(x_offset, y_offset, piano_width, piano_height);
     piano.createKeys();
     piano.draw();
 
@@ -33,52 +40,51 @@ function Piano(x, y, width, height) {
 
     this.keys = [];
 
-    this.white_keys = [];
-    this.black_keys = [];
-
     this.white_key_width = this.w / 21;
     this.black_key_width = this.white_key_width / 2;
+
+    this.play_mode = "note";
 
     this.createSounds = function() {
         var instrument = "piano";
         var piano_srcs = [
-			"sound_files/" + instrument + "/C_3.mp3",
-			"sound_files/" + instrument + "/Cs_3.mp3",
-			"sound_files/" + instrument + "/D_3.mp3",
-			"sound_files/" + instrument + "/Ds_3.mp3",
-			"sound_files/" + instrument + "/E_3.mp3",
-			"sound_files/" + instrument + "/F_3.mp3",
-			"sound_files/" + instrument + "/Fs_3.mp3",
-			"sound_files/" + instrument + "/G_3.mp3",
-			"sound_files/" + instrument + "/Gs_3.mp3",
-			"sound_files/" + instrument + "/A_3.mp3",
-			"sound_files/" + instrument + "/As_3.mp3",
-			"sound_files/" + instrument + "/B_3.mp3",
-			"sound_files/" + instrument + "/C_4.mp3",
-			"sound_files/" + instrument + "/Cs_4.mp3",
-			"sound_files/" + instrument + "/D_4.mp3",
-			"sound_files/" + instrument + "/Ds_4.mp3",
-			"sound_files/" + instrument + "/E_4.mp3",
-			"sound_files/" + instrument + "/F_4.mp3",
-			"sound_files/" + instrument + "/Fs_4.mp3",
-			"sound_files/" + instrument + "/G_4.mp3",
-			"sound_files/" + instrument + "/Gs_4.mp3",
-			"sound_files/" + instrument + "/A_4.mp3",
-			"sound_files/" + instrument + "/As_4.mp3",
-			"sound_files/" + instrument + "/B_4.mp3",
-			"sound_files/" + instrument + "/C_5.mp3",
-			"sound_files/" + instrument + "/Cs_5.mp3",
-			"sound_files/" + instrument + "/D_5.mp3",
-			"sound_files/" + instrument + "/Ds_5.mp3",
-			"sound_files/" + instrument + "/E_5.mp3",
-			"sound_files/" + instrument + "/F_5.mp3",
-			"sound_files/" + instrument + "/Fs_5.mp3",
-			"sound_files/" + instrument + "/G_5.mp3",
-			"sound_files/" + instrument + "/Gs_5.mp3",
-			"sound_files/" + instrument + "/A_5.mp3",
-			"sound_files/" + instrument + "/As_5.mp3",
-			"sound_files/" + instrument + "/B_5.mp3",
-			"sound_files/" + instrument + "/C_6.mp3"
+			url_header + "/C_3.mp3",
+			url_header + "/Cs_3.mp3",
+			url_header + "/D_3.mp3",
+			url_header + "/Ds_3.mp3",
+			url_header + "/E_3.mp3",
+			url_header + "/F_3.mp3",
+			url_header + "/Fs_3.mp3",
+			url_header + "/G_3.mp3",
+			url_header + "/Gs_3.mp3",
+			url_header + "/A_3.mp3",
+			url_header + "/As_3.mp3",
+			url_header + "/B_3.mp3",
+			url_header + "/C_4.mp3",
+			url_header + "/Cs_4.mp3",
+			url_header + "/D_4.mp3",
+			url_header + "/Ds_4.mp3",
+			url_header + "/E_4.mp3",
+			url_header + "/F_4.mp3",
+			url_header + "/Fs_4.mp3",
+			url_header + "/G_4.mp3",
+			url_header + "/Gs_4.mp3",
+			url_header + "/A_4.mp3",
+			url_header + "/As_4.mp3",
+			url_header + "/B_4.mp3",
+			url_header + "/C_5.mp3",
+			url_header + "/Cs_5.mp3",
+			url_header + "/D_5.mp3",
+			url_header + "/Ds_5.mp3",
+			url_header + "/E_5.mp3",
+			url_header + "/F_5.mp3",
+			url_header + "/Fs_5.mp3",
+			url_header + "/G_5.mp3",
+			url_header + "/Gs_5.mp3",
+			url_header + "/A_5.mp3",
+			url_header + "/As_5.mp3",
+			url_header + "/B_5.mp3",
+			url_header + "/C_6.mp3"
         ];
         var sounds = [];
 		for(var i = 0; i < piano_srcs.length; i++) {
@@ -88,58 +94,6 @@ function Piano(x, y, width, height) {
         return sounds;
     }
     this.sounds = this.createSounds();
-
-    this.createWhiteKeys = function() {
-        var key_counter = 0;
-        for(var i = 0; i < this.sounds.length; i++) {    
-            // Check if current key is white or black and assigns css class
-            if(!( i == 1  || 
-                i == 3  ||
-                i == 6  || 
-                i == 8  || 
-                i == 10 ||
-                i == 13 ||
-                i == 15 ||
-                i == 18 ||
-                i == 20 ||
-                i == 22 ||
-                i == 25 ||
-                i == 27 ||
-                i == 30 ||
-                i == 32 ||
-                i == 34)) {
-                var key = new WhiteKey(this.x + this.white_key_width * key_counter, this.y, this.white_key_width, this.h, this.sounds[i]);
-                this.white_keys.push(key);
-                key_counter++;
-            }
-        }    
-    }
-
-    this.createBlackKeys = function() {
-        var key_counter = 0;
-        for(var i = 0; i < this.sounds.length; i++) {    
-            // Check if current key is white or black and assigns css class
-            if(!( i == 1  || 
-                i == 3  ||
-                i == 6  || 
-                i == 8  || 
-                i == 10 ||
-                i == 13 ||
-                i == 15 ||
-                i == 18 ||
-                i == 20 ||
-                i == 22 ||
-                i == 25 ||
-                i == 27 ||
-                i == 30 ||
-                i == 32 ||
-                i == 34)) {
-                var key = new BlackKey(this.x + this.black_key_width * key_counter, this.y, this.white_key_width, this.h / 1.5, this.sounds[i]);
-                this.black_keys.push(key);
-                key_counter++;
-            }
-        }  
-    }
 
     this.createKeys = function() {
         this.keys[0] = new WhiteKey("left", this.x + this.white_key_width * 0, this.y, this.white_key_width, this.h, this.sounds[0]);
@@ -204,6 +158,10 @@ function Piano(x, y, width, height) {
             }
         });
     }
+
+    this.playChord = function() {
+
+    }
 }
 
 function WhiteKey(key_type, x, y, width, height, piano_sound) {
@@ -229,12 +187,6 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
         }
     })();
 
-    this.outer_rect = {
-        x: x + 0.5,
-        y: y + 0.5,
-        w: width - 0.5,
-        h: height - 0.5
-    }
     this.upper_rect = {
         x: x + this.upper_offset + 0.5,
         y: y + 0.5,

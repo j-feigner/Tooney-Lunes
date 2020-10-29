@@ -7,7 +7,7 @@ function main() {
     canvas.id = "canvas";
     canvas.style.border = "1px solid black";
     canvas.width = 1800;
-    canvas.height = 900;
+    canvas.height = 400;
 
     var num_cols = 32;
     var column_width = canvas.width / num_cols;
