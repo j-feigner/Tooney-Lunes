@@ -142,31 +142,38 @@ function DrumKit() {
 }
 
 // Drum object. Contains an Audio and Image object as well as position data
-function Drum(drum_name, sound_src, image_src, center_x, center_y, width, height) {
+function Drum(drum_name, sound_src, image_src, x, y, width, height) {
     this.name = drum_name;
     this.sound = new Audio();
     this.sound.src = sound_src;
     this.img = new Image();
     this.img.src = image_src;
-    this.img.width = width;
-    this.img.height = height;
-    this.arc = {
-        x: center_x,
-        y: center_y,
-        r: this.img.width,
-        s_angle: 0,
-        e_angle: 2 * Math.PI
+    this.rect = {
+        x: x,
+        y: y,
+        w: width,
+        h: height
     }
     this.is_playing = false;
+    this.hit_intensity = 2.5;
 
     // Renders this drum to the canvas
     this.draw = function() {
         var canvas = document.getElementById("drumCanvas");
         var ctx = canvas.getContext("2d");
         if(this.is_playing) {
-            ctx.drawImage(this.img, this.arc.x, this.arc.y, this.img.width + 3 * Math.sin(Date.now()), this.img.height + 3 * Math.cos(Date.now()));
+            var center_x = this.rect.x + (this.rect.w / 2);
+            var center_y = this.rect.y + (this.rect.h / 2);
+
+            var new_width = this.rect.w + this.hit_intensity * Math.sin(Date.now());
+            var new_height = this.rect.h + this.hit_intensity * Math.cos(Date.now());
+
+            var new_x = center_x - (new_width / 2);
+            var new_y = center_y - (new_height / 2);
+
+            ctx.drawImage(this.img, new_x, new_y, new_width, new_height);
         } else {
-            ctx.drawImage(this.img, this.arc.x, this.arc.y, this.img.width, this.img.height);
+            ctx.drawImage(this.img, this.rect.x, this.rect.y, this.rect.w, this.rect.h);
         }
     }
 
@@ -180,15 +187,15 @@ function Drum(drum_name, sound_src, image_src, center_x, center_y, width, height
         this.is_playing = true;
         setTimeout( () => {
             this.is_playing = false;
-        }, 100);
+        }, 500);
     }
 
     // Checks if a given x,y pair is within rectangular bounding box
     this.isInBounds = function(x, y) {
-        var x_lower = this.arc.x;
-        var x_upper = this.arc.x + this.img.width;
-        var y_lower = this.arc.y;
-        var y_upper = this.arc.y + this.img.height;
+        var x_lower = this.rect.x;
+        var x_upper = this.rect.x + this.rect.w;
+        var y_lower = this.rect.y;
+        var y_upper = this.rect.y + this.rect.h;
         if(x > x_lower && x < x_upper && y > y_lower && y < y_upper) {
             return true;
         } else {
