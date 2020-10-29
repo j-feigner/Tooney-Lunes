@@ -24,8 +24,10 @@ function main() {
             for(var j = 0; j < grid.columns[i].cells.length; j++) {
                 var cell = grid.columns[i].cells[j];
                 if(isInBounds(mouse_x, mouse_y, cell.rect)) {
-                    cell.play();
                     cell.is_filled = !cell.is_filled;
+                    if(cell.is_filled) {
+                        cell.play();
+                    }
                     cell.draw();
                 }
             }
