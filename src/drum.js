@@ -1,3 +1,5 @@
+var url_header = "https://j-feigner.github.io/Tooney-Lunes/src/sound_files/drums/";
+
 window.onload = main;
 
 function main() {
@@ -9,10 +11,30 @@ function main() {
     canvas.width = window.innerWidth;
     canvas.height = 800;
 
+    //getUserInput();
+
+    var audio_ctx = new AudioContext();
+    
     var drum_kit = new DrumKit();
     drum_kit.createDrums();
 
-    window.requestAnimationFrame(function(){drum_kit.animateDrums()});
+    drum_kit.drums.forEach(function(drum) {
+        var req = new XMLHttpRequest();
+        req.open("GET", drum.sound.src);
+        req.responseType = "arraybuffer";
+        req.onload = function() {
+            var audio_data = req.response;
+            audio_ctx.decodeAudioData(audio_data, function(buffer) {
+                drum.sound_buffer = buffer;
+            });
+        }
+        req.onprogress = function() {
+            drawLoading();
+        }
+        req.send();
+    });
+
+    window.requestAnimationFrame(function(){drum_kit.animateDrums(canvas)});
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
@@ -20,20 +42,51 @@ function main() {
 
         drum_kit.drums.forEach(function(drum) {
             if(drum.isInBounds(mouse_x, mouse_y)) {
-                drum.play();
+                drum.playBuffer(audio_ctx);
             }
         });
     });
+}
 
-    var button = document.getElementById("playLoop");
-    button.addEventListener("click", function() {
-        drum_kit.layItDown();
-        if(drum_kit.is_laying_it_down) {
-            button.value = "Stop Laying that Down!";
-        } else {
-            button.value = "Lay it Down";
-        }
-    });
+function getUserInput() {
+    var c = document.getElementById("drumCanvas");
+    var ctx = c.getContext("2d");
+
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.fillStyle = "grey";
+    ctx.rect(0, 0, c.width, c.height);
+    ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.font = "100px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Click to Start", c.width / 2, c.height / 2);
+
+    c.addEventListener("click", handleStart);
+}
+
+function handleStart(event) {
+    var c = document.getElementById("drumCanvas");
+    c.removeEventListener("click", handleStart);
+
+    var drum_kit = new DrumKit();
+    drum_kit.createDrums();
+    window.requestAnimationFrame(() => drum_kit.animateDrums(c));
+}
+
+function drawLoading() {
+    var c = document.getElementById("drumCanvas");
+    var ctx = c.getContext("2d");
+
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.fillStyle = "grey";
+    ctx.rect(0, 0, c.width, c.height);
+    ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.font = "100px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Loading", c.width / 2, c.height / 2);
 }
 
 // DrumKit container object
@@ -53,24 +106,24 @@ function DrumKit() {
     // Fills drums array and sets properties of each drum in the kit
     // Positions and proportions are ratios of the DrumKit bounding box to ensure proper resizing
     this.createDrums = function() {
-        this.drums[0] = new Drum("kick", "sound_files/drums/kick.mp3", "image_files/kick.svg", this.center_x - this.width / 3.5 / 2, this.center_y, this.width / 3.5, this.height / 2);
-        this.drums[1] = new Drum("snare", "sound_files/drums/snare.mp3", "image_files/snare.svg", this.center_x + this.width / 5.5, this.center_y + this.height / 7, this.width / 6, this.width / 6);
-        this.drums[2] = new Drum("tom1", "sound_files/drums/tom1.mp3", "image_files/tom.svg", this.center_x - this.width / 10, this.center_y - this.height / 6, this.width / 10, this.width / 10);
-        this.drums[3] = new Drum("tom2", "sound_files/drums/tom2.mp3", "image_files/tom.svg", this.center_x, this.center_y - this.height / 6, this.width / 10, this.width / 10);
-        this.drums[4] = new Drum("hi_hat", "sound_files/drums/hi_hat.mp3", "image_files/cymbal.svg", this.center_x - this.width / 3, this.center_y + this.height / 5.5, this.width / 6.5, this.width / 6.5);
-        this.drums[5] = new Drum("crash", "sound_files/drums/crash.mp3", "image_files/cymbal.svg", this.center_x - this.width / 3, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
-        this.drums[6] = new Drum("ride",  "sound_files/drums/ride.mp3", "image_files/cymbal.svg", this.center_x + this.width / 10, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
+        this.drums[0] = new Drum("kick", url_header + "kick.mp3", "image_files/kick.svg", this.center_x - this.width / 3.5 / 2, this.center_y, this.width / 3.5, this.height / 2);
+        this.drums[1] = new Drum("snare", url_header + "snare.mp3", "image_files/snare.svg", this.center_x + this.width / 5.5, this.center_y + this.height / 7, this.width / 6, this.width / 6);
+        this.drums[2] = new Drum("tom1", url_header + "tom1.mp3", "image_files/tom.svg", this.center_x - this.width / 10, this.center_y - this.height / 6, this.width / 10, this.width / 10);
+        this.drums[3] = new Drum("tom2", url_header + "tom2.mp3", "image_files/tom.svg", this.center_x, this.center_y - this.height / 6, this.width / 10, this.width / 10);
+        this.drums[4] = new Drum("hi_hat", url_header + "hi_hat.mp3", "image_files/cymbal.svg", this.center_x - this.width / 3, this.center_y + this.height / 5.5, this.width / 6.5, this.width / 6.5);
+        this.drums[5] = new Drum("crash", url_header + "crash.mp3", "image_files/cymbal.svg", this.center_x - this.width / 3, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
+        this.drums[6] = new Drum("ride",  url_header + "ride.mp3", "image_files/cymbal.svg", this.center_x + this.width / 10, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
     }
 
     // Callback function for requestAnimationFrame, draws each drum in the kit
-    this.animateDrums = function() {
-        canvas = document.getElementById("drumCanvas");
+    this.animateDrums = function(c) {
+        canvas = c;
         ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.drums.forEach(function(drum) {
-            drum.draw();
+            drum.draw(c);
         });
-        window.requestAnimationFrame(() => this.animateDrums());
+        window.requestAnimationFrame(() => this.animateDrums(c));
     }
 
     // Silly function to play a groove rock backing beat
@@ -139,13 +192,31 @@ function DrumKit() {
             }, interval);
         }
     }
+
+    this.layItDown2 = function(audio_ctx, buffers) {
+        var bpm = 95;
+        var ms_per_beat = 60000 / bpm;
+        
+        var whole_note = ms_per_beat * 4;
+        var half_note = ms_per_beat * 2;
+        var quarter_note = ms_per_beat;
+        var eighth_note = ms_per_beat / 2;
+        var sixteenth_note = ms_per_beat / 4;
+
+        
+    }
 }
 
 // Drum object. Contains an Audio and Image object as well as position data
 function Drum(drum_name, sound_src, image_src, x, y, width, height) {
     this.name = drum_name;
+
     this.sound = new Audio();
     this.sound.src = sound_src;
+    this.sound.crossOrigin = "";
+
+    this.sound_buffer = null;
+
     this.img = new Image();
     this.img.src = image_src;
     this.rect = {
@@ -154,12 +225,13 @@ function Drum(drum_name, sound_src, image_src, x, y, width, height) {
         w: width,
         h: height
     }
+
     this.is_playing = false;
     this.hit_intensity = 2.5;
 
     // Renders this drum to the canvas
-    this.draw = function() {
-        var canvas = document.getElementById("drumCanvas");
+    this.draw = function(c) {
+        var canvas = c;
         var ctx = canvas.getContext("2d");
         if(this.is_playing) {
             var center_x = this.rect.x + (this.rect.w / 2);
@@ -187,7 +259,14 @@ function Drum(drum_name, sound_src, image_src, x, y, width, height) {
         this.is_playing = true;
         setTimeout( () => {
             this.is_playing = false;
-        }, 500);
+        }, 200);
+    }
+
+    this.playBuffer = function(audio_ctx) {
+        var source = audio_ctx.createBufferSource();
+        source.buffer = this.sound_buffer;
+        source.connect(audio_ctx.destination);
+        source.start();
     }
 
     // Checks if a given x,y pair is within rectangular bounding box
