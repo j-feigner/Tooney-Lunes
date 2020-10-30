@@ -30,8 +30,8 @@ body {
 }
 
 .drum-block {
-	display: table;
-}	
+    display: table;
+}
 
 .top-bar {
     position: relative;
@@ -46,13 +46,6 @@ body {
 .title-image {
     width: auto;
     height: auto;
-    position: relative;
-    top: 55px;
-}
-
-.profile-title-image {
-	width: auto;
-	height: auto;
     position: relative;
     top: 55px;
 }
