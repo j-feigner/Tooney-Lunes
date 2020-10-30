@@ -3,19 +3,17 @@ var url_header = "https://j-feigner.github.io/Tooney-Lunes/src/sound_files/drums
 window.onload = main;
 
 function main() {
-    var canvas = document.createElement("canvas");
-    var div = document.getElementById("drumBlock");
-    div.appendChild(canvas);
-    canvas.id = "drumCanvas";
-    canvas.style.border = "1px solid black";
-    canvas.width = window.innerWidth;
-    canvas.height = 800;
+    var canvas = document.getElementById("drumCanvas");
+    resizeCanvas();
 
     var audio_ctx = new AudioContext();
     var gain_node = audio_ctx.createGain();
     gain_node.connect(audio_ctx.destination);
+
+    var kit_width = canvas.width;
+    var kit_height = kit_width / 2;
     
-    var drum_kit = new DrumKit();
+    var drum_kit = new DrumKit(0, 0, kit_width, kit_height);
     drum_kit.createDrums();
 
     drum_kit.drums.forEach(function(drum) {
@@ -27,9 +25,6 @@ function main() {
             audio_ctx.decodeAudioData(audio_data, function(buffer) {
                 drum.sound_buffer = buffer;
             });
-        }
-        req.onprogress = function() {
-            drawLoading();
         }
         req.send();
     });
@@ -47,37 +42,30 @@ function main() {
         });
     });
 
-    var play_button = document.getElementById("playLoop");
+    var play_button = document.getElementById("playButton");
     play_button.addEventListener("click", function() {
         drum_kit.layItDown(audio_ctx);
     })
 }
 
-function drawLoading() {
-    var c = document.getElementById("drumCanvas");
-    var ctx = c.getContext("2d");
-
-    ctx.clearRect(0, 0, c.width, c.height);
-    ctx.fillStyle = "grey";
-    ctx.rect(0, 0, c.width, c.height);
-    ctx.fill();
-    ctx.fillStyle = "white";
-    ctx.font = "100px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("Loading", c.width / 2, c.height / 2);
+function resizeCanvas() {
+    var container = document.getElementById("drumBlock");
+    var canvas = document.getElementById("drumCanvas");
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
 }
 
 // DrumKit container object
-function DrumKit() {
+function DrumKit(x, y, width, height) {
     this.drums = [];
-    this.x = 400;
-    this.y = 200;
-    this.width = 1000;
-    this.height = this.width / 2;
 
-    this.center_x = this.x + this.width / 2;
-    this.center_y = this.y + this.height / 2;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+
+    this.center_x = this.x + (this.width / 2);
+    this.center_y = this.y + (this.height / 2);
 
     this.loop = null;
     this.is_laying_it_down = false;
