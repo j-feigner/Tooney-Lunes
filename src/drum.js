@@ -163,7 +163,7 @@ function Drum(drum_name, sound_src, image_src, x, y, width, height) {
     }
 
     this.is_playing = false;
-    this.hit_intensity = 2.5;
+    this.hit_intensity = 5;
 
     // Renders this drum to the canvas
     this.draw = function(c) {
@@ -203,6 +203,13 @@ function Drum(drum_name, sound_src, image_src, x, y, width, height) {
         source.buffer = this.sound_buffer;
         source.connect(audio_ctx.destination);
         source.start(audio_ctx.currentTime + delay);
+
+        setTimeout(() => {
+            this.is_playing = true;
+            setTimeout(() => {
+                this.is_playing = false;
+            }, 200);
+        }, delay * 1000);
     }
 
     // Checks if a given x,y pair is within rectangular bounding box
