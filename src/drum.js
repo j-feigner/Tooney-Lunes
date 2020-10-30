@@ -11,9 +11,9 @@ function main() {
     canvas.width = window.innerWidth;
     canvas.height = 800;
 
-    //getUserInput();
-
     var audio_ctx = new AudioContext();
+    var gain_node = audio_ctx.createGain();
+    gain_node.connect(audio_ctx.destination);
     
     var drum_kit = new DrumKit();
     drum_kit.createDrums();
@@ -42,36 +42,15 @@ function main() {
 
         drum_kit.drums.forEach(function(drum) {
             if(drum.isInBounds(mouse_x, mouse_y)) {
-                drum.playBuffer(audio_ctx);
+                drum.playBuffer(audio_ctx, 0);
             }
         });
     });
-}
 
-function getUserInput() {
-    var c = document.getElementById("drumCanvas");
-    var ctx = c.getContext("2d");
-
-    ctx.clearRect(0, 0, c.width, c.height);
-    ctx.fillStyle = "grey";
-    ctx.rect(0, 0, c.width, c.height);
-    ctx.fill();
-    ctx.fillStyle = "white";
-    ctx.font = "100px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("Click to Start", c.width / 2, c.height / 2);
-
-    c.addEventListener("click", handleStart);
-}
-
-function handleStart(event) {
-    var c = document.getElementById("drumCanvas");
-    c.removeEventListener("click", handleStart);
-
-    var drum_kit = new DrumKit();
-    drum_kit.createDrums();
-    window.requestAnimationFrame(() => drum_kit.animateDrums(c));
+    var play_button = document.getElementById("playLoop");
+    play_button.addEventListener("click", function() {
+        drum_kit.layItDown(audio_ctx);
+    })
 }
 
 function drawLoading() {
@@ -127,83 +106,40 @@ function DrumKit() {
     }
 
     // Silly function to play a groove rock backing beat
-    this.layItDown = function() {
-        var interval = 2500;
-        var quarter = interval / 4;
-        var eighth = interval / 8;
-        var sixteenth = interval / 16;
-        if(this.is_laying_it_down) {
-            this.is_laying_it_down = false;
-            clearInterval(this.loop);
-        } else {
-            this.is_laying_it_down = true;
-            // Intro
-            setTimeout(() => {
-                this.drums[2].play();
-            }, interval - quarter);
-            setTimeout(() => {
-                this.drums[2].play();
-            }, interval - eighth - sixteenth);
-            setTimeout(() => {
-                this.drums[3].play();
-            }, interval - eighth);
-            setTimeout(() => {
-                this.drums[3].play();
-            }, interval - sixteenth);
-            setTimeout(() => {
-                this.drums[5].play();
-            }, interval);
-            // Main groove rock loop
-            this.loop = setInterval(() => {
-                setTimeout(() => {
-                    this.drums[0].play();
-                    this.drums[4].play();
-                }, 0);
-                setTimeout(() => {
-                    this.drums[4].play();
-                }, eighth);
-                setTimeout(() => {
-                    this.drums[0].play();
-                }, sixteenth * 3);
-                setTimeout(() => {
-                    this.drums[1].play()
-                    this.drums[4].play();
-                }, quarter);
-                setTimeout(() => {
-                    this.drums[4].play();
-                }, quarter + eighth);
-                setTimeout(() => {
-                    this.drums[0].play(); 
-                }, quarter + eighth + sixteenth);
-                setTimeout(() => {
-                    this.drums[4].play();
-                }, quarter * 2);
-                setTimeout(() => {
-                    this.drums[0].play(); 
-                    this.drums[4].play();
-                }, quarter * 2 + eighth);
-                setTimeout(() => {
-                    this.drums[1].play();
-                    this.drums[4].play();
-                }, quarter * 3);
-                setTimeout(() => {
-                    this.drums[4].play();
-                }, quarter * 3 + eighth);
-            }, interval);
+    this.layItDown = function(audio_ctx) {
+        var bpm = 105;
+        var s_per_beat = 60 / bpm;
+        
+        var measure = s_per_beat * 4;
+        var half_note = s_per_beat * 2;
+        var quarter_note = s_per_beat;
+        var eighth_note = s_per_beat / 2;
+        var sixteenth_note = s_per_beat / 4;
+
+        this.drums[2].playBuffer(audio_ctx, measure - quarter_note);
+        this.drums[2].playBuffer(audio_ctx, measure - eighth_note - sixteenth_note);
+        this.drums[3].playBuffer(audio_ctx, measure - eighth_note);
+        this.drums[3].playBuffer(audio_ctx, measure - sixteenth_note);
+        this.drums[5].playBuffer(audio_ctx, measure);
+
+        for(var i = 1; i <= 4; i++) {
+            this.drums[0].playBuffer(audio_ctx, measure * i);
+            this.drums[0].playBuffer(audio_ctx, measure * i + eighth_note + sixteenth_note);
+            this.drums[0].playBuffer(audio_ctx, measure * i + quarter_note + eighth_note + sixteenth_note);
+            this.drums[0].playBuffer(audio_ctx, measure * i + half_note + eighth_note);
+    
+            this.drums[1].playBuffer(audio_ctx, measure * i + quarter_note);
+            this.drums[1].playBuffer(audio_ctx, measure * i + half_note + quarter_note);
+    
+            this.drums[4].playBuffer(audio_ctx, measure * i);
+            this.drums[4].playBuffer(audio_ctx, measure * i + eighth_note);
+            this.drums[4].playBuffer(audio_ctx, measure * i + quarter_note);
+            this.drums[4].playBuffer(audio_ctx, measure * i + quarter_note + eighth_note);
+            this.drums[4].playBuffer(audio_ctx, measure * i + half_note);
+            this.drums[4].playBuffer(audio_ctx, measure * i + half_note + eighth_note);
+            this.drums[4].playBuffer(audio_ctx, measure * i + half_note + quarter_note);
+            this.drums[4].playBuffer(audio_ctx, measure * i + half_note + quarter_note + eighth_note);
         }
-    }
-
-    this.layItDown2 = function(audio_ctx, buffers) {
-        var bpm = 95;
-        var ms_per_beat = 60000 / bpm;
-        
-        var whole_note = ms_per_beat * 4;
-        var half_note = ms_per_beat * 2;
-        var quarter_note = ms_per_beat;
-        var eighth_note = ms_per_beat / 2;
-        var sixteenth_note = ms_per_beat / 4;
-
-        
     }
 }
 
@@ -262,11 +198,11 @@ function Drum(drum_name, sound_src, image_src, x, y, width, height) {
         }, 200);
     }
 
-    this.playBuffer = function(audio_ctx) {
+    this.playBuffer = function(audio_ctx, delay) {
         var source = audio_ctx.createBufferSource();
         source.buffer = this.sound_buffer;
         source.connect(audio_ctx.destination);
-        source.start();
+        source.start(audio_ctx.currentTime + delay);
     }
 
     // Checks if a given x,y pair is within rectangular bounding box
