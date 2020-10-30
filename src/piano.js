@@ -4,16 +4,11 @@ var url_header = "sound_files/piano"
 window.onload = main;
 
 function main() {
-    var canvas = document.createElement("canvas");
-    var div = document.getElementById("pianoBlock");
-    div.appendChild(canvas);
-    canvas.id = "pianoCanvas";
-    canvas.style.border = "1px solid black";
-    canvas.width = 1600;
-    canvas.height = 400;
+    var canvas = document.getElementById("pianoCanvas");
+    resizeCanvas();
 
     var piano_width = canvas.width / 1.1;
-    var piano_height = canvas.height / 1.3;
+    var piano_height = canvas.height / 2.5;
     var x_offset = canvas.width / 2 - piano_width / 2;
     var y_offset = canvas.height / 2 - piano_height / 2;
 
@@ -41,6 +36,13 @@ function main() {
     mode.addEventListener("change", function() {
         piano.play_mode = mode.value;
     });
+}
+
+function resizeCanvas() {
+    var container = document.getElementById("pianoBlock");
+    var canvas = document.getElementById("pianoCanvas");
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
 }
 
 function Piano(x, y, width, height) {
