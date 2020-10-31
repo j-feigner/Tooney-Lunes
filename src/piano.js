@@ -255,8 +255,7 @@ function WhiteKey(key_type, x, y, width, height, line_width, piano_sound) {
         ctx.lineCap = "round";
         if(this.is_playing) {
             ctx.fillStyle = "grey";
-        }
-        else {
+        } else {
             ctx.fillStyle = "white";
         }
         ctx.beginPath();
@@ -271,6 +270,7 @@ function WhiteKey(key_type, x, y, width, height, line_width, piano_sound) {
         this.is_playing = true;
         setTimeout(() => {
             this.is_playing = false;
+            this.draw();
         }, 300);
 
         var sound_clip = new Audio();
@@ -292,6 +292,7 @@ function WhiteKey(key_type, x, y, width, height, line_width, piano_sound) {
 function BlackKey(x, y, width, height, line_width, piano_sound) {
     this.type = "black";
     this.is_playing = false;
+    this.is_finished = false;
     this.rect = {
         x: x,
         y: y,
@@ -326,6 +327,7 @@ function BlackKey(x, y, width, height, line_width, piano_sound) {
         this.is_playing = true;
         setTimeout(() => {
             this.is_playing = false;
+            this.draw();
         }, 300);
 
         var sound_clip = new Audio();
