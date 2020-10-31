@@ -4,16 +4,11 @@ var url_header = "sound_files/piano"
 window.onload = main;
 
 function main() {
-    var canvas = document.createElement("canvas");
-    var div = document.getElementById("pianoBlock");
-    div.appendChild(canvas);
-    canvas.id = "pianoCanvas";
-    canvas.style.border = "1px solid black";
-    canvas.width = 1600;
-    canvas.height = 400;
+    var canvas = document.getElementById("pianoCanvas");
+    resizeCanvas();
 
     var piano_width = canvas.width / 1.1;
-    var piano_height = canvas.height / 1.3;
+    var piano_height = canvas.height / 2.5;
     var x_offset = canvas.width / 2 - piano_width / 2;
     var y_offset = canvas.height / 2 - piano_height / 2;
 
@@ -43,6 +38,13 @@ function main() {
     });
 }
 
+function resizeCanvas() {
+    var container = document.getElementById("pianoBlock");
+    var canvas = document.getElementById("pianoCanvas");
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
+}
+
 function Piano(x, y, width, height) {
     this.x = x;
     this.y = y;
@@ -51,8 +53,7 @@ function Piano(x, y, width, height) {
 
     this.keys = [];
 
-    this.white_key_width = this.w / 21;
-    this.black_key_width = this.white_key_width / 2;
+    this.line_width = 10;
 
     this.play_mode = "note";
 
@@ -106,44 +107,49 @@ function Piano(x, y, width, height) {
     this.sounds = this.createSounds();
 
     this.createKeys = function() {
-        this.keys[0] = new WhiteKey("left", this.x + this.white_key_width * 0, this.y, this.white_key_width, this.h, this.sounds[0]);
-        this.keys[1] = new BlackKey(this.keys[0].upper_rect.x + this.keys[0].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[1]);
-        this.keys[2] = new WhiteKey("middle", this.x + this.white_key_width * 1, this.y, this.white_key_width, this.h, this.sounds[2]);
-        this.keys[3] = new BlackKey(this.keys[2].upper_rect.x + this.keys[2].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[3]);
-        this.keys[4] = new WhiteKey("right", this.x + this.white_key_width * 2, this.y, this.white_key_width, this.h, this.sounds[4]);
-        this.keys[5] = new WhiteKey("left", this.x + this.white_key_width * 3, this.y, this.white_key_width, this.h, this.sounds[5]);
-        this.keys[6] = new BlackKey(this.keys[5].upper_rect.x + this.keys[5].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[6]);
-        this.keys[7] = new WhiteKey("middle", this.x + this.white_key_width * 4, this.y, this.white_key_width, this.h, this.sounds[7]);
-        this.keys[8] = new BlackKey(this.keys[7].upper_rect.x + this.keys[7].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[8]);
-        this.keys[9] = new WhiteKey("middle", this.x + this.white_key_width * 5, this.y, this.white_key_width, this.h, this.sounds[9]);
-        this.keys[10] = new BlackKey(this.keys[9].upper_rect.x + this.keys[9].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[10]);
-        this.keys[11] = new WhiteKey("right", this.x + this.white_key_width * 6, this.y, this.white_key_width, this.h, this.sounds[11]);
+        var white_key_width = (this.w / 21);
+        var white_key_height = this.h - (this.line_width / 2) - 0.5;
+    
+        var black_key_width = white_key_width / 2;
+        var black_key_height = (this.h / 1.5) - (this.line_width);
 
-        this.keys[12] = new WhiteKey("left", this.x + this.white_key_width * 7, this.y, this.white_key_width, this.h, this.sounds[12]);
-        this.keys[13] = new BlackKey(this.keys[12].upper_rect.x + this.keys[12].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[13]);
-        this.keys[14] = new WhiteKey("middle", this.x + this.white_key_width * 8, this.y, this.white_key_width, this.h, this.sounds[14]);
-        this.keys[15] = new BlackKey(this.keys[14].upper_rect.x + this.keys[14].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[15]);
-        this.keys[16] = new WhiteKey("right", this.x + this.white_key_width * 9, this.y, this.white_key_width, this.h, this.sounds[16]);
-        this.keys[17] = new WhiteKey("left", this.x + this.white_key_width * 10, this.y, this.white_key_width, this.h, this.sounds[17]);
-        this.keys[18] = new BlackKey(this.keys[17].upper_rect.x + this.keys[17].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[18]);
-        this.keys[19] = new WhiteKey("middle", this.x + this.white_key_width * 11, this.y, this.white_key_width, this.h, this.sounds[19]);
-        this.keys[20] = new BlackKey(this.keys[19].upper_rect.x + this.keys[19].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[20]);
-        this.keys[21] = new WhiteKey("middle", this.x + this.white_key_width * 12, this.y, this.white_key_width, this.h, this.sounds[21]);
-        this.keys[22] = new BlackKey(this.keys[21].upper_rect.x + this.keys[21].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[22]);
-        this.keys[23] = new WhiteKey("right", this.x + this.white_key_width * 13, this.y, this.white_key_width, this.h, this.sounds[23]);
+        var white_left_keys = [0, 5, 12, 17, 24, 29];
+        var white_middle_keys = [2, 7, 9, 14, 19, 21, 26, 31, 33];
+        var white_right_keys = [4, 11, 16, 23, 28, 35];
+        var black_keys = [1, 3, 6, 8, 10, 13, 15, 18, 20, 22, 25, 27, 30, 32, 34];
 
-        this.keys[24] = new WhiteKey("left", this.x + this.white_key_width * 14, this.y, this.white_key_width, this.h, this.sounds[24]);
-        this.keys[25] = new BlackKey(this.keys[24].upper_rect.x + this.keys[24].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[25]);
-        this.keys[26] = new WhiteKey("middle", this.x + this.white_key_width * 15, this.y, this.white_key_width, this.h, this.sounds[26]);
-        this.keys[27] = new BlackKey(this.keys[26].upper_rect.x + this.keys[26].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[27]);
-        this.keys[28] = new WhiteKey("right", this.x + this.white_key_width * 16, this.y, this.white_key_width, this.h, this.sounds[28]);
-        this.keys[29] = new WhiteKey("left", this.x + this.white_key_width * 17, this.y, this.white_key_width, this.h, this.sounds[29]);
-        this.keys[30] = new BlackKey(this.keys[29].upper_rect.x + this.keys[29].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[30]);
-        this.keys[31] = new WhiteKey("middle", this.x + this.white_key_width * 18, this.y, this.white_key_width, this.h, this.sounds[31]);
-        this.keys[32] = new BlackKey(this.keys[31].upper_rect.x + this.keys[31].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[32]);
-        this.keys[33] = new WhiteKey("middle", this.x + this.white_key_width * 19, this.y, this.white_key_width, this.h, this.sounds[33]);
-        this.keys[34] = new BlackKey(this.keys[33].upper_rect.x + this.keys[33].upper_rect.w, this.y, this.black_key_width, this.h / 1.5, this.sounds[34]);
-        this.keys[35] = new WhiteKey("right", this.x + this.white_key_width * 20, this.y, this.white_key_width, this.h, this.sounds[35]);
+        var white_key_counter = 0;
+
+        for(var i = 0; i < 36; i++) {
+            if(black_keys.includes(i)) {
+                this.keys[i] = new BlackKey(this.keys[i - 1].upper_rect.x + this.keys[i - 1].upper_rect.w + (this.line_width / 2),
+                                            this.y, 
+                                            black_key_width,
+                                            black_key_height,
+                                            this.sounds[i]
+                                            );
+            }
+            else {
+                var white_key_type = null;
+                if(white_left_keys.includes(i)) {
+                    white_key_type = "left";
+                } 
+                else if(white_middle_keys.includes(i)) {
+                    white_key_type = "middle";
+                }
+                else if(white_right_keys.includes(i)) {
+                    white_key_type = "right";
+                }
+                this.keys[i] = new WhiteKey(white_key_type, 
+                                            this.x + (white_key_width * white_key_counter), 
+                                            this.y, 
+                                            white_key_width, 
+                                            white_key_height, 
+                                            this.sounds[i]
+                                            );
+                white_key_counter++;
+            }
+        }
     }
 
     this.draw = function() {
@@ -213,16 +219,16 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
     })();
 
     this.upper_rect = {
-        x: x + this.upper_offset + 0.5,
-        y: y + 0.5,
-        w: this.upper_width - 0.5,
-        h: (height / 1.5) - 0.5
+        x: x + this.upper_offset,
+        y: y,
+        w: this.upper_width,
+        h: (height / 1.5)
     }
     this.lower_rect = {
-        x: x + 0.5,
-        y: y + this.upper_rect.h + 0.5,
-        w: width - 0.5,
-        h: height - this.upper_rect.h - 0.5
+        x: x,
+        y: y + this.upper_rect.h,
+        w: width,
+        h: height - this.upper_rect.h
     }
 
     this.sound = piano_sound;
@@ -232,7 +238,7 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
         var ctx = c.getContext("2d");
 
         ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 10;
         if(this.is_playing) {
             ctx.fillStyle = "grey";
         }
@@ -273,10 +279,10 @@ function BlackKey(x, y, width, height, piano_sound) {
     this.type = "black";
     this.is_playing = false;
     this.rect = {
-        x: x + 0.5,
-        y: y + 0.5,
-        w: width - 0.5,
-        h: height - 0.5
+        x: x,
+        y: y,
+        w: width,
+        h: height
     }
 
     this.sound = piano_sound;
@@ -292,7 +298,7 @@ function BlackKey(x, y, width, height, piano_sound) {
             ctx.fillStyle = "black";
         }
         ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 10;
         ctx.beginPath();
         ctx.rect(this.rect.x, this.rect.y, this.rect.w, this.rect.h);
         ctx.stroke();
