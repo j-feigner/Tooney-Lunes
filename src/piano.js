@@ -45,20 +45,20 @@ function resizeCanvas() {
 }
 
 function Piano(x, y, width, height) {
-    this.line_width = 8;
+    this.line_width =  10;
     this.border = this.line_width / 2;
     
-    this.x = Math.floor(x + this.border);
-    this.y = Math.floor(y + this.border);
-    this.w = Math.floor(width - this.line_width);
-    this.h = Math.floor(height - this.line_width);
+    this.x = Math.floor(x) + this.border;
+    this.y = Math.floor(y) + this.border;
+    this.w = Math.floor(width) - this.line_width;
+    this.h = Math.floor(height) - this.line_width;
 
     this.white_key_count = 21;
-    this.white_key_width = Math.floor(this.w / this.white_key_count) - this.border;
-    this.white_key_offset = this.white_key_width + this.border + 1;
+    this.white_key_width = Math.floor(this.w / this.white_key_count);
+    this.white_key_height = this.h;
 
-    this.black_key_width = this.white_key_width / 2 - this.border - 1;
-    this.black_key_height = (this.h * 2 / 3) - (this.border) - 1;
+    this.black_key_width = this.white_key_width / 2;
+    this.black_key_height = Math.floor(this.white_key_height * 2 / 3) - this.border;
 
     this.keys = [];
 
@@ -125,10 +125,11 @@ function Piano(x, y, width, height) {
         var white_key_counter = 0;
         for(var i = 0; i < 36; i++) {
             if(black_keys.includes(i)) {
-                this.keys[i] = new BlackKey(this.keys[i - 1].upper_rect.x + this.keys[i - 1].upper_rect.w + this.border + 1,
+                this.keys[i] = new BlackKey(this.keys[i - 1].upper_rect_right_boundary + this.border,
                                             this.y, 
-                                            this.black_key_width,
+                                            this.black_key_width - this.border,
                                             this.black_key_height,
+                                            this.line_width,
                                             this.sounds[i]
                                             );
             }
@@ -144,10 +145,11 @@ function Piano(x, y, width, height) {
                     white_key_type = "right";
                 }
                 this.keys[i] = new WhiteKey(white_key_type, 
-                                            this.x + (this.white_key_offset * white_key_counter), 
+                                            this.x + (this.white_key_width * white_key_counter) + this.border, 
                                             this.y, 
                                             this.white_key_width, 
-                                            this.h, 
+                                            this.white_key_height, 
+                                            this.line_width,
                                             this.sounds[i]
                                             );
                 white_key_counter++;
@@ -195,41 +197,52 @@ function Piano(x, y, width, height) {
     }
 }
 
-function WhiteKey(key_type, x, y, width, height, piano_sound) {
+function WhiteKey(key_type, x, y, width, height, line_width, piano_sound) {
     this.type = "white";
     this.is_playing = false;
     this.white_key_type = key_type;
+
+    this.line_width = line_width;
+    this.border = line_width / 2;
+
+    this.black_key_width = (width / 2);
+
+    this.upper_width = (() => {
+        if(this.white_key_type === "left" || this.white_key_type === "right") {
+            return width - (this.black_key_width / 2);
+        }
+        if(this.white_key_type === "middle") {
+            return width - this.black_key_width;
+        }
+    })();
 
     this.upper_offset = (() => {
         if(this.white_key_type === "left") {
             return 0;
         }
-        if(this.white_key_type === "middle" || this.white_key_type === "right") {
-            return width / 4;
-        } 
-    })();
-
-    this.upper_width = (() => {
-        if(this.white_key_type === "left" || this.white_key_type === "right") {
-            return width * 3 / 4;
-        }
         if(this.white_key_type === "middle") {
-            return width / 2;
+            return this.black_key_width / 2;
+        } 
+        if(this.white_key_type === "right") {
+            return width - this.upper_width;
         }
     })();
 
     this.upper_rect = {
         x: x + this.upper_offset,
         y: y,
-        w: this.upper_width,
-        h: (height * 2 / 3)
+        w: this.upper_width - this.border,
+        h: Math.floor(height * 2 / 3)
     }
+    this.upper_rect_right_boundary = this.upper_rect.x + this.upper_width - this.border;
     this.lower_rect = {
         x: x,
         y: y + this.upper_rect.h,
-        w: width,
+        w: width - this.border,
         h: height - this.upper_rect.h
     }
+
+    this.line_width = line_width;
 
     this.sound = piano_sound;
 
@@ -238,7 +251,8 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
         var ctx = c.getContext("2d");
 
         ctx.strokeStyle = "black";
-        ctx.lineWidth = 10;
+        ctx.lineWidth = this.line_width;
+        ctx.lineCap = "round";
         if(this.is_playing) {
             ctx.fillStyle = "grey";
         }
@@ -275,7 +289,7 @@ function WhiteKey(key_type, x, y, width, height, piano_sound) {
     }
 }
 
-function BlackKey(x, y, width, height, piano_sound) {
+function BlackKey(x, y, width, height, line_width, piano_sound) {
     this.type = "black";
     this.is_playing = false;
     this.rect = {
@@ -284,6 +298,8 @@ function BlackKey(x, y, width, height, piano_sound) {
         w: width,
         h: height
     }
+
+    this.line_width = line_width;
 
     this.sound = piano_sound;
 
@@ -298,12 +314,12 @@ function BlackKey(x, y, width, height, piano_sound) {
             ctx.fillStyle = "black";
         }
         ctx.strokeStyle = "black";
-        ctx.lineWidth = 10;
+        ctx.lineWidth = this.line_width;
         ctx.beginPath();
         ctx.rect(this.rect.x, this.rect.y, this.rect.w, this.rect.h);
+        ctx.closePath();
         ctx.stroke();
         ctx.fill();
-        ctx.closePath();
     }
 
     this.play = function() {
