@@ -7,14 +7,15 @@ function main() {
     var canvas = document.getElementById("pianoCanvas");
     resizeCanvas();
 
-    var piano_width = canvas.width / 1.1;
-    var piano_height = canvas.height / 2.5;
+    var piano_width = canvas.width;
+    var piano_height = canvas.height;
     var x_offset = canvas.width / 2 - piano_width / 2;
     var y_offset = canvas.height / 2 - piano_height / 2;
 
-    var piano = new Piano(x_offset, y_offset, piano_width, piano_height);
+    var piano = new Piano(0, 0, piano_width, piano_height);
     piano.createKeys();
     piano.draw();
+    piano.update();
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
@@ -51,11 +52,15 @@ function Piano(x, y, width, height) {
     this.w = width;
     this.h = height;
 
+    this.white_key_count = 21;
     this.keys = [];
 
     this.line_width = 10;
 
     this.play_mode = "note";
+
+    this.c = document.getElementById("pianoCanvas");
+    this.ctx = this.c.getContext("2d");
 
     this.createSounds = function() {
         var piano_srcs = [
@@ -153,22 +158,22 @@ function Piano(x, y, width, height) {
     }
 
     this.draw = function() {
-        var c = document.getElementById("pianoCanvas");
-        var ctx = c.getContext("2d");
-
-        ctx.clearRect(0, 0, c.width, c.height);
-
         this.keys.forEach(function(key) {
             key.draw();
         });
-
-        window.requestAnimationFrame(() => {
-            this.draw();
-        })
     }
 
     this.playNote = function(key) {
         key.play();
+    }
+
+    this.update = function() {
+        this.keys.forEach(function(key) {
+            if(key.is_playing) {
+                key.draw();
+            }
+        });
+        window.requestAnimationFrame(() => this.update());
     }
 
     this.playChord = function(key_index) {
