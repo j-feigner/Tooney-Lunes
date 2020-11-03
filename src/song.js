@@ -1,3 +1,5 @@
+var url_header = "https://j-feigner.github.io/Tooney-Lunes/src/";
+
 window.onload = main;
 
 function main() {
@@ -15,8 +17,47 @@ function main() {
 
     var grid = new Grid(0, 0, canvas.width, canvas.height, num_cols, column_width, row_height);
 
-    grid.createColumns();
-    grid.draw();
+    var audio_ctx = new AudioContext();
+
+    grid.sound_srcs.forEach(function(src, i) {
+        var req = new XMLHttpRequest();
+        req.open("GET", url_header + src);
+        req.responseType = "arraybuffer";
+        req.onload = function() {
+            var audio_data = req.response;
+            audio_ctx.decodeAudioData(audio_data, function(buffer) {
+                grid.audio_buffers[i] = buffer;
+            });
+        }
+        req.send();
+    })
+
+    var song = [
+        [0, 4],
+        [1, 4],
+        [0, 4],
+        [1, 4],
+        [0, 4],
+        [1, 4],
+        [0, 4],
+        [1, 4]
+    ];
+
+    setTimeout(() => {
+        grid.createColumns();
+        grid.draw();
+
+        song.forEach(function(beat, beat_index) {
+            var column = grid.columns[beat_index];
+            
+            beat.forEach(function(note) {
+                var cell = column.cells[note];
+                cell.is_filled = true;
+                cell.draw();
+            })
+        });
+    }, 5000);
+
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
@@ -34,6 +75,11 @@ function main() {
                 }
             }
         }
+    });
+
+    var play_button = document.getElementById("playSong");
+    play_button.addEventListener("click", function() {
+        playSong(song, grid.audio_buffers, audio_ctx);
     });
 }
 
@@ -61,9 +107,11 @@ function Grid(x, y, width, height, num_cols, col_width, row_height) {
     }
     this.sound_srcs = this.createSoundSources();
 
+    this.audio_buffers = [];
+
     this.createColumns = function() {
         for(var i = 0; i < this.column_number; i++) {
-            this.columns[i] = new Column(this.x + this.column_width * i, this.y, this.column_width, this.row_height, this.sound_srcs);
+            this.columns[i] = new Column(this.x + this.column_width * i, this.y, this.column_width, this.row_height, this.sound_srcs, this.audio_buffers);
             this.columns[i].fillCells();
         }
     }
@@ -77,7 +125,7 @@ function Grid(x, y, width, height, num_cols, col_width, row_height) {
     }
 }
 
-function Column(x, y, width, row_height, sound_srcs) {
+function Column(x, y, width, row_height, sound_srcs, audio_buffers) {
     this.x = x;
     this.y = y;
     this.w = width;
@@ -89,12 +137,12 @@ function Column(x, y, width, row_height, sound_srcs) {
 
     this.fillCells = function() {
         for(var i =0; i < sound_srcs.length; i++) {
-            this.cells[i] = new Cell(this.x, this.y + this.h - row_height * i, this.w, row_height, sound_srcs[i]);
+            this.cells[i] = new Cell(this.x, this.y + this.h - row_height * i, this.w, row_height, sound_srcs[i], audio_buffers[i]);
         }
     }
 }
 
-function Cell(x, y, width, height, sound_src) {
+function Cell(x, y, width, height, sound_src, audio_buffer) {
     this.rect = {
         x: x + 0.5,
         y: y + 0.5,
@@ -103,6 +151,9 @@ function Cell(x, y, width, height, sound_src) {
     }
     this.sound = new Audio();
     this.sound.src = sound_src;
+
+    this.audio_buffer = audio_buffer;
+
     this.is_filled = false;
 
     this.draw = function() {
@@ -140,4 +191,25 @@ function isInBounds(x, y, rect) {
     } else {
         return false;
     }
+}
+
+function playSong(song, sounds, ctx) {
+    var bpm = 105;
+    var s_per_beat = 60 / bpm;
+    
+    var measure = s_per_beat * 4;
+    var half_note = s_per_beat * 2;
+    var quarter_note = s_per_beat;
+    var eighth_note = s_per_beat / 2;
+    var sixteenth_note = s_per_beat / 4;
+
+    song.forEach(function(beat, beat_index) {
+        var delay = quarter_note * beat_index;
+        beat.forEach(function(note) {
+            var source = ctx.createBufferSource();
+            source.buffer = sounds[note];
+            source.connect(ctx.destination);
+            source.start(ctx.currentTime + delay);
+        });
+    });
 }
