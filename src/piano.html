@@ -20,12 +20,14 @@
             <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
             <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
         </div>
-        <button type="button" id="songMakerButton" class="menu-button">Song Maker</button>
+        <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
         <button type="button" id="userProfileButton" class="menu-button">User</button>
     </div>
 
-    <div id="pianoBlock" class="canvas-container">
-        <canvas id="pianoCanvas"></canvas>
+    <div id="pageContents" class="page-contents">
+        <div id="pianoBlock" class="canvas-container">
+            <canvas id="pianoCanvas"></canvas>
+        </div>
     </div>
 
     <div id="bottomBar" class="bottom-bar">
@@ -36,8 +38,18 @@
 
         <input type="radio" name="chord-degree" id="d1" value="major" checked> Major 
         <input type="radio" name="chord-degree" id="d2" value="minor"> Minor
+        <!-- <div class="bottom-menu-div">
+            <div id="playMode" class="binary-switch">
+                <span class="left-label">Note Mode</span>
+                <div class="slider">
+                    <div class="knob" id="playModeKnob"></div>
+                </div>
+                <span class="right-label">Chord Mode</span>
+            </div>
+        </div> -->
     </div>
 
+    <script src="menu.js"></script>
     <script src="piano.js"></script>
 </body>
 
