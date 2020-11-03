@@ -43,21 +43,18 @@ function main() {
         [1, 4]
     ];
 
-    setTimeout(() => {
-        grid.createColumns();
-        grid.draw();
+    grid.createColumns();
+    grid.draw();
 
-        song.forEach(function(beat, beat_index) {
-            var column = grid.columns[beat_index];
-            
-            beat.forEach(function(note) {
-                var cell = column.cells[note];
-                cell.is_filled = true;
-                cell.draw();
-            })
-        });
-    }, 5000);
-
+    song.forEach(function(beat, beat_index) {
+        var column = grid.columns[beat_index];
+        
+        beat.forEach(function(note) {
+            var cell = column.cells[note];
+            cell.is_filled = true;
+            cell.draw();
+        })
+    });
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
@@ -125,7 +122,7 @@ function Grid(x, y, width, height, num_cols, col_width, row_height) {
     }
 
     this.playSong = function(song, ctx) {
-        var bpm = 105;
+        var bpm = 125;
         var s_per_beat = 60 / bpm;
         
         var measure = s_per_beat * 4;
@@ -212,7 +209,7 @@ function Cell(x, y, width, height, sound_src, audio_buffer) {
             ctx.fillStyle = "rgba(255, 0, 0, 1.0)";
         }
         else if(this.is_playing && !this.is_filled) {
-            ctx.fillStyle = "rgba(185, 185, 185, 0.5)";
+            ctx.fillStyle = "rgba(220, 220, 220, 0.5)";
         }
         else if(!this.is_playing && !this.is_filled) {
             ctx.fillStyle = "rgba(0, 0, 0, 0.0)";

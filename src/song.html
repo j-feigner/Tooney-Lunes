@@ -5,16 +5,31 @@
 <head>
 	<meta charset="utf-8">
 	<title>Tooney Lunes</title>
-	<link rel="stylesheet" href="stylesheet.css">
+	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <div id="topBar" class="top-bar">
+        <div id="title" class="title-img-container">
+            <!--https://fontmeme.com/script-fonts/ font: KrinkesDecorPERSOONAL size: 65 -->
+            <img id="titleImg" class="title-img" src="image_files/title.png">
+        </div>
+        <div id="instrumentsDropdown" class="dropdown">
+            <button type="button" class="dropdown-button">Instruments</button>
+            <button type="button" class="dropdown-option" onclick="window.location='piano.html'">Piano</button>
+            <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
+            <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
+        </div>
+        <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
+        <button type="button" id="userProfileButton" class="menu-button">User</button>
+    </div>
     <div id="container">
 
     </div>
-    <div>
-        <button type="button" id="playSong">Play Song</button>
+    <div id="bottomBar" class="bottom-bar">
+		<button type="button" id="playSong" class="menu-button">Play Song</button>
     </div>
+    
     <script src="song.js"></script>
 </body>
 
