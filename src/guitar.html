@@ -1,12 +1,13 @@
-<!doctype html>
+﻿<!doctype html>
 
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<title>Tooney Lunes</title>
-	<link rel="stylesheet" href="style.css">
-	<script src="animation.js"></script>
+    <meta charset="utf-8">
+    <title>Tooney Lunes</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="style.js"></script>
+    <script src="guitar.js"></script>
 </head>
 
 <body>
@@ -15,12 +16,14 @@
             <!--https://fontmeme.com/script-fonts/ font: KrinkesDecorPERSOONAL size: 65 -->
             <img id="titleImg" class="title-img" src="image_files/title.png">
         </div>
+        <button type="button" id="myProfileButton" class="menu-button" class="menu-button" onclick="window.location='profile.html'">My Profile</button>
         <div id="instrumentsDropdown" class="dropdown">
             <button type="button" class="dropdown-button">Instruments</button>
             <button type="button" class="dropdown-option" onclick="window.location='piano.html'">Piano</button>
             <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
             <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
         </div>
+
         <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
         <button type="button" id="userProfileButton" class="menu-button">User</button>
     </div>
@@ -29,11 +32,16 @@
         <canvas id="guitarCanvas"></canvas>
     </div>
 
-    <div id="bottomBar" class="bottom-bar">
-		<button type="button" id="strumButton" class="menu-button">Strum Guitar</button>
-		<button type="button" id="pickButton" class="menu-button">Start Picking</button>
+    <div id="instrSwitcher">
+        <button type="button" id="left" onclick="window.location='piano.html'"><< Piano</button>
+        <button type="button" id="right" onclick="window.location='drum.html'">Drums >></button>
     </div>
-    <script src="guitar.js"></script>
+
+    <div id="bottomBar" class="bottom-bar">
+        <button type="button" id="strumButton" class="menu-button">Strum Guitar</button>
+        <button type="button" id="pickButton" class="menu-button">Start Picking</button>
+    </div>
+
 </body>
 
 </html>

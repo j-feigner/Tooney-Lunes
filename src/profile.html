@@ -5,40 +5,54 @@
 <head>
 	<meta charset="utf-8">
 	<title>User Profile</title>
-	<link rel="stylesheet" href="profile_stylesheet.css">
-    <script src="animation.js"></script>
+	<link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="style.js"></script>
 </head>
 
 <body>
-
-    <div id="profileTitleBackg" class="profile-title-backg">
-        <img id="profileTitle" class="profile-title" src="image_files\profile_title.png">
-    </div>
-    <div id="usernameBackg" class="username-backg">
-        <p id="username" class="username">My_Username</p>
-    </div>
-    <div id="emailBackg" class="email-backg">
-        <p id="email" class="email">bricor@gmail.com</p>
-    </div>
-
-    <div id="genre" class="genre">
-        <div id="genrePreferences" class="genre-preferences">
-            <img id="genrePrefTitle" class="genre-pref-title" src="image_files\genre_pref.png">
+    <div id="topBar" class="top-bar">
+        <div id="title" class="title-img-container">
+            <img id="titleImg" class="title-img" src="image_files\my_profile_title.png">
         </div>
-    </div>
-
-    <div id="instrument" class="instrument">
-        <div id="instrumSpecialties" class="instrum-specialties">
-            <img id="instrumSpecTitle" class="instrum-spec-title" src="image_files\istrum_spec.png">
+        <button type="button" id="myProfileButton" class="menu-button" onclick="window.location='profile.html'">My Profile</button>
+        <div id="instrumentsDropdown" class="dropdown">
+            <button type="button" class="dropdown-button">Instruments</button>
+            <button type="button" class="dropdown-option" onclick="window.location='piano.html'">Piano</button>
+            <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
+            <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
         </div>
+        <button type="button" id="songMakerButton" class="menu-button">Song Maker</button>
     </div>
 
-    <div id="musical" class="musical">
-        <div id="musicalExperience" class="musical-experience">
-            <img id="musicalExpTitle" class="musical-exp-title" src="image_files\music_exp.png">
+    <div id="usernameContainer" class="profile-details-container">
+        <p id="username" class="profile-details">MyUsername</p>
+    </div>
+    <div id="emailContainer" class="profile-details-container">
+        <p id="email" class="profile-details">MyEmail@gmail.com</p>
+    </div>
+    <script>profileDetailsSlideIn()</script>
+
+    <div class="profile-info-container">
+        <div class="info-container">
+            <div class="info-oval">
+                <p class="info-title">Genre Preferences</p>
+            </div>
+            <p class="info">Rock</p>
         </div>
-    </div>
+        <div class="info-container">
+            <div class="info-oval">
+                <p class="info-title">Instrument Specialty</p>
+            </div>
+            <p class="info">Piano, Guitar, Drums</p>
+        </div>
+        <div class="info-container">
+            <div class="info-oval">
+                <p class="info-title">Music Experience</p>
+            </div>
+            <p class="info">Beginner</p>
+        </div>
 
+    </div>
 </body>
 
 </html>
