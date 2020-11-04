@@ -32,29 +32,10 @@ function main() {
         req.send();
     })
 
-    var song = [
-        [0, 4],
-        [1, 4],
-        [0, 4],
-        [1, 4],
-        [0, 4],
-        [1, 4],
-        [0, 4],
-        [1, 4]
-    ];
-
     grid.createColumns();
     grid.draw();
 
-    song.forEach(function(beat, beat_index) {
-        var column = grid.columns[beat_index];
-        
-        beat.forEach(function(note) {
-            var cell = column.cells[note];
-            cell.is_filled = true;
-            cell.draw();
-        })
-    });
+    var song = new Song();
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
@@ -69,6 +50,7 @@ function main() {
                         cell.play();
                     }
                     cell.draw();
+                    song.readGrid(grid);
                 }
             }
         }
@@ -122,29 +104,38 @@ function Grid(x, y, width, height, num_cols, col_width, row_height) {
     }
 
     this.playSong = function(song, ctx) {
-        var bpm = 125;
+        var bpm = song.tempo;
         var s_per_beat = 60 / bpm;
-        
-        var measure = s_per_beat * 4;
-        var half_note = s_per_beat * 2;
-        var quarter_note = s_per_beat;
-        var eighth_note = s_per_beat / 2;
-        var sixteenth_note = s_per_beat / 4;
     
-        song.forEach(function(beat, beat_index) {
-            var delay = quarter_note * beat_index;
+        song.beats.forEach(function(beat, beat_index) {
+            var delay = s_per_beat * beat_index;
 
             var column = this.columns[beat_index];
 
-            setTimeout(function() {
-                loopHelper(column, quarter_note);
+/*             setTimeout(function() {
+                loopHelper(column, s_per_beat);
+            }, delay * 1000); */
+
+            setTimeout(() => {
+                column.cells.forEach(function(cell) {
+                    cell.is_playing = true;
+                    cell.draw();
+                });
+                setTimeout(() => {
+                    column.cells.forEach(function(cell) {
+                        cell.is_playing = false;
+                        cell.draw();
+                    });
+                }, s_per_beat * 1000);
             }, delay * 1000);
 
-            beat.forEach(function(note) {
-                var source = ctx.createBufferSource();
-                source.buffer = this.audio_buffers[note];
-                source.connect(ctx.destination);
-                source.start(ctx.currentTime + delay);
+            beat.notes.forEach(function(note) {
+                if(note != null) {
+                    var source = ctx.createBufferSource();
+                    source.buffer = this.audio_buffers[note];
+                    source.connect(ctx.destination);
+                    source.start(ctx.currentTime + delay);
+                }
             }.bind(this));
         }.bind(this));
     }
@@ -228,6 +219,33 @@ function Cell(x, y, width, height, sound_src, audio_buffer) {
         this.sound.play();
         this.sound.currentTime = 0;
     }
+}
+
+function Song() {
+    this.beats = [];
+    this.tempo = 300;
+    this.beat_length = "quarter";
+
+    this.readGrid = function(grid) {
+        grid.columns.forEach((column, beat_index) => {
+            this.beats[beat_index] = new Beat();
+
+            column.cells.forEach((note, note_index) => {
+                if(note.is_filled) {
+                    this.beats[beat_index].notes[note_index] = note_index;
+                }
+                else {
+                    this.beats[beat_index].notes[note_index] = null;
+                }
+            });
+        });
+    }
+
+    this.writeGrid
+}
+
+function Beat() {
+    this.notes = [];
 }
 
 function isInBounds(x, y, rect) {

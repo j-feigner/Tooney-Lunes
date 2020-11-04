@@ -1,11 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<title>Tooney Lunes</title>
-	<link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <title>Tooney Lunes</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="piano.js"></script>
 </head>
 
 <body>
@@ -14,12 +15,14 @@
             <!--https://fontmeme.com/script-fonts/ font: KrinkesDecorPERSOONAL size: 65 -->
             <img id="titleImg" class="title-img" src="image_files/title.png">
         </div>
+        <button type="button" id="myProfileButton" class="menu-button" onclick="window.location='profile.html'">My Profile</button>
         <div id="instrumentsDropdown" class="dropdown">
             <button type="button" class="dropdown-button">Instruments</button>
             <button type="button" class="dropdown-option" onclick="window.location='piano.html'">Piano</button>
             <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
             <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
         </div>
+
         <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
         <button type="button" id="userProfileButton" class="menu-button">User</button>
     </div>
@@ -30,13 +33,18 @@
         </div>
     </div>
 
+    <div id="instrSwitcher">
+        <button type="button" id="left" onclick="window.location='drum.html'"><< Drums</button>
+        <button type="button" id="right" onclick="window.location='guitar.html'">Guitar >></button>
+    </div>
+
     <div id="bottomBar" class="bottom-bar">
         <select id="mode" name="chord-mode">
             <option value="note">Note Mode</option>
             <option value="chord">Chord Mode</option>
         </select>
 
-        <input type="radio" name="chord-degree" id="d1" value="major" checked> Major 
+        <input type="radio" name="chord-degree" id="d1" value="major" checked> Major
         <input type="radio" name="chord-degree" id="d2" value="minor"> Minor
         <!-- <div class="bottom-menu-div">
             <div id="playMode" class="binary-switch">
