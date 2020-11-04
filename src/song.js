@@ -1,3 +1,5 @@
+var url_header = "https://j-feigner.github.io/Tooney-Lunes/src/";
+
 window.onload = main;
 
 function main() {
@@ -15,8 +17,44 @@ function main() {
 
     var grid = new Grid(0, 0, canvas.width, canvas.height, num_cols, column_width, row_height);
 
+    var audio_ctx = new AudioContext();
+
+    grid.sound_srcs.forEach(function(src, i) {
+        var req = new XMLHttpRequest();
+        req.open("GET", url_header + src);
+        req.responseType = "arraybuffer";
+        req.onload = function() {
+            var audio_data = req.response;
+            audio_ctx.decodeAudioData(audio_data, function(buffer) {
+                grid.audio_buffers[i] = buffer;
+            });
+        }
+        req.send();
+    })
+
+    var song = [
+        [0, 4],
+        [1, 4],
+        [0, 4],
+        [1, 4],
+        [0, 4],
+        [1, 4],
+        [0, 4],
+        [1, 4]
+    ];
+
     grid.createColumns();
     grid.draw();
+
+    song.forEach(function(beat, beat_index) {
+        var column = grid.columns[beat_index];
+        
+        beat.forEach(function(note) {
+            var cell = column.cells[note];
+            cell.is_filled = true;
+            cell.draw();
+        })
+    });
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
@@ -34,6 +72,11 @@ function main() {
                 }
             }
         }
+    });
+
+    var play_button = document.getElementById("playSong");
+    play_button.addEventListener("click", function() {
+        grid.playSong(song, audio_ctx);
     });
 }
 
@@ -61,9 +104,11 @@ function Grid(x, y, width, height, num_cols, col_width, row_height) {
     }
     this.sound_srcs = this.createSoundSources();
 
+    this.audio_buffers = [];
+
     this.createColumns = function() {
         for(var i = 0; i < this.column_number; i++) {
-            this.columns[i] = new Column(this.x + this.column_width * i, this.y, this.column_width, this.row_height, this.sound_srcs);
+            this.columns[i] = new Column(this.x + this.column_width * i, this.y, this.column_width, this.row_height, this.sound_srcs, this.audio_buffers);
             this.columns[i].fillCells();
         }
     }
@@ -75,9 +120,50 @@ function Grid(x, y, width, height, num_cols, col_width, row_height) {
             }
         }
     }
+
+    this.playSong = function(song, ctx) {
+        var bpm = 125;
+        var s_per_beat = 60 / bpm;
+        
+        var measure = s_per_beat * 4;
+        var half_note = s_per_beat * 2;
+        var quarter_note = s_per_beat;
+        var eighth_note = s_per_beat / 2;
+        var sixteenth_note = s_per_beat / 4;
+    
+        song.forEach(function(beat, beat_index) {
+            var delay = quarter_note * beat_index;
+
+            var column = this.columns[beat_index];
+
+            setTimeout(function() {
+                loopHelper(column, quarter_note);
+            }, delay * 1000);
+
+            beat.forEach(function(note) {
+                var source = ctx.createBufferSource();
+                source.buffer = this.audio_buffers[note];
+                source.connect(ctx.destination);
+                source.start(ctx.currentTime + delay);
+            }.bind(this));
+        }.bind(this));
+    }
 }
 
-function Column(x, y, width, row_height, sound_srcs) {
+function loopHelper(column, delay) {
+    column.cells.forEach(function(cell) {
+        cell.is_playing = true;
+        cell.draw();
+    });
+    setTimeout(() => {
+        column.cells.forEach(function(cell) {
+            cell.is_playing = false;
+            cell.draw();
+        });
+    }, delay * 1000);
+}
+
+function Column(x, y, width, row_height, sound_srcs, audio_buffers) {
     this.x = x;
     this.y = y;
     this.w = width;
@@ -89,12 +175,12 @@ function Column(x, y, width, row_height, sound_srcs) {
 
     this.fillCells = function() {
         for(var i =0; i < sound_srcs.length; i++) {
-            this.cells[i] = new Cell(this.x, this.y + this.h - row_height * i, this.w, row_height, sound_srcs[i]);
+            this.cells[i] = new Cell(this.x, this.y + this.h - row_height * i, this.w, row_height, sound_srcs[i], audio_buffers[i]);
         }
     }
 }
 
-function Cell(x, y, width, height, sound_src) {
+function Cell(x, y, width, height, sound_src, audio_buffer) {
     this.rect = {
         x: x + 0.5,
         y: y + 0.5,
@@ -103,6 +189,10 @@ function Cell(x, y, width, height, sound_src) {
     }
     this.sound = new Audio();
     this.sound.src = sound_src;
+
+    this.audio_buffer = audio_buffer;
+
+    this.is_playing = false;
     this.is_filled = false;
 
     this.draw = function() {
@@ -111,15 +201,25 @@ function Cell(x, y, width, height, sound_src) {
 
         ctx.lineWidth = 2;
         ctx.strokeStyle = "grey";
-        ctx.fillStyle = "coral";
+
+        if(this.is_playing && this.is_filled) {
+            ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+        }
+        else if(!this.is_playing && this.is_filled) {
+            ctx.fillStyle = "rgba(255, 0, 0, 1.0)";
+        }
+        else if(this.is_playing && !this.is_filled) {
+            ctx.fillStyle = "rgba(220, 220, 220, 0.5)";
+        }
+        else if(!this.is_playing && !this.is_filled) {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.0)";
+        }
 
         ctx.clearRect(this.rect.x, this.rect.y, this.rect.w, this.rect.h);
 
         ctx.beginPath();
         ctx.rect(this.rect.x, this.rect.y, this.rect.w, this.rect.h)
-        if(this.is_filled) {
-            ctx.fill();
-        }
+        ctx.fill();
         ctx.stroke();
         ctx.closePath();
     }

@@ -10,7 +10,7 @@ function main() {
     var gain_node = audio_ctx.createGain();
     gain_node.connect(audio_ctx.destination);
 
-    var kit_width = canvas.width;
+    var kit_width = canvas.width / 2;
     var kit_height = kit_width / 2;
     
     var drum_kit = new DrumKit(0, 0, kit_width, kit_height);
@@ -151,7 +151,7 @@ function Drum(drum_name, sound_src, image_src, x, y, width, height) {
     }
 
     this.is_playing = false;
-    this.hit_intensity = 5;
+    this.hit_intensity = 2;
 
     // Renders this drum to the canvas
     this.draw = function(c) {
