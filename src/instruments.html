@@ -1,18 +1,19 @@
-﻿<!doctype html>
+<!doctype html>
+
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Tooney Lunes</title>
     <link rel="stylesheet" href="style.css">
-    <script src="drum.js"></script>
 </head>
+
 <body>
     <div id="topBar" class="top-bar">
         <div id="title" class="title-img-container">
             <!--https://fontmeme.com/script-fonts/ font: KrinkesDecorPERSOONAL size: 65 -->
             <img id="titleImg" class="title-img" src="image_files/title.png">
         </div>
-        <button type="button" id="myProfileButton" class="menu-button" class="menu-button" onclick="window.location='profile.html'">My Profile</button>
         <div id="instrumentsDropdown" class="dropdown">
             <button type="button" class="dropdown-button">Instruments</button>
             <button type="button" class="dropdown-option" onclick="window.location='piano.html'">Piano</button>
@@ -20,20 +21,32 @@
             <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
         </div>
         <button type="button" id="songMakerButton" class="menu-button">Song Maker</button>
+        <button type="button" id="userProfileButton" class="menu-button" onclick="window.location='profile.html'">User Profile</button>
     </div>
 
-    <div id="drumBlock" class="canvas-container">
+    <div id="guitarBlock" class="canvas-container">
+        <canvas id="guitarCanvas"></canvas>
+    </div>
+    <script src="guitar.js"></script>
+
+    <!--<div id="drumBlock" class="canvas-container">
         <canvas id="drumCanvas"></canvas>
     </div>
 
-    <div id="instrSwitcher">
-        <button type="button" id="left" onclick="window.location='guitar.html'"><< Guitar</button>
-        <button type="button" id="right" onclick="window.location='piano.html'">Piano >></button>
-    </div>
+    <div id="pianoBlock" class="canvas-container">
+        <canvas id="pianoCanvas"></canvas>
+    </div>-->
 
     <div id="bottomBar" class="bottom-bar">
-        <button type="button" id="playButton" class="menu-button">Lay it Down</button>
+        <select id="mode" name="chord-mode">
+            <option value="note">Note Mode</option>
+            <option value="chord">Chord Mode</option>
+        </select>
+
+        <input type="radio" name="chord-degree" id="d1" value="major" checked> Major
+        <input type="radio" name="chord-degree" id="d2" value="minor"> Minor
     </div>
 
 </body>
+
 </html>

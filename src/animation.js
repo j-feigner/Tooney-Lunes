@@ -3,7 +3,7 @@ var off_screen = false;
 function slidePiano() {
 	var inst_container = document.getElementById("instrumentBlock");
 	var slide_x        = 100;
-	
+
 	if (off_screen == false) {
 		var x_sofar = 0;
 		var id = setInterval(move, .5);
@@ -29,4 +29,21 @@ function slidePiano() {
 		}
 		off_screen = false;
 	}
+}
+
+function profile_format() {
+    var username_container = document.getElementById("usernameContainer");
+    var email_container = document.getElementById("emailContainer");
+    var username_width = username_container.offsetWidth;
+    var email_width = email_container.offsetWidth;
+
+    username_container.style.borderBottomRightRadius = "20px";
+    email_container.style.borderBottomRightRadius = "20px";
+
+    if (username_width >= "288") {
+        username_container.style.borderTopRightRadius = "20px";
+    }
+    if (email_width >= username_width - 12) {
+        email_container.style.borderTopRightRadius = "20px";
+    }
 }
