@@ -6,7 +6,6 @@
 	<meta charset="utf-8">
 	<title>Tooney Lunes</title>
 	<link rel="stylesheet" href="style.css">
-	<script src="animation.js"></script>
 </head>
 
 <body>
@@ -24,16 +23,14 @@
         <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
         <button type="button" id="userProfileButton" class="menu-button">User</button>
     </div>
+    <div id="container">
 
-    <div id="guitarBlock" class="canvas-container">
-        <canvas id="guitarCanvas"></canvas>
     </div>
-
     <div id="bottomBar" class="bottom-bar">
-		<button type="button" id="strumButton" class="menu-button">Strum Guitar</button>
-		<button type="button" id="pickButton" class="menu-button">Start Picking</button>
+		<button type="button" id="playSong" class="menu-button">Play Song</button>
     </div>
-    <script src="guitar.js"></script>
+    
+    <script src="song.js"></script>
 </body>
 
 </html>

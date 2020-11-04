@@ -6,7 +6,6 @@
 	<meta charset="utf-8">
 	<title>Tooney Lunes</title>
 	<link rel="stylesheet" href="style.css">
-	<script src="animation.js"></script>
 </head>
 
 <body>
@@ -25,15 +24,33 @@
         <button type="button" id="userProfileButton" class="menu-button">User</button>
     </div>
 
-    <div id="guitarBlock" class="canvas-container">
-        <canvas id="guitarCanvas"></canvas>
+    <div id="pageContents" class="page-contents">
+        <div id="pianoBlock" class="canvas-container">
+            <canvas id="pianoCanvas"></canvas>
+        </div>
     </div>
 
     <div id="bottomBar" class="bottom-bar">
-		<button type="button" id="strumButton" class="menu-button">Strum Guitar</button>
-		<button type="button" id="pickButton" class="menu-button">Start Picking</button>
+        <select id="mode" name="chord-mode">
+            <option value="note">Note Mode</option>
+            <option value="chord">Chord Mode</option>
+        </select>
+
+        <input type="radio" name="chord-degree" id="d1" value="major" checked> Major 
+        <input type="radio" name="chord-degree" id="d2" value="minor"> Minor
+        <!-- <div class="bottom-menu-div">
+            <div id="playMode" class="binary-switch">
+                <span class="left-label">Note Mode</span>
+                <div class="slider">
+                    <div class="knob" id="playModeKnob"></div>
+                </div>
+                <span class="right-label">Chord Mode</span>
+            </div>
+        </div> -->
     </div>
-    <script src="guitar.js"></script>
+
+    <script src="menu.js"></script>
+    <script src="piano.js"></script>
 </body>
 
 </html>

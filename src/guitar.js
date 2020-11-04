@@ -1,7 +1,8 @@
 window.onload = main;
 
 function main() {
-    var canvas = createCanvas();
+    var canvas = document.getElementById("guitarCanvas");
+    resizeCanvas();
 
     var guitar = new Guitar(canvas);
     guitar.draw();
@@ -40,10 +41,10 @@ function main() {
     pick_button.addEventListener("click", function() {
         guitar.pick();
         if(guitar.is_picking) {
-            pick_button.value = "Stop Picking";
+            pick_button.innerHTML = "Stop Picking";
         }
         else {
-            pick_button.value = "Start Picking";
+            pick_button.innerHTML = "Start Picking";
         }
     });
 
@@ -58,6 +59,13 @@ function main() {
             guitar.draw();
         }, 400)
     });
+}
+
+function resizeCanvas() {
+    var container = document.getElementById("guitarBlock");
+    var canvas = document.getElementById("guitarCanvas");
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
 }
 
 // Main guitar object
@@ -291,18 +299,6 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     this.isStrummed = function(x, y) {
         return isInBounds(x, y, this.string_rect);
     };
-}
-
-// Creates canvas elemtn in script too enable IntelliSense in VS Code, can be moved to main() later
-function createCanvas() {
-    var guitar_block = document.getElementById("guitarBlock");
-    var canvas = document.createElement("canvas");
-    guitar_block.appendChild(canvas);
-
-    canvas.height = window.innerHeight / 1.5;
-    canvas.width = window.innerWidth;
-
-    return canvas;
 }
 
 // Creates initial array of guitar sound sources from source files

@@ -1,21 +1,34 @@
 <!doctype html>
-
 <html lang="en">
-
 <head>
 	<meta charset="utf-8">
 	<title>Tooney Lunes</title>
-	<link rel="stylesheet" href="stylesheet.css">
+	<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div id="drumBlock">
+    <div id="topBar" class="top-bar">
+        <div id="title" class="title-img-container">
+            <!--https://fontmeme.com/script-fonts/ font: KrinkesDecorPERSOONAL size: 65 -->
+            <img id="titleImg" class="title-img" src="image_files/title.png">
+        </div>
+        <div id="instrumentsDropdown" class="dropdown">
+            <button type="button" class="dropdown-button">Instruments</button>
+            <button type="button" class="dropdown-option" onclick="window.location='piano.html'">Piano</button>
+            <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
+            <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
+        </div>
+        <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
+        <button type="button" id="userProfileButton" class="menu-button">User</button>
+    </div>
 
+    <div id="drumBlock" class="canvas-container">
+        <canvas id="drumCanvas"></canvas>
     </div>
-    <div>
-        <input type="button" id="playLoop" value="Lay it Down">
+
+    <div id="bottomBar" class="bottom-bar">
+        <button type="button" id="playButton" class="menu-button">Lay it Down</button>
     </div>
+
     <script src="drum.js"></script>
 </body>
-
 </html>
