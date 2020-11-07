@@ -8,8 +8,9 @@ function main() {
 
     var audio_ctx = new AudioContext();
 
-    var guitar = new Guitar(canvas);
+    var guitar = new Guitar(canvas, audio_ctx);
     guitar.sounds = createGuitarSoundArray(audio_ctx);
+    guitar.strings = guitar.createStrings();
     guitar.draw();
 
     canvas.addEventListener("click", function(event) {
@@ -74,8 +75,9 @@ function resizeCanvas() {
 }
 
 // Main guitar object
-function Guitar(canvas) {
+function Guitar(canvas, audio_ctx) {
     this.sounds = [];
+    this.strings = [];
 
     this.number_of_strings = 6;
     this.number_of_frets = 19;
@@ -110,12 +112,12 @@ function Guitar(canvas) {
                 this.fretboard_rect.width,
                 this.fretboard_rect.height / 12,
                 this.sounds[i],
-                canvas
+                canvas,
+                audio_ctx
             );
         }
         return strings;
     };
-    this.strings = this.createStrings();
 
     // Returns a two dimensional array of fret bounding boxes that overlays the fretboard
     // For frets[i][j], i represents the string number, and j the fret number
@@ -252,7 +254,7 @@ function Guitar(canvas) {
 // A GuitarString object consists of a rectangular bounding box for registering click events,
 // and an array of sounds the string is capable of producing. This sound produced by the string changes
 // depending on the fret value.
-function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
+function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas, audio_ctx) {
     this.string_rect = {
         x: rect_x,
         y: rect_y,
@@ -288,15 +290,18 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
     // Plays string audio based on current fret value
     this.pluck = function() {
         if(!this.is_playing) {
-            var sound = new Audio();        // Play note
-            sound.src = sounds[this.current_fret];
-            sound.play();
-            delete sound;
+            this.is_playing = true;  
 
-            this.is_playing = true;         // Delay click sensitivity
-            setTimeout(function() {
+            // Play sound through audio context
+            var source = audio_ctx.createBufferSource();
+            source.buffer = this.sounds[this.current_fret];
+            source.connect(audio_ctx.destination);
+            source.start();
+
+           // Delay click sensitivity
+            setTimeout(() => {
                 this.is_playing = false;
-            }.bind(this), this.play_delay);
+            }, this.play_delay);
         }
     };
 
