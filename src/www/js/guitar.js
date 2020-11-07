@@ -1,10 +1,8 @@
-var url_header = "sounds/guitar/";
-
 window.onload = main;
 
 function main() {
     var canvas = document.getElementById("guitarCanvas");
-    resizeCanvas();
+    resizeCanvas("guitarCanvas", "guitarBlock");
 
     var audio_ctx = new AudioContext();
 
@@ -67,13 +65,6 @@ function main() {
     });
 }
 
-function resizeCanvas() {
-    var container = document.getElementById("guitarBlock");
-    var canvas = document.getElementById("guitarCanvas");
-    canvas.width = container.offsetWidth;
-    canvas.height = container.offsetHeight;
-}
-
 // Main guitar object
 function Guitar(canvas, audio_ctx) {
     this.sounds = [];
@@ -131,8 +122,8 @@ function Guitar(canvas, audio_ctx) {
                     y: this.fretboard_rect.y + 
                        (this.fretboard_rect.height * 0.92) - 
                        (i * this.fretboard_rect.height / (this.number_of_strings - 1) * 0.92),
-                    width: this.fretboard_rect.width / this.number_of_frets,
-                    height: this.fretboard_rect.height / 12
+                    w: this.fretboard_rect.width / this.number_of_frets,
+                    h: this.fretboard_rect.height / 12
                 };
             }
             frets[i] = string;
@@ -171,11 +162,11 @@ function Guitar(canvas, audio_ctx) {
             var fret_number = string.current_fret;
             var fret_width = this.fretboard_rect.width / this.number_of_frets;
             var fret_x = (fret_width * fret_number) + (fret_width / 2);
-            var fret_y = string.string_rect.y + (string.string_rect.height / 2);
+            var fret_y = string.string_rect.y + (string.string_rect.h / 2);
 
             ctx.fillStyle = "red";
             ctx.beginPath();
-            ctx.arc(fret_x, fret_y, string.string_rect.height / 2.5, 0, 360);
+            ctx.arc(fret_x, fret_y, string.string_rect.h / 2.5, 0, 360);
             ctx.fill();
             ctx.closePath();
         }.bind(this));
@@ -258,8 +249,8 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas, audio_ctx)
     this.string_rect = {
         x: rect_x,
         y: rect_y,
-        width: rect_w,
-        height: rect_h
+        w: rect_w,
+        h: rect_h
     };
     this.sounds = sounds;
     this.current_fret = 0;
@@ -272,17 +263,17 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas, audio_ctx)
 
         // Draw stroke for string visual
         if(this.is_playing) {
-            ctx.lineWidth = (this.string_rect.height / 3) + 2 * (Math.sin(0.1 * Date.now()));
+            ctx.lineWidth = (this.string_rect.h / 3) + 2 * (Math.sin(0.1 * Date.now()));
         }
         else {
-            ctx.lineWidth = (this.string_rect.height) / 3;
+            ctx.lineWidth = (this.string_rect.h) / 3;
         }
         ctx.strokeStyle = "white";
         ctx.lineCap = "round";
 
         ctx.beginPath();
-        ctx.moveTo(this.string_rect.x, this.string_rect.y + this.string_rect.height / 2);
-        ctx.lineTo(this.string_rect.x + this.string_rect.width, this.string_rect.y + this.string_rect.height / 2);
+        ctx.moveTo(this.string_rect.x, this.string_rect.y + this.string_rect.h / 2);
+        ctx.lineTo(this.string_rect.x + this.string_rect.w, this.string_rect.y + this.string_rect.h / 2);
         ctx.stroke();
         ctx.closePath();
     };
@@ -380,19 +371,4 @@ function createGuitarSoundArray(audio_ctx) {
     })
 
     return buffers;
-}
-
-// Determines whether a given x,y pair is within the bounds of a given rectangle
-// Expectes rect object to be in format {x: , y: , width: , height: }
-function isInBounds(x, y, rect) {
-    var x_lower = rect.x;
-    var x_upper = rect.x + rect.width;
-    var y_lower = rect.y;
-    var y_upper = rect.y + rect.height;
-    if(x > x_lower && x < x_upper && y > y_lower && y < y_upper ) {
-        return true;
-    }
-    else {
-        return false;
-    }
 }

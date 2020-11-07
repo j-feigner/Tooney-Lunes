@@ -17,6 +17,7 @@
             <canvas id="guitarCanvas"></canvas>
 
             <script src="js/guitar.js"></script>
+            <script src="js/utils.js"></script>
         </div>
     </div>
 
