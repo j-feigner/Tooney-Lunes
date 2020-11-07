@@ -357,3 +357,7 @@ function isInBounds(x, y, rect) {
         return false;
     }
 }
+
+var note_mode_opt = document.getElementById("note");
+var chord_mode_opt = document.getElementById("chord");
+
