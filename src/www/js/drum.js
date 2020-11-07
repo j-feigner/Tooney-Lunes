@@ -1,4 +1,4 @@
-var url_header = "https://j-feigner.github.io/Tooney-Lunes/src/sound_files/drums/";
+var url_header = "sounds/drum/";//"https://j-feigner.github.io/Tooney-Lunes/src/sound_files/drums/";
 
 window.onload = main;
 

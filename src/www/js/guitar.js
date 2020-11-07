@@ -1,10 +1,15 @@
+var url_header = "sounds/guitar/";
+
 window.onload = main;
 
 function main() {
     var canvas = document.getElementById("guitarCanvas");
     resizeCanvas();
 
+    var audio_ctx = new AudioContext();
+
     var guitar = new Guitar(canvas);
+    guitar.sounds = createGuitarSoundArray(audio_ctx);
     guitar.draw();
 
     canvas.addEventListener("click", function(event) {
@@ -70,7 +75,7 @@ function resizeCanvas() {
 
 // Main guitar object
 function Guitar(canvas) {
-    this.sounds = createGuitarSoundArray();
+    this.sounds = [];
 
     this.number_of_strings = 6;
     this.number_of_frets = 19;
@@ -302,7 +307,7 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas) {
 }
 
 // Creates initial array of guitar sound sources from source files
-function createGuitarSoundArray() {
+function createGuitarSoundArray(audio_ctx) {
     var sound_srcs = [
         [   // String 1
             "sounds/guitar/1_0_E3.mp3",    // String 1, Fret 0
@@ -348,7 +353,28 @@ function createGuitarSoundArray() {
         ]
     ];
 
-    return sound_srcs;
+    var buffers = [];
+    
+    sound_srcs.forEach((string, index) => {
+        var string_buffers = [];
+
+        string.forEach((note, index) => {
+            var req = new XMLHttpRequest();
+            req.open("GET", note);
+            req.responseType = "arraybuffer";
+            req.onload = function() {
+                var audio_data = req.response;
+                audio_ctx.decodeAudioData(audio_data, function(buffer) {
+                    string_buffers[index] = buffer;
+                });
+            }
+            req.send();
+        })
+
+        buffers[index] = string_buffers;
+    })
+
+    return buffers;
 }
 
 // Determines whether a given x,y pair is within the bounds of a given rectangle
