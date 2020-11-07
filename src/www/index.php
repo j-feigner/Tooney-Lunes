@@ -1,43 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <?php
+        $header = file_get_contents("html/header.html");
+        echo $header;
+    ?>
+</head>
 <body>
-
-<?php
-echo "Welcome to Tuuney. ";
-echo "If you're seeing this message our server is working. ";
-
-echo "Here is a test query of our database...<br><br>";
-
-$servername = "tuuney";
-$username = "root";
-$password = "";
-$dbname = "tuuneyDB";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-
-$sql = "SELECT username, email, song_title 
-          FROM Users, Song
-         WHERE Users.user_id = Song.user_id;";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-  // output data of each row
-  while($row = $result->fetch_assoc()) {
-    echo " - Username: " . $row["username"].
-         " - Email: " . $row["email"]. 
-         " - Song: " . $row["song_title"].
-         "<br>";
-  }
-} else {
-  echo "0 results";
-}
-$conn->close();
-?>
-
+    <?php
+        $top_bar = file_get_contents("html/top_bar.html");
+        echo $top_bar;
+    ?>
+    <div id="pageContents" class="page-contents">
+        <div class="screen-message-container">
+            <div class="screen-message-contents">
+                <h1>WELCOME TO TOONEY LUNES</h1>
+                <h3>Play instruments, make songs, and share your creations.</h3>
+                <p>Designed by Brian Corbett, Jordan Feigner, Matthew Nicholson, and James Pelligra</p>
+                <p>2020</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
