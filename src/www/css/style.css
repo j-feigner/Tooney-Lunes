@@ -164,6 +164,19 @@ html, body {
     background-color: white;
 }
 
+.guitar-prompt {
+    position: absolute;
+    width: 10%;
+    top: -5%;
+    left: 20%;
+    animation-name: bounce;
+    animation-duration: 1s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
 .screen-message-container {
     width: 70%;
     height: 70%;
@@ -192,5 +205,23 @@ html, body {
     to {
         background-color: rgba(10, 10, 10, 0.65);
         margin-top: 5%;
+    }
+}
+
+@keyframes bounce {
+    from {
+        margin-top: 0px;
+    }
+    to {
+        margin-top: 6px;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1.0;
+    }
+    to {
+        opacity: 0.0;
     }
 }
