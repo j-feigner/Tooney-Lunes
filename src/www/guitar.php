@@ -13,7 +13,7 @@
     ?>
 
     <div id="pageContents" class="page-contents">
-        <div id="guitarBlock" class="canvas-container">
+        <div id="guitarBlock" class="full-canvas">
             <canvas id="guitarCanvas"></canvas>
 
             <script src="js/guitar.js"></script>
