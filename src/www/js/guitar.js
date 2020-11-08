@@ -89,7 +89,7 @@ function Guitar(canvas, audio_ctx) {
     this.number_of_frets = 19;
 
     this.neck_length = canvas.width * 0.9;
-    this.neck_width = canvas.height * 0.2;
+    this.neck_width = this.neck_length * 0.1;
 
     this.outer_rect = {
         x: (canvas.width - this.neck_length) / 2,
@@ -124,7 +124,7 @@ function Guitar(canvas, audio_ctx) {
         for(var i = 0; i < this.number_of_strings; i++) {
             strings[i] = new GuitarString(
                 this.outer_rect.x, 
-                this.outer_rect.y + this.outer_rect.h - (i * this.fret_height) - (this.fret_height / 2),
+                this.outer_rect.y + this.outer_rect.h - (i * this.fret_height) - (this.fret_height / 2) - (this.string_width / 2),
                 this.outer_rect.w,
                 this.string_width,
                 this.sounds[i],
@@ -393,6 +393,8 @@ function createGuitarSoundArray(audio_ctx) {
 
     var buffers = [];
     
+    // Asynchronously requests sound source files from server
+    // and processes them into audio buffers for use with AudioContext()
     sound_srcs.forEach((string, index) => {
         var string_buffers = [];
 
