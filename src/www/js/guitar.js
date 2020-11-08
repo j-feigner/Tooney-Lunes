@@ -41,8 +41,6 @@ function main() {
                     string.pluck();
                 }
             });
-            var play = setInterval(guitar.draw(), 20)
-            setTimeout(clearInterval(play), 400);
         }
     });
     canvas.addEventListener("mouseup", function() {
@@ -50,11 +48,6 @@ function main() {
             guitar.is_strumming = false;
         }
     });
-    canvas.addEventListener("mouseout", function() {
-        if(guitar.is_strumming) {
-            guitar.is_strumming = false;
-        }
-    })
 
     var pick_button = document.getElementById("pickButton");
     pick_button.addEventListener("click", function() {
@@ -108,7 +101,7 @@ function Guitar(canvas, audio_ctx) {
     this.fret_width = this.fretboard_rect.w / this.number_of_frets;
     this.fret_height = this.fretboard_rect.h / this.number_of_strings;
 
-    this.string_width = 5;
+    this.string_width = 10;
 
     this.strum_delay = 25;
 
@@ -217,13 +210,10 @@ function Guitar(canvas, audio_ctx) {
     // Creates and draws all approoriate guitar elements to the canvas
     this.draw = function() {
         var ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.restore();
-        //this.drawFretboard();
-        for(var i = 0; i < this.strings.length; i++) {
-            this.strings[i].drawString();
-        }
-        this.drawFrettedSymbols();
+        this.strings.forEach((string) => {
+            string.drawString();
+        })
+        window.requestAnimationFrame(() => this.draw());
     };
 
     // Plucks all strings of the guitar with a given delay
@@ -235,9 +225,9 @@ function Guitar(canvas, audio_ctx) {
 
     // Helper function for Guitar.strum() to allow for delay between each sring pluck
     this.strumDelay = function(i) {
-        setTimeout(function() {
+        setTimeout(() => {
             this.strings[i].pluck();
-        }.bind(this), this.strum_delay * i);
+        }, this.strum_delay * i);
     };
 
     // Checks each fret bounding box against the given x,y pair
@@ -267,16 +257,16 @@ function Guitar(canvas, audio_ctx) {
             }, 20);
 
             this.picking_interval = setInterval( () => {    // SetInterval sets the entire pattern delay
-                setTimeout( () => {                         // SetTimeout sets the individual note delays within the pattern
+                setTimeout(() => {                         // SetTimeout sets the individual note delays within the pattern
                     this.strings[0].pluck();
                 }, 0);
-                setTimeout( () => {
+                setTimeout(() => {
                     this.strings[4].pluck();
                 }, 250);
-                setTimeout( () => {
+                setTimeout(() => {
                     this.strings[2].pluck();
                 }, 500);
-                setTimeout( () => {
+                setTimeout(() => {
                     this.strings[3].pluck();
                 }, 750);
             }, 1000);
@@ -294,28 +284,33 @@ function GuitarString(rect_x, rect_y, rect_w, rect_h, sounds, canvas, audio_ctx)
         w: rect_w,
         h: rect_h
     };
+    this.string_width = this.rect.h / 2;
+    this.pluck_strength = 1;
+
     this.sounds = sounds;
     this.current_fret = 0;
     this.is_playing = false;
-    this.play_delay = 300;
+    this.play_delay = 380;
 
     // Renders the string to the canvas
     this.drawString = function() {
         var ctx = canvas.getContext("2d");
 
+        ctx.clearRect(this.rect.x, this.rect.y, this.rect.w, this.rect.h);
+
         // Draw stroke for string visual
         if(this.is_playing) {
-            ctx.lineWidth = this.rect.h;//ctx.lineWidth = (this.string_rect.h / 3) + 2 * (Math.sin(0.1 * Date.now()));
+            ctx.lineWidth = this.string_width + this.pluck_strength * (Math.sin(0.1 * Date.now()));
         }
         else {
-            ctx.lineWidth = this.rect.h;//ctx.lineWidth = (this.string_rect.h) / 3;
+            ctx.lineWidth = this.string_width;
         }
         ctx.strokeStyle = "white";
         ctx.lineCap = "round";
 
         ctx.beginPath();
-        ctx.moveTo(this.rect.x, this.rect.y);
-        ctx.lineTo(this.rect.x + this.rect.w, this.rect.y);
+        ctx.moveTo(this.rect.x, this.rect.y + (this.rect.h / 2));
+        ctx.lineTo(this.rect.x + this.rect.w, this.rect.y + (this.rect.h / 2));
         ctx.stroke();
         ctx.closePath();
     };
