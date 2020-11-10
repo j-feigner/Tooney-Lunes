@@ -14,9 +14,11 @@
 
     <div id="pageContents" class="page-contents">
         <div id="guitarBlock" class="canvas-container">
+            <img src="../images/guitar_strum_prompt" id="strumPrompt" class="guitar-prompt">
             <canvas id="guitarCanvas"></canvas>
 
             <script src="js/guitar.js"></script>
+            <script src="js/utils.js"></script>
         </div>
     </div>
 
