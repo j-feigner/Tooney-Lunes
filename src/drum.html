@@ -19,19 +19,17 @@
             <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
             <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
         </div>
-
         <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
-        <button type="button" id="userProfileButton" class="menu-button">User</button>
     </div>
 
     <div id="drumBlock" class="canvas-container">
         <canvas id="drumCanvas"></canvas>
+        <div id="instrSwitcher">
+            <button type="button" id="left" onclick="window.location='guitar.html'"><< Guitar</button>
+            <button type="button" id="right" onclick="window.location='piano.html'">Piano >></button>
+        </div>
     </div>
 
-    <div id="instrSwitcher">
-        <button type="button" id="left" onclick="window.location='guitar.html'"><< Guitar</button>
-        <button type="button" id="right" onclick="window.location='piano.html'">Piano >></button>
-    </div>
 
     <div id="bottomBar" class="bottom-bar">
         <button type="button" id="playButton" class="menu-button">Lay it Down</button>

@@ -21,7 +21,7 @@
             <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
             <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
         </div>
-        <button type="button" id="songMakerButton" class="menu-button">Song Maker</button>
+        <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
     </div>
 
     <div id="usernameContainer" class="profile-details-container">
@@ -33,25 +33,24 @@
     <script>profileDetailsSlideIn()</script>
 
     <div class="profile-info-container">
-        <div class="info-container">
+        <div id="genreInfoContainer" class="info-container">
             <div class="info-oval">
                 <p class="info-title">Genre Preferences</p>
             </div>
-            <p class="info">Rock</p>
+            <p onclick='raise("genreInfo")' id="genreInfo" class="info">Rock</p>
         </div>
-        <div class="info-container">
+        <div id="instrInfoContainer" class="info-container">
             <div class="info-oval">
                 <p class="info-title">Instrument Specialty</p>
             </div>
-            <p class="info">Piano, Guitar, Drums</p>
+            <p onclick='raise("instrInfo")' id="instrInfo" class="info">Piano, Guitar, Drums</p>
         </div>
-        <div class="info-container">
+        <div id="expInfoContainer" class="info-container">
             <div class="info-oval">
                 <p class="info-title">Music Experience</p>
             </div>
-            <p class="info">Beginner</p>
+            <p onclick='raise("expInfo")' id="expInfo" class="info">Beginner</p>
         </div>
-
     </div>
 </body>
 
