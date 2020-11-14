@@ -26,6 +26,8 @@ function main() {
         song.readGrid(melody_grid, song.melody_beat_data);
         song.readGrid(percussion_grid, song.percussion_beat_data);
         song.play(audio_ctx);
+        melody_grid.start(song.tempo);
+        percussion_grid.start(song.tempo);
     });
 }
 
@@ -136,6 +138,27 @@ function Grid(num_cols, num_rows, canvas) {
     this.draw = function() {
         this.columns.forEach((column) => {
             column.draw(this.ctx);
+        })
+    }
+
+    this.start = function(tempo) {
+        var ms_per_beat = 60 / tempo * 1000;
+
+        this.columns.forEach((column, index) => {
+            var delay = ms_per_beat * index;
+
+            setTimeout(() => {
+                column.cells.forEach((cell) => {
+                    cell.is_playing = true;
+                    cell.draw(this.ctx);
+                });
+                setTimeout(() => {
+                    column.cells.forEach((cell) => {
+                        cell.is_playing = false;
+                        cell.draw(this.ctx);
+                    });
+                }, ms_per_beat);
+            }, delay);
         })
     }
 
