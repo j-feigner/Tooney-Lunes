@@ -13,15 +13,13 @@ function main() {
     resizeCanvas("gridCanvas", "gridContainer");
 
     var melody_grid = new Grid(32, 13, melody_canvas);
-    melody_grid.createColumns();
-    melody_grid.draw();
+    melody_grid.initialize();
 
     var percussion_canvas = document.getElementById("gridCanvas2");
     resizeCanvas("gridCanvas2", "gridContainer2");
 
     var percussion_grid = new Grid(32, 7, percussion_canvas);
-    percussion_grid.createColumns();
-    percussion_grid.draw();
+    percussion_grid.initialize();
 
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
@@ -147,10 +145,32 @@ function Grid(num_cols, num_rows, canvas) {
 
     }
 
+    this.createEventListeners = function() {
+        canvas.addEventListener("click", (event) => {
+            var mouse_x = event.offsetX;
+            var mouse_y = event.offsetY;
+
+            this.columns.forEach((column) => {
+                column.cells.forEach((cell) => {
+                    if(isInBounds(mouse_x, mouse_y, cell.rect)) {
+                        cell.is_filled = !cell.is_filled;
+                        cell.draw(this.ctx);
+                    }
+                })
+            })
+        })
+    }
+
     this.draw = function() {
         this.columns.forEach((column) => {
             column.draw(this.ctx);
         })
+    }
+
+    this.initialize = function() {
+        this.createColumns();
+        this.createEventListeners();
+        this.draw();
     }
 }
 
