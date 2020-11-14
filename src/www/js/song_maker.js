@@ -23,20 +23,13 @@ function main() {
 
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
+        test_song.readGrids(melody_grid, percussion_grid);
         test_song.play(audio_ctx);
     });
 }
 
 function Song() {
-    this.melody_beat_data = [
-        [0],
-        [0, 2],
-        [0, 4],
-        [0, 6],
-        [0, 4],
-        [0, 2],
-        [0]
-    ];
+    this.melody_beat_data = [];
     this.percussion_beat_data = [];
 
     this.melody_instrument = "";
@@ -109,6 +102,35 @@ function Song() {
                 source.start(current_time + delay);
             })
         })
+        this.percussion_beat_data.forEach((beat, beat_index) => {
+            var delay = 60 / this.tempo * beat_index;
+            
+            beat.forEach((note) => {
+                var source = audio_ctx.createBufferSource();
+                source.buffer = this.percussion_sounds[note];
+                source.connect(audio_ctx.destination);
+                source.start(current_time + delay);
+            })
+        })
+    }
+
+    this.readGrids = function(melody_grid, percussion_grid) {
+        melody_grid.columns.forEach((column, beat_index) => {
+            this.melody_beat_data[beat_index] = [];
+            column.cells.forEach((note, note_index) => {
+                if(note.is_filled) {
+                    this.melody_beat_data[beat_index].push(note_index);
+                }
+            })
+        })
+        percussion_grid.columns.forEach((column, beat_index) => {
+            this.percussion_beat_data[beat_index] = [];
+            column.cells.forEach((note, note_index) => {
+                if(note.is_filled) {
+                    this.percussion_beat_data[beat_index].push(note_index);
+                }
+            })
+        })
     }
 }
 
@@ -116,10 +138,10 @@ function Grid(num_cols, num_rows, canvas) {
     this.ctx = canvas.getContext("2d");
 
     this.rect = {
-        x: 0,
-        y: 0,
-        w: canvas.width,
-        h: canvas.height
+        x: 2,
+        y: 2,
+        w: canvas.width - 4,
+        h: canvas.height - 4
     };
 
     this.size = num_cols;
@@ -204,10 +226,10 @@ function GridColumn(col_x, col_y, col_width, col_height, col_size) {
 
 function GridCell(cell_x, cell_y, cell_width, cell_height) {
     this.rect = {
-        x: cell_x,
-        y: cell_y,
-        w: cell_width,
-        h: cell_height
+        x: cell_x + 0.5,
+        y: cell_y + 0.5,
+        w: cell_width - 0.5,
+        h: cell_height - 0.5
     };
 
     this.color = "red";
