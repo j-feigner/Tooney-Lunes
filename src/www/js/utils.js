@@ -22,6 +22,7 @@ function resizeCanvas(canvas_name, container_name) {
 }
 
 // Requests and loads instrument data from server from given instrument name
+// Inserts data into destination array within loadSounds()
 loadInstrument = function(instr_selection, destination) {
     var req = new XMLHttpRequest();
     req.open("GET", "load_instrument.php?name=" + instr_selection);

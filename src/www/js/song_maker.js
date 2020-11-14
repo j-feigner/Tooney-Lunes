@@ -3,11 +3,11 @@ window.onload = main;
 function main() {
     var audio_ctx = new AudioContext();
 
-    var test_song = new Song();
-    test_song.melody_instrument = "piano";
-    test_song.percussion_instrument = "drum";
-    loadInstrument(test_song.melody_instrument, test_song.melody_sounds);
-    loadInstrument(test_song.percussion_instrument, test_song.percussion_sounds);
+    var song = new Song();
+    song.melody_instrument = "piano";
+    song.percussion_instrument = "drum";
+    loadInstrument(song.melody_instrument, song.melody_sounds);
+    loadInstrument(song.percussion_instrument, song.percussion_sounds);
 
     var melody_canvas = document.getElementById("gridCanvas");
     resizeCanvas("gridCanvas", "gridContainer");
@@ -23,8 +23,9 @@ function main() {
 
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
-        test_song.readGrids(melody_grid, percussion_grid);
-        test_song.play(audio_ctx);
+        song.readGrid(melody_grid, song.melody_beat_data);
+        song.readGrid(percussion_grid, song.percussion_beat_data);
+        song.play(audio_ctx);
     });
 }
 
@@ -70,20 +71,13 @@ function Song() {
         })
     }
 
-    this.readGrids = function(melody_grid, percussion_grid) {
-        melody_grid.columns.forEach((column, beat_index) => {
-            this.melody_beat_data[beat_index] = [];
+    this.readGrid = function(grid, data_array) {
+        grid.columns.forEach((column, beat_index) => {
+            data_array[beat_index] = [];
+
             column.cells.forEach((note, note_index) => {
                 if(note.is_filled) {
-                    this.melody_beat_data[beat_index].push(note_index);
-                }
-            })
-        })
-        percussion_grid.columns.forEach((column, beat_index) => {
-            this.percussion_beat_data[beat_index] = [];
-            column.cells.forEach((note, note_index) => {
-                if(note.is_filled) {
-                    this.percussion_beat_data[beat_index].push(note_index);
+                    data_array[beat_index].push(note_index);
                 }
             })
         })
