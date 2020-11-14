@@ -15,10 +15,13 @@
     <div id="pageContents" class="page-contents">
         <div id="gridContainer" class="canvas-container">
             <canvas id="gridCanvas"></canvas>
-
-            <script src="js/song.js"></script>
-            <script src="js/utils.js"></script>
         </div>
+        <div id="gridContainer2">
+            <canvas id="gridCanvas2"></canvas>
+        </div>
+        
+        <script src="js/song_maker.js"></script>
+        <script src="js/utils.js"></script>
     </div>
 
     <div id="bottomBar" class="bottom-bar">
