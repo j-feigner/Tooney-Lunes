@@ -203,39 +203,51 @@ html, body {
     to {left: 0;}
 }
 
-.settings-icon {
-    /**/
-}
-
 .profile-info-container {
     position: absolute;
     top: 25%;
-    left: 3%;
     height: auto;
-    width: fit-contents;
+    width: 23%;
 }
 
 .info-container {
+    position: relative;
     box-shadow: 10px 10px 8px #888888;
-    width: fit-content;
+    width: 100%;
     border-radius: 20px;
     border: 2px solid black;
     background-color: #7F8EC7;
-    margin: 25px 0px 40px 0px;
+    margin: 40px 0px 40px 40px;
     padding: 0px 20px 10px 20px;
+    text-align: center;
 }
 
 .info-title {
+    display: inline-block;
+    position: relative;
     font-family: "Arial Black", Gadget, sans-serif;
     color: white;
-    margin-top: -10px;
-    margin-bottom: -10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     font-size: 1.5em;
     text-align: center;
     text-shadow: 5px 5px 8px black;
 }
 
+.settings-img {
+    display: inline-block;
+    position: relative;
+    height: 20px;
+    width: 20px;
+    margin-left: 10px;
+}
+
+.settings-img:hover {
+    cursor: pointer;
+}
+
 .info {
+    position: relative;
     font-family: "Arial Black", Gadget, sans-serif;
     color: white;
     font-size: 1em;
@@ -250,12 +262,35 @@ html, body {
 }
 
 .info-oval {
+    text-align: center;
+    position: relative;
     background-color: #ac3b61;
-    padding: 20px;
     width: auto;
     transform: translateY(-10px);
     border-radius: 100px;
     box-shadow: 10px 10px 8px black;
+}
+
+#genreCheckboxes {
+    display: none;
+}
+#genreCheckboxes label {
+    display: inline-block;
+    font-family: "Arial Black", Gadget, sans-serif;
+}
+#instrCheckboxes {
+    display: none;
+}
+#instrCheckboxes label {
+    display: inline-block;
+    font-family: "Arial Black", Gadget, sans-serif;
+}
+#expCheckboxes {
+    display: none;
+}
+#expCheckboxes label {
+    display: inline-block;
+    font-family: "Arial Black", Gadget, sans-serif;
 }
 
 #instrSwitcher {
@@ -272,7 +307,6 @@ html, body {
     outline: none;
     border: none;
     transition: background-color 0.3s;
-    box-shadow: 0 4px black;
     margin: 0 5px 0 5px;
 }
 #instrSwitcher button:hover {
