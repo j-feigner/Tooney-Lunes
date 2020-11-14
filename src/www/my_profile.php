@@ -1,28 +1,20 @@
-﻿<!doctype html>
+<!doctype html>
 
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="style.js"></script>
+    <?php
+        $header = file_get_contents("html\header.html");
+        echo $header;
+    ?>
+    <script type="text/javascript" src="js/style.js"></script>
 </head>
 
 <body>
-    <div id="topBar" class="top-bar">
-        <div id="title" class="title-img-container">
-            <img id="titleImg" class="title-img" src="image_files\my_profile_title.png">
-        </div>
-        <button type="button" id="myProfileButton" class="menu-button" onclick="window.location='profile.html'">My Profile</button>
-        <div id="instrumentsDropdown" class="dropdown">
-            <button type="button" class="dropdown-button">Instruments</button>
-            <button type="button" class="dropdown-option" onclick="window.location='piano.html'">Piano</button>
-            <button type="button" class="dropdown-option" onclick="window.location='guitar.html'">Guitar</button>
-            <button type="button" class="dropdown-option" onclick="window.location='drum.html'">Drums</button>
-        </div>
-        <button type="button" id="songMakerButton" class="menu-button" onclick="window.location='song.html'">Song Maker</button>
-    </div>
+    <?php
+        $top_bar = file_get_contents("html\myprofile_title_top_bar.html");
+        echo $top_bar;
+    ?>
 
     <div id="usernameContainer" class="profile-details-container">
         <p id="username" class="profile-details">MyUsername</p>
@@ -36,7 +28,7 @@
         <div id="genreInfoContainer" class="info-container">
             <div class="info-oval">
                 <p class="info-title">Genre Preferences</p>
-                <img onclick="showGenreCheckboxes()" id="genreSettings" class="settings-img" src="image_files\settings.png" />
+                <img onclick="showGenreCheckboxes()" id="genreSettings" class="settings-img" src="images\settings.png" />
             </div>
             <p id="genreInfo" class="info">Rock</p>
             <div class="multi-select">
@@ -53,7 +45,7 @@
         <div id="instrInfoContainer" class="info-container">
             <div class="info-oval">
                 <p class="info-title">Instrument Specialty</p>
-                <img onclick="showInstrCheckboxes()" id="instrSettings" class="settings-img" src="image_files\settings.png" />
+                <img onclick="showInstrCheckboxes()" id="instrSettings" class="settings-img" src="images\settings.png" />
             </div>
             <p id="instrInfo" class="info">Piano, Guitar, Drums</p>
             <div class="multi-select">
@@ -67,7 +59,7 @@
         <div id="expInfoContainer" class="info-container">
             <div class="info-oval">
                 <p class="info-title">Music Experience</p>
-                <img onclick="showExpCheckboxes()" id="expSettings" class="settings-img" src="image_files\settings.png" />
+                <img onclick="showExpCheckboxes()" id="expSettings" class="settings-img" src="images\settings.png" />
             </div>
             <p id="expInfo" class="info">Beginner</p>
             <div class="multi-select">
