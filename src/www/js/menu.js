@@ -4,6 +4,7 @@ var guitar_button = instrument_dropdown.children[2];
 var drum_button = instrument_dropdown.children[3];
 
 var song_maker_button = document.getElementById("songMakerButton");
+var profile_button = document.getElementById("userProfileButton");
 
 piano_button.addEventListener("click", function() {
     var href = "piano.php";
@@ -22,5 +23,10 @@ drum_button.addEventListener("click", function() {
 
 song_maker_button.addEventListener("click", function() {
     var href = "song.php";
+    window.location = href;
+})
+
+profile_button.addEventListener("click", function() {
+    var href = "index.php";
     window.location = href;
 })
