@@ -27,6 +27,6 @@ song_maker_button.addEventListener("click", function() {
 })
 
 profile_button.addEventListener("click", function() {
-    var href = "index.php";
+    var href = "my_profile.php";
     window.location = href;
 })
