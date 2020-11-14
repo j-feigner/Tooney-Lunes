@@ -8,7 +8,7 @@
 </head>
 <body>
     <?php
-        $top_bar = file_get_contents("html/top_bar.html");
+        $top_bar = file_get_contents("html/tooney_title_top_bar.html");
         echo $top_bar;
     ?>
 
