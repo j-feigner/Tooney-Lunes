@@ -1,0 +1,21 @@
+.stacking-canvas-container {
+    position: relative;
+    width: 90%;
+    margin: auto;
+}
+
+#gridContainer {
+    height: 50%;
+    top: 10%;
+}
+
+#gridContainer2 {
+    height: 25%;
+    top: 15%;
+}
+
+.stacking-canvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}

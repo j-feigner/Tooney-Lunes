@@ -5,6 +5,7 @@
         $header = file_get_contents("html/header.html");
         echo $header;
     ?>
+    <link rel="stylesheet" href="css/song_maker_style.css">
 </head>
 <body>
     <?php
@@ -13,11 +14,11 @@
     ?>
 
     <div id="pageContents" class="page-contents">
-        <div id="gridContainer" class="canvas-container">
-            <canvas id="gridCanvas"></canvas>
+        <div id="gridContainer" class="stacking-canvas-container">
+            <canvas id="gridCanvas" class="stacking-canvas"></canvas>
         </div>
-        <div id="gridContainer2">
-            <canvas id="gridCanvas2"></canvas>
+        <div id="gridContainer2" class="stacking-canvas-container">
+            <canvas id="gridCanvas2" class="stacking-canvas"></canvas>
         </div>
         
         <script src="js/song_maker.js"></script>
