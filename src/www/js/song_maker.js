@@ -6,8 +6,8 @@ function main() {
     var test_song = new Song();
     test_song.melody_instrument = "piano";
     test_song.percussion_instrument = "drum";
-    test_song.loadInstrument(test_song.melody_instrument, test_song.melody_sounds);
-    test_song.loadInstrument(test_song.percussion_instrument, test_song.percussion_sounds);
+    loadInstrument(test_song.melody_instrument, test_song.melody_sounds);
+    loadInstrument(test_song.percussion_instrument, test_song.percussion_sounds);
 
     var melody_canvas = document.getElementById("gridCanvas");
     resizeCanvas("gridCanvas", "gridContainer");
@@ -43,50 +43,6 @@ function Song() {
     this.num_beats = 32;
 
     this.tempo = 200;
-
-    // Requests and loads instrument data from server from given instrument name
-    this.loadInstrument = function(instr_selection, destination) {
-        var req = new XMLHttpRequest();
-        req.open("GET", "load_instrument.php?name=" + instr_selection);
-        req.onload = () => {
-            this.loadSounds(req.responseText, instr_selection, destination);
-        }
-        req.send();
-    }
-
-    // Callback function for loadInstrument
-    this.loadSounds = function(path_array, instrument, destination) {
-        var srcs = JSON.parse(path_array);
-        var ctx = new AudioContext();
-
-        // Attach path headers to sound sources
-        srcs.forEach((sound, index) => {
-            srcs[index] = "sounds/" + instrument + "/" + sound;
-        })
-
-        // Request and decode arraybuffers for each sound source
-        var req_remaining = srcs.length;
-        srcs.forEach((sound, index) => {
-            var req = new XMLHttpRequest();
-            req.open("GET", sound);
-            req.responseType = "arraybuffer";
-
-            req.onload = () => {
-                var data = req.response;
-                ctx.decodeAudioData(data, (buffer) => { // Decode success callback
-                    destination[index] = buffer;
-
-                    if(--req_remaining === 0) { // All sounds successfully loaded
-                        var stopper = 0;
-                    }
-                }, (error) => { // Decode failure callback
-                    alert(error);
-                })
-            }
-
-            req.send();
-        })
-    }
 
     // Loop through all beat data matrices and set buffer source nodes with proper delays
     this.play = function(audio_ctx) {
