@@ -3,26 +3,33 @@ window.onload = main;
 function main() {
     var audio_ctx = new AudioContext();
 
+    // Create and resize canvases
+    var melody_canvas = document.getElementById("gridCanvas");
+    var percussion_canvas = document.getElementById("gridCanvas2");
+    resizeCanvas("gridCanvas", "gridContainer");
+    resizeCanvas("gridCanvas2", "gridContainer2");
+
+    // Create and initialize grids
+    var melody_grid = new Grid(32, 13, melody_canvas, audio_ctx);
+    melody_grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 13);
+    melody_grid.initialize();
+
+    var percussion_grid = new Grid(32, 7, percussion_canvas, audio_ctx);
+    percussion_grid.color_seq = createColorGradient("rgb(125, 200, 0)", "rgb(255, 125, 0)", 7);
+    percussion_grid.initialize();
+
+    // Create song object
     var song = new Song();
     song.melody_instrument = "piano";
     song.percussion_instrument = "drum";
+
+    // Load all instrument sounds into song object and grids
     loadInstrument(song.melody_instrument, song.melody_sounds);
+    loadInstrument(song.melody_instrument, melody_grid.sounds);
     loadInstrument(song.percussion_instrument, song.percussion_sounds);
+    loadInstrument(song.percussion_instrument, percussion_grid.sounds);
 
-    var melody_canvas = document.getElementById("gridCanvas");
-    resizeCanvas("gridCanvas", "gridContainer");
-
-    var melody_grid = new Grid(32, 13, melody_canvas);
-    melody_grid.color_seq = createColorGradient("rgb(255, 0, 0)", "rgb(0, 0, 255)", 13);
-    melody_grid.initialize();
-
-    var percussion_canvas = document.getElementById("gridCanvas2");
-    resizeCanvas("gridCanvas2", "gridContainer2");
-
-    var percussion_grid = new Grid(32, 7, percussion_canvas);
-    percussion_grid.color_seq = createColorGradient("rgb(255, 0, 0)", "rgb(0, 255, 0)", 7);
-    percussion_grid.initialize();
-
+    // Play song button
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
         song.readGrid(melody_grid, song.melody_beat_data);
@@ -32,6 +39,15 @@ function main() {
 
         melody_grid.start(song.tempo);
         percussion_grid.start(song.tempo);
+    });
+
+    // Tempo control
+    var tempo_slider = document.getElementById("songTempo");
+    var tempo_value = document.getElementById("tempoValue");
+    tempo_value.innerHTML = song.tempo;
+    tempo_slider.addEventListener("input", function() {
+        song.tempo = tempo_slider.value * 2;
+        tempo_value.innerHTML = tempo_slider.value;
     });
 }
 
@@ -49,7 +65,7 @@ function Song() {
 
     this.num_beats = 32;
 
-    this.tempo = 200;
+    this.tempo = 120;
 
     // Loop through all beat data matrices and set buffer source nodes with proper delays
     this.play = function(audio_ctx) {
@@ -91,7 +107,7 @@ function Song() {
     }
 }
 
-function Grid(num_cols, num_rows, canvas) {
+function Grid(num_cols, num_rows, canvas, audio_ctx) {
     this.ctx = canvas.getContext("2d");
 
     this.rect = {
@@ -108,6 +124,9 @@ function Grid(num_cols, num_rows, canvas) {
     this.column_width = this.rect.w / this.size;
 
     this.color_seq = [];
+
+    this.sounds = [];
+    this.audio_ctx = audio_ctx;
 
     this.is_playing = false;
 
@@ -133,10 +152,13 @@ function Grid(num_cols, num_rows, canvas) {
             var mouse_y = event.offsetY;
 
             this.columns.forEach((column) => {
-                column.cells.forEach((cell) => {
+                column.cells.forEach((cell, index) => {
                     if(isInBounds(mouse_x, mouse_y, cell.rect)) {
                         cell.is_filled = !cell.is_filled;
                         cell.draw(this.ctx);
+                        if(cell.is_filled) {
+                            this.playCellSound(index);
+                        }
                     }
                 })
             })
@@ -178,6 +200,13 @@ function Grid(num_cols, num_rows, canvas) {
         this.createColumns();
         this.createEventListeners();
         this.draw();
+    }
+
+    this.playCellSound = function(index) {
+        var source = this.audio_ctx.createBufferSource();
+        source.buffer = this.sounds[index];
+        source.connect(audio_ctx.destination);
+        source.start();
     }
 }
 
