@@ -13,19 +13,23 @@ function main() {
     resizeCanvas("gridCanvas", "gridContainer");
 
     var melody_grid = new Grid(32, 13, melody_canvas);
+    melody_grid.color_seq = createColorGradient("rgb(255, 0, 0)", "rgb(0, 0, 255)", 13);
     melody_grid.initialize();
 
     var percussion_canvas = document.getElementById("gridCanvas2");
     resizeCanvas("gridCanvas2", "gridContainer2");
 
     var percussion_grid = new Grid(32, 7, percussion_canvas);
+    percussion_grid.color_seq = createColorGradient("rgb(255, 0, 0)", "rgb(0, 255, 0)", 7);
     percussion_grid.initialize();
 
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
         song.readGrid(melody_grid, song.melody_beat_data);
         song.readGrid(percussion_grid, song.percussion_beat_data);
+
         song.play(audio_ctx);
+
         melody_grid.start(song.tempo);
         percussion_grid.start(song.tempo);
     });
@@ -73,6 +77,7 @@ function Song() {
         })
     }
 
+    // Read data from grid object and insert into data_array
     this.readGrid = function(grid, data_array) {
         grid.columns.forEach((column, beat_index) => {
             data_array[beat_index] = [];
@@ -106,19 +111,22 @@ function Grid(num_cols, num_rows, canvas) {
 
     this.is_playing = false;
 
+    // Initialize column objects with calculated rect coordinates
     this.createColumns = function() {
         for(var i = 0; i < this.size; i++) {
             var col_x = this.rect.x + this.column_width * i;
 
-            this.columns[i] = new GridColumn(col_x, this.rect.y, this.column_width, this.rect.h, this.column_size);
+            this.columns[i] = new GridColumn(col_x, this.rect.y, this.column_width, this.rect.h, this.column_size, this.color_seq);
             this.columns[i].createCells();
         }
     }
 
+    // Initialize measure lines or beat divisions for song organization
     this.createSubdivisions = function() {
 
     }
 
+    // Creates ecent listeners on the canvas the grid is rendering to
     this.createEventListeners = function() {
         canvas.addEventListener("click", (event) => {
             var mouse_x = event.offsetX;
@@ -135,12 +143,15 @@ function Grid(num_cols, num_rows, canvas) {
         })
     }
 
+    // Loop through and draw all columns
     this.draw = function() {
         this.columns.forEach((column) => {
             column.draw(this.ctx);
         })
     }
 
+    // Starts the song playing animation with column and note highlighting
+    // This function is called seperately from Song.play() 
     this.start = function(tempo) {
         var ms_per_beat = 60 / tempo * 1000;
 
@@ -162,6 +173,7 @@ function Grid(num_cols, num_rows, canvas) {
         })
     }
 
+    // Set all initial values for Grid object
     this.initialize = function() {
         this.createColumns();
         this.createEventListeners();
@@ -169,7 +181,7 @@ function Grid(num_cols, num_rows, canvas) {
     }
 }
 
-function GridColumn(col_x, col_y, col_width, col_height, col_size) {
+function GridColumn(col_x, col_y, col_width, col_height, col_size, color_seq) {
     this.rect = {
         x: col_x,
         y: col_y,
@@ -183,13 +195,15 @@ function GridColumn(col_x, col_y, col_width, col_height, col_size) {
 
     this.cell_height = this.rect.h / this.size;
 
+    // Initializes cell objects with calculated rect coordinates
     this.createCells = function() {
         for(var i = 0; i < this.size; i++) {
             var cell_y = this.rect.y + this.rect.h - (this.cell_height * i) - this.cell_height;
-            this.cells[i] = new GridCell(this.rect.x, cell_y, this.rect.w, this.cell_height);
+            this.cells[i] = new GridCell(this.rect.x, cell_y, this.rect.w, this.cell_height, color_seq[i]);
         }
     }
 
+    // Loop through and draw each cell in this column
     this.draw = function(ctx) {
         this.cells.forEach((cell) => {
             cell.draw(ctx);
@@ -197,7 +211,7 @@ function GridColumn(col_x, col_y, col_width, col_height, col_size) {
     }
 }
 
-function GridCell(cell_x, cell_y, cell_width, cell_height) {
+function GridCell(cell_x, cell_y, cell_width, cell_height, cell_color) {
     this.rect = {
         x: cell_x + 0.5,
         y: cell_y + 0.5,
@@ -205,11 +219,12 @@ function GridCell(cell_x, cell_y, cell_width, cell_height) {
         h: cell_height - 0.5
     };
 
-    this.color = "red";
+    this.color = cell_color;
 
     this.is_playing = false;
     this.is_filled = false;
 
+    // Clear cell and draw updated value to canvas context
     this.draw = function(ctx) {
         ctx.lineWidth = 1;
         ctx.strokeStyle = "grey";
