@@ -10,8 +10,8 @@ function main() {
     resizeCanvas("gridCanvas2", "gridContainer2");
 
     // Create and initialize grids
-    var melody_grid = new Grid(32, 13, melody_canvas, audio_ctx);
-    melody_grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 13);
+    var melody_grid = new Grid(32, 20, melody_canvas, audio_ctx);
+    melody_grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 20);
     melody_grid.initialize();
 
     var percussion_grid = new Grid(32, 7, percussion_canvas, audio_ctx);
