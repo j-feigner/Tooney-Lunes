@@ -20,7 +20,7 @@ function main() {
 
     // Create song object
     var song = new Song();
-    song.melody_instrument = "synth_clean_supersaw";
+    song.melody_instrument = "piano";
     song.percussion_instrument = "drum";
 
     // Load all instrument sounds into song object and grids
@@ -110,11 +110,15 @@ function Song() {
 function Grid(num_cols, num_rows, canvas, audio_ctx) {
     this.ctx = canvas.getContext("2d");
 
+    this.outline_width = 6;
+    this.grid_line_width = 1;
+    this.line_offset = (this.outline_width / 2) + this.grid_line_width;
+
     this.rect = {
-        x: 2,
-        y: 2,
-        w: canvas.width - 4,
-        h: canvas.height - 4
+        x: this.line_offset,
+        y: this.line_offset,
+        w: canvas.width - (this.line_offset * 2),
+        h: canvas.height - (this.line_offset * 2)
     };
 
     this.size = num_cols;
@@ -172,6 +176,15 @@ function Grid(num_cols, num_rows, canvas, audio_ctx) {
         })
     }
 
+    this.outline = function() {
+        this.ctx.lineWidth = this.outline_width + 0.5;
+        this.ctx.strokeStyle = "black";
+        this.ctx.beginPath();
+        this.ctx.rect(0, 0, canvas.width, canvas.height);
+        this.ctx.stroke();
+        this.ctx.closePath();
+    }
+
     // Starts the song playing animation with column and note highlighting
     // This function is called seperately from Song.play() 
     this.start = function(tempo) {
@@ -199,6 +212,7 @@ function Grid(num_cols, num_rows, canvas, audio_ctx) {
     this.initialize = function() {
         this.createColumns();
         this.createEventListeners();
+        this.outline();
         this.draw();
     }
 
