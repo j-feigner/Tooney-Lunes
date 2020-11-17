@@ -64,7 +64,7 @@ function DrumKit(x, y, width, height) {
     this.width = width;
     this.height = height;
 
-    this.center_x = this.x + (this.width / 2);
+    this.center_x = this.x + this.width;
     this.center_y = this.y + (this.height / 2);
 
     this.loop = null;

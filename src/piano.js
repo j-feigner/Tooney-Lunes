@@ -31,9 +31,13 @@ function main() {
         })
     });
 
+    var note = document.getElementById("note");
     var mode = document.getElementById("mode");
-    mode.addEventListener("change", function() {
-        piano.play_mode = mode.value;
+    mode.addEventListener("click", function () {
+        if (note.checked)
+            piano.play_mode = "note";
+        else
+            piano.play_mode = "chord";
     });
 }
 
@@ -47,7 +51,7 @@ function resizeCanvas() {
 function Piano(x, y, width, height) {
     this.line_width =  10;
     this.border = this.line_width / 2;
-    
+
     this.x = Math.floor(x) + this.border;
     this.y = Math.floor(y) + this.border;
     this.w = Math.floor(width) - this.line_width;
@@ -126,7 +130,7 @@ function Piano(x, y, width, height) {
         for(var i = 0; i < 36; i++) {
             if(black_keys.includes(i)) {
                 this.keys[i] = new BlackKey(this.keys[i - 1].upper_rect_right_boundary + this.border,
-                                            this.y, 
+                                            this.y,
                                             this.black_key_width - this.border,
                                             this.black_key_height,
                                             this.line_width,
@@ -137,18 +141,18 @@ function Piano(x, y, width, height) {
                 var white_key_type = null;
                 if(white_left_keys.includes(i)) {
                     white_key_type = "left";
-                } 
+                }
                 else if(white_middle_keys.includes(i)) {
                     white_key_type = "middle";
                 }
                 else if(white_right_keys.includes(i)) {
                     white_key_type = "right";
                 }
-                this.keys[i] = new WhiteKey(white_key_type, 
-                                            this.x + (this.white_key_width * white_key_counter) + this.border, 
-                                            this.y, 
-                                            this.white_key_width, 
-                                            this.white_key_height, 
+                this.keys[i] = new WhiteKey(white_key_type,
+                                            this.x + (this.white_key_width * white_key_counter) + this.border,
+                                            this.y,
+                                            this.white_key_width,
+                                            this.white_key_height,
                                             this.line_width,
                                             this.sounds[i]
                                             );
@@ -176,21 +180,23 @@ function Piano(x, y, width, height) {
         window.requestAnimationFrame(() => this.update());
     }
 
-    this.playChord = function(key_index) {
+    this.playChord = function (key_index) {
         var root_key, third_key, fifth_key;
-        var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
-    
+        var degree_selection = document.getElementById("chordDegree");
+
         root_key = this.keys[key_index]
-    
-        if(degree_selection == "minor") {
-            third_key = this.keys[key_index + 3];
+
+        for (var i = 0; i < degree_selection.childNodes.length; i++) {
+            if (degree_selection.childNodes[i].checked) {
+                if (degree_selection.childNodes[i].value == "minor")
+                    third_key = this.keys[key_index + 3];
+                else
+                    third_key = this.keys[key_index + 4];
+            }
         }
-        else {
-            third_key = this.keys[key_index + 4];
-        }
-    
+
         fifth_key = this.keys[key_index + 7];
-        
+
         root_key.play();
         third_key.play();
         fifth_key.play();
@@ -222,7 +228,7 @@ function WhiteKey(key_type, x, y, width, height, line_width, piano_sound) {
         }
         if(this.white_key_type === "middle") {
             return this.black_key_width / 2;
-        } 
+        }
         if(this.white_key_type === "right") {
             return width - this.upper_width;
         }
@@ -357,7 +363,4 @@ function isInBounds(x, y, rect) {
         return false;
     }
 }
-
-var note_mode_opt = document.getElementById("note");
-var chord_mode_opt = document.getElementById("chord");
 
