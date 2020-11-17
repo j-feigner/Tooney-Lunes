@@ -21,6 +21,11 @@ function resizeCanvas(canvas_name, container_name) {
     canvas.height = container.offsetHeight;
 }
 
+function resizeCanvas2(canvas, container) {
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
+}
+
 // Requests and loads instrument data from server from given instrument name
 // Inserts data into destination array within loadSounds()
 function loadInstrument(instr_selection, destination) {

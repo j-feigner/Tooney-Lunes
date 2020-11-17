@@ -3,112 +3,88 @@ window.onload = main;
 function main() {
     var audio_ctx = new AudioContext();
 
-    // Create and resize canvases
-    var melody_canvas = document.getElementById("gridCanvas");
-    var percussion_canvas = document.getElementById("gridCanvas2");
-    resizeCanvas("gridCanvas", "gridContainer");
-    resizeCanvas("gridCanvas2", "gridContainer2");
-
-    // Create and initialize grids
-    var melody_grid = new Grid(40, 12, melody_canvas, audio_ctx);
-    melody_grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
-    melody_grid.initialize();
-
-    var percussion_grid = new Grid(40, 7, percussion_canvas, audio_ctx);
-    percussion_grid.color_seq = createColorGradient("rgb(125, 200, 0)", "rgb(255, 125, 0)", 7);
-    percussion_grid.initialize();
+    // Initialize first grid
+    var grids = [];
 
     // Create song object
     var song = new Song();
-    song.melody_instrument = "piano";
-    song.percussion_instrument = "drum";
+    song.tracks[0] = new SongTrack();
+    song.tracks[0].instrument = "piano";
+    loadInstrument(song.tracks[0].instrument, song.tracks[0].sounds);
 
-    // Load all instrument sounds into song object and grids
-    loadInstrument(song.melody_instrument, song.melody_sounds);
-    loadInstrument(song.melody_instrument, melody_grid.sounds);
-    loadInstrument(song.percussion_instrument, song.percussion_sounds);
-    loadInstrument(song.percussion_instrument, percussion_grid.sounds);
+    // Create first sample grid with piano sounds
+    grids.push(createGrid("piano", audio_ctx));
+
+    // Add grid to screen
+    var add_grid_button = document.getElementById("addGridButton");
+    add_grid_button.addEventListener("click", function() {
+
+    });
 
     // Play song button
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
-        song.readGrid(melody_grid, song.melody_beat_data);
-        song.readGrid(percussion_grid, song.percussion_beat_data);
-
+        song.readGrids(grids);
         song.play(audio_ctx);
 
-        melody_grid.start(song.tempo);
-        percussion_grid.start(song.tempo);
+        grids.forEach((grid) => {
+            grid.start(song.tempo);
+        })
     });
 
     // Tempo control
     var tempo_slider = document.getElementById("songTempo");
     var tempo_value = document.getElementById("tempoValue");
-    tempo_value.innerHTML = song.tempo;
+    tempo_value.innerHTML = song.tempo / 4;
     tempo_slider.addEventListener("input", function() {
-        song.tempo = tempo_slider.value * 2;
+        song.tempo = tempo_slider.value * 4;
         tempo_value.innerHTML = tempo_slider.value;
     });
 }
 
 function Song() {
-    this.melody_beat_data = [];
-    this.percussion_beat_data = [];
-
-    this.melody_instrument = "";
-    this.percussion_instrument = "";
-
-    this.melody_sounds = [];
-    this.percussion_sounds = [];
-
-    this.song_buffers = [];
+    this.tracks = [];
 
     this.num_beats = 32;
 
-    this.tempo = 120;
+    this.tempo = 120 * 4;
 
     // Loop through all beat data matrices and set buffer source nodes with proper delays
     this.play = function(audio_ctx) {
         var current_time = audio_ctx.currentTime;
 
-        this.melody_beat_data.forEach((beat, beat_index) => {
-            var delay = 60 / this.tempo * beat_index;
-            
-            beat.forEach((note) => {
-                var source = audio_ctx.createBufferSource();
-                source.buffer = this.melody_sounds[note];
-                source.connect(audio_ctx.destination);
-                source.start(current_time + delay);
-            })
-        })
-        this.percussion_beat_data.forEach((beat, beat_index) => {
-            var delay = 60 / this.tempo * beat_index;
-            
-            beat.forEach((note) => {
-                var source = audio_ctx.createBufferSource();
-                source.buffer = this.percussion_sounds[note];
-                source.connect(audio_ctx.destination);
-                source.start(current_time + delay);
+        this.tracks.forEach((track) => {
+            track.beat_data.forEach((beat, beat_index) => {
+                var delay = 60 / this.tempo * beat_index;
+
+                beat.forEach((note) => {
+                    var source = audio_ctx.createBufferSource();
+                    source.buffer = track.sounds[note];
+                    source.connect(audio_ctx.destination);
+                    source.start(current_time + delay);
+                })
             })
         })
     }
 
-    // Read data from grid object and insert into data_array
-    this.readGrid = function(grid, data_array) {
-        grid.columns.forEach((column, beat_index) => {
-            data_array[beat_index] = [];
-
-            column.cells.forEach((note, note_index) => {
-                if(note.is_filled) {
-                    data_array[beat_index].push(note_index);
-                }
-            })
+    this.readGrids = function(grids) {
+        grids.forEach((grid, track_index) => {
+            this.tracks[track_index].beat_data = grid.getData();
         })
     }
 }
 
+function SongTrack() {
+    this.instrument = "";
+    this.sounds = [];
+    this.beat_data = [];
+    this.gain = 1.0;
+}
+
 function Grid(num_cols, num_rows, canvas, audio_ctx) {
     this.ctx = canvas.getContext("2d");
+
+    this.instrument = "";
 
     this.outline_width = 6;
     this.grid_line_width = 1;
@@ -222,6 +198,19 @@ function Grid(num_cols, num_rows, canvas, audio_ctx) {
         source.connect(audio_ctx.destination);
         source.start();
     }
+
+    this.getData = function() {
+        var beats = [];
+        this.columns.forEach((column, beat_index) => {
+            beats[beat_index] = [];
+            column.cells.forEach((cell, note_index) => {
+                if(cell.is_filled) {
+                    beats[beat_index].push(note_index);
+                }
+            })
+        })
+        return beats;
+    }
 }
 
 function GridColumn(col_x, col_y, col_width, col_height, col_size, color_seq) {
@@ -293,4 +282,28 @@ function GridCell(cell_x, cell_y, cell_width, cell_height, cell_color) {
         ctx.stroke();
         ctx.closePath();
     }
+}
+
+function createGrid(instrument, audio_ctx) {
+    var container = document.createElement("div");
+    var canvas = document.createElement("canvas");
+
+    container.className = "stacking-canvas-container";
+    canvas.className = "stacking-canvas";
+
+    container.appendChild(canvas);
+
+    var page_contents = document.getElementById("pageContents");
+    var insert_point = document.getElementById("addGridButton");
+    page_contents.insertBefore(container, insert_point);
+
+    resizeCanvas2(canvas, container);
+
+    var new_grid = new Grid(40, 12, canvas, audio_ctx);
+    new_grid.instrument = instrument;
+    new_grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
+    loadInstrument(instrument, new_grid.sounds);
+    new_grid.initialize();
+
+    return new_grid;
 }
