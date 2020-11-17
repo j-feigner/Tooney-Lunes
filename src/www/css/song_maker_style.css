@@ -12,6 +12,7 @@
     position: absolute;
     top: 0px;
     left: 0px;
+    cursor: pointer;
 }
 
 .grid-overlay {
@@ -24,6 +25,15 @@
     border-radius: 10px;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.grid-creation-form {
+    position: relative;
+    width: 75%;
+    height: 20%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #bottomBar {

@@ -8,9 +8,7 @@ function main() {
 
     // Create song object
     var song = new Song();
-    song.tracks[0] = new SongTrack();
-    song.tracks[0].instrument = "piano";
-    loadInstrument(song.tracks[0].instrument, song.tracks[0].sounds);
+    song.tracks[0] = new SongTrack("piano");
 
     // Create first sample grid with piano sounds
     grids.push(createGrid("piano", audio_ctx));
@@ -18,7 +16,35 @@ function main() {
     // Add grid to screen
     var add_grid_button = document.getElementById("addGridButton");
     add_grid_button.addEventListener("click", function() {
+        var container = document.createElement("div");
+        var canvas = document.createElement("canvas");
+    
+        container.className = "stacking-canvas-container";
+        canvas.className = "stacking-canvas";
+    
+        container.appendChild(canvas);
+    
+        var page_contents = document.getElementById("pageContents");
+        var insert_point = document.getElementById("addGridButton");
+        page_contents.insertBefore(container, insert_point);
+    
+        resizeCanvas2(canvas, container);
 
+        var req = new XMLHttpRequest();
+        req.open("GET", "html/grid_overlay_create.html");
+        req.onload = () => {
+            var prompt_contents = req.responseText;
+            container.innerHTML = prompt_contents;
+
+            var submit_button = container.querySelector("#createGridButton");
+            submit_button.addEventListener("click", () => {
+                var instrument = container.querySelector("#instrumentSelect").value;
+                container.remove();
+                grids.push(createGrid(instrument, audio_ctx));
+                song.tracks.push(new SongTrack(instrument));
+            })
+        }
+        req.send();
     });
 
     // Play song button
@@ -42,11 +68,25 @@ function main() {
     });
 }
 
+function SongMaker() {
+    this.grids = [];
+
+    this.createGridPrompt = function() {
+
+    }
+
+    this.createGrid = function() {
+        
+    }
+
+    this.loadSong = function() {
+
+    }
+}
+
 function Song() {
     this.tracks = [];
-
     this.num_beats = 32;
-
     this.tempo = 120 * 4;
 
     // Loop through all beat data matrices and set buffer source nodes with proper delays
@@ -74,11 +114,13 @@ function Song() {
     }
 }
 
-function SongTrack() {
-    this.instrument = "";
+function SongTrack(instrument) {
+    this.instrument = instrument;
     this.sounds = [];
     this.beat_data = [];
     this.gain = 1.0;
+
+    loadInstrument(instrument, this.sounds);
 }
 
 function Grid(num_cols, num_rows, canvas, audio_ctx) {
