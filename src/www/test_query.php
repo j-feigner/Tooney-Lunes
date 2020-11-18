@@ -4,10 +4,10 @@ echo "If you're seeing this message our server is working. ";
 
 echo "Here is a test query of our database...<br><br>";
 
-$servername = "tuuney";
+$servername = "tooney-lunes";
 $username = "root";
 $password = "";
-$dbname = "tuuneyDB";
+$dbname = "tuneyloonsdb";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

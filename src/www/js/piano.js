@@ -31,10 +31,19 @@ function main() {
         })
     });
 
+    var note = document.getElementById("note");
     var mode = document.getElementById("mode");
-    mode.addEventListener("change", function() {
-        piano.play_mode = mode.value;
+    mode.addEventListener("click", function () {
+        if (note.checked)
+            piano.play_mode = "note";
+        else
+            piano.play_mode = "chord";
     });
+
+    //var mode = document.getElementById("mode");
+    //mode.addEventListener("change", function() {
+    //    piano.play_mode = mode.value;
+    //});
 }
 
 function resizeCanvas() {
@@ -178,15 +187,17 @@ function Piano(x, y, width, height) {
 
     this.playChord = function(key_index) {
         var root_key, third_key, fifth_key;
-        var degree_selection = document.querySelector("input[name=chord-degree]:checked").value;
+        var degree_selection = document.getElementById("chordDegree");
     
         root_key = this.keys[key_index]
     
-        if(degree_selection == "minor") {
-            third_key = this.keys[key_index + 3];
-        }
-        else {
-            third_key = this.keys[key_index + 4];
+        for (var i = 0; i < degree_selection.childNodes.length; i++) {
+            if (degree_selection.childNodes[i].checked) {
+                if (degree_selection.childNodes[i].value == "minor")
+                    third_key = this.keys[key_index + 3];
+                else
+                    third_key = this.keys[key_index + 4];
+            }
         }
     
         fifth_key = this.keys[key_index + 7];
