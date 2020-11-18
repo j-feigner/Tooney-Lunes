@@ -41,7 +41,7 @@ function resizeCanvas() {
 }
 
 // DrumKit container object
-function DrumKit(x, y, width, height, sounds) {
+function DrumKit(x, y, width, height) {
     this.drums = [];
 
     this.sounds = [];

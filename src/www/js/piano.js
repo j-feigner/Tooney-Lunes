@@ -5,17 +5,18 @@ window.onload = main;
 
 function main() {
     var canvas = document.getElementById("pianoCanvas");
-    resizeCanvas();
+    resizeCanvas("pianoCanvas", "pianoBlock");
+
+    var audio_ctx = new AudioContext();
 
     var piano_width = canvas.width * 0.95;
     var piano_height = canvas.height * 0.55;
 
     var x = (canvas.width - piano_width) / 2;
+    var y = 50;
 
-    var piano = new Piano(x, 50, piano_width, piano_height);
-    piano.createKeys();
-    piano.draw();
-    piano.update();
+    var piano = new Piano(x, y, piano_width, piano_height);
+    piano.start();
 
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
@@ -24,10 +25,10 @@ function main() {
         piano.keys.forEach(function(key, key_index) {
             if(key.isClicked(mouse_x, mouse_y)) {
                 if(piano.play_mode === "note") {
-                    piano.playNote(key);
+                    piano.playNote(key, audio_ctx);
                 }
                 if(piano.play_mode === "chord") {
-                    piano.playChord(key_index);
+                    piano.playChord(key_index, audio_ctx);
                 }
             }
         })
@@ -41,21 +42,11 @@ function main() {
         else
             piano.play_mode = "chord";
     });
-
-    //var mode = document.getElementById("mode");
-    //mode.addEventListener("change", function() {
-    //    piano.play_mode = mode.value;
-    //});
-}
-
-function resizeCanvas() {
-    var container = document.getElementById("pianoBlock");
-    var canvas = document.getElementById("pianoCanvas");
-    canvas.width = container.offsetWidth;
-    canvas.height = container.offsetHeight;
 }
 
 function Piano(x, y, width, height) {
+    this.sounds = [];
+
     this.line_width =  10;
     this.border = this.line_width / 2;
     
@@ -78,56 +69,7 @@ function Piano(x, y, width, height) {
     this.c = document.getElementById("pianoCanvas");
     this.ctx = this.c.getContext("2d");
 
-    this.createSounds = function() {
-        var piano_srcs = [
-			url_header + "/C_3.mp3",
-			url_header + "/Cs_3.mp3",
-			url_header + "/D_3.mp3",
-			url_header + "/Ds_3.mp3",
-			url_header + "/E_3.mp3",
-			url_header + "/F_3.mp3",
-			url_header + "/Fs_3.mp3",
-			url_header + "/G_3.mp3",
-			url_header + "/Gs_3.mp3",
-			url_header + "/A_3.mp3",
-			url_header + "/As_3.mp3",
-			url_header + "/B_3.mp3",
-			url_header + "/C_4.mp3",
-			url_header + "/Cs_4.mp3",
-			url_header + "/D_4.mp3",
-			url_header + "/Ds_4.mp3",
-			url_header + "/E_4.mp3",
-			url_header + "/F_4.mp3",
-			url_header + "/Fs_4.mp3",
-			url_header + "/G_4.mp3",
-			url_header + "/Gs_4.mp3",
-			url_header + "/A_4.mp3",
-			url_header + "/As_4.mp3",
-			url_header + "/B_4.mp3",
-			url_header + "/C_5.mp3",
-			url_header + "/Cs_5.mp3",
-			url_header + "/D_5.mp3",
-			url_header + "/Ds_5.mp3",
-			url_header + "/E_5.mp3",
-			url_header + "/F_5.mp3",
-			url_header + "/Fs_5.mp3",
-            url_header + "/G_5.mp3",
-            url_header + "/Gs_5.mp3",
-            url_header + "/A_5.mp3",
-            url_header + "/As_5.mp3",
-            url_header + "/B_5.mp3",
-            url_header + "/C_6.mp3"
-        ];
-        var sounds = [];
-		for(var i = 0; i < piano_srcs.length; i++) {
-			var sound = new Audio(piano_srcs[i]);
-			sounds.push(sound);
-		}
-        return sounds;
-    }
-    this.sounds = this.createSounds();
-
-    this.createKeys = function() {
+    this.createKeys = () => {
         var white_left_keys = [0, 5, 12, 17, 24, 29];
         var white_middle_keys = [2, 7, 9, 14, 19, 21, 26, 31, 33];
         var white_right_keys = [4, 11, 16, 23, 28, 35];
@@ -174,8 +116,8 @@ function Piano(x, y, width, height) {
         });
     }
 
-    this.playNote = function(key) {
-        key.play();
+    this.playNote = function(key, ctx) {
+        key.play(ctx);
     }
 
     this.update = function() {
@@ -187,7 +129,7 @@ function Piano(x, y, width, height) {
         window.requestAnimationFrame(() => this.update());
     }
 
-    this.playChord = function(key_index) {
+    this.playChord = function(key_index, ctx) {
         var root_key, third_key, fifth_key;
         var degree_selection = document.getElementById("chordDegree");
     
@@ -204,9 +146,19 @@ function Piano(x, y, width, height) {
     
         fifth_key = this.keys[key_index + 7];
         
-        root_key.play();
-        third_key.play();
-        fifth_key.play();
+        root_key.play(ctx);
+        third_key.play(ctx);
+        fifth_key.play(ctx);
+    }
+
+    this.start = function() {
+        loadInstrument("piano", this.sounds, this.initialize);
+    }
+
+    this.initialize = () => {
+        this.createKeys();
+        this.draw();
+        this.update();
     }
 }
 
@@ -279,17 +231,17 @@ function WhiteKey(key_type, x, y, width, height, line_width, piano_sound) {
         ctx.fill();
     }
 
-    this.play = function() {
+    this.play = function(ctx) {
+        var source = ctx.createBufferSource();
+        source.buffer = this.sound;
+        source.connect(ctx.destination);
+        source.start();
+
         this.is_playing = true;
         setTimeout(() => {
             this.is_playing = false;
             this.draw();
         }, 300);
-
-        var sound_clip = new Audio();
-        sound_clip.src = this.sound.src;
-        sound_clip.play();
-        delete sound_clip;
     }
 
     this.isClicked = function(x, y) {
@@ -336,17 +288,17 @@ function BlackKey(x, y, width, height, line_width, piano_sound) {
         ctx.fill();
     }
 
-    this.play = function() {
+    this.play = function(ctx) {
+        var source = ctx.createBufferSource();
+        source.buffer = this.sound;
+        source.connect(ctx.destination);
+        source.start();
+
         this.is_playing = true;
         setTimeout(() => {
             this.is_playing = false;
             this.draw();
         }, 300);
-
-        var sound_clip = new Audio();
-        sound_clip.src = this.sound.src;
-        sound_clip.play();
-        delete sound_clip;
     }
 
     this.isClicked = function(x, y) {
@@ -356,17 +308,5 @@ function BlackKey(x, y, width, height, line_width, piano_sound) {
         else {
             return false;
         }
-    }
-}
-
-function isInBounds(x, y, rect) {
-    var x_lower = rect.x
-    var x_upper = rect.x + rect.w;
-    var y_lower = rect.y;
-    var y_upper = rect.y + rect.h;
-    if(x > x_lower && x < x_upper && y > y_lower && y < y_upper) {
-        return true;
-    } else {
-        return false;
     }
 }
