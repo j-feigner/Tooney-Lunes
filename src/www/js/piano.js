@@ -1,5 +1,5 @@
 //var url_header = "https://j-feigner.github.io/Tooney-Lunes/sound_files/piano";
-var url_header = "sounds/piano"
+var url_header = "sounds/piano_alt"
 
 window.onload = main;
 

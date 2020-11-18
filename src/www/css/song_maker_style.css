@@ -1,0 +1,65 @@
+.stacking-canvas-container {
+    position: relative;
+    width: 95%;
+    height: 30%;
+    top: 12%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
+}
+
+.stacking-canvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    cursor: pointer;
+}
+
+.stacking-canvas-label {
+    position: absolute;
+    top: -20px;
+    left: 0px;
+    color: black;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.grid-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background-color: darkgrey;
+    border-radius: 10px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.grid-creation-form {
+    position: relative;
+    width: 75%;
+    height: 20%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#bottomBar {
+    position: fixed;
+}
+
+#addGridButton {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25%;
+    cursor: pointer;
+}
+
+#addGridButton :active {
+    transform: scale(0.96);
+}
