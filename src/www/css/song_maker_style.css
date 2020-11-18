@@ -15,6 +15,15 @@
     cursor: pointer;
 }
 
+.stacking-canvas-label {
+    position: absolute;
+    top: -20px;
+    left: 0px;
+    color: black;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 .grid-overlay {
     position: absolute;
     width: 100%;

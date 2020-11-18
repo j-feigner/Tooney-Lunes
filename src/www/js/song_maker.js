@@ -11,7 +11,7 @@ function main() {
     song.tracks[0] = new SongTrack("piano");
 
     // Create first sample grid with piano sounds
-    grids.push(createGrid("piano", audio_ctx));
+    grids.push(createGrid("Melody", "piano", audio_ctx));
 
     // Add grid to screen
     var add_grid_button = document.getElementById("addGridButton");
@@ -38,9 +38,10 @@ function main() {
 
             var submit_button = container.querySelector("#createGridButton");
             submit_button.addEventListener("click", () => {
+                var name = container.querySelector("#gridTitle").value;
                 var instrument = container.querySelector("#instrumentSelect").value;
                 container.remove();
-                grids.push(createGrid(instrument, audio_ctx));
+                grids.push(createGrid(name, instrument, audio_ctx));
                 song.tracks.push(new SongTrack(instrument));
             })
         }
@@ -66,22 +67,6 @@ function main() {
         song.tempo = tempo_slider.value * 4;
         tempo_value.innerHTML = tempo_slider.value;
     });
-}
-
-function SongMaker() {
-    this.grids = [];
-
-    this.createGridPrompt = function() {
-
-    }
-
-    this.createGrid = function() {
-        
-    }
-
-    this.loadSong = function() {
-
-    }
 }
 
 function Song() {
@@ -326,13 +311,17 @@ function GridCell(cell_x, cell_y, cell_width, cell_height, cell_color) {
     }
 }
 
-function createGrid(instrument, audio_ctx) {
+function createGrid(name, instrument, audio_ctx) {
     var container = document.createElement("div");
     var canvas = document.createElement("canvas");
+    var gird_name = document.createElement("span");
+    gird_name.innerHTML = name;
 
     container.className = "stacking-canvas-container";
     canvas.className = "stacking-canvas";
+    gird_name.className = "stacking-canvas-label"
 
+    container.appendChild(gird_name);
     container.appendChild(canvas);
 
     var page_contents = document.getElementById("pageContents");
