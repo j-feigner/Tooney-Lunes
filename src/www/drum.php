@@ -15,13 +15,17 @@
     <div id="pageContents" class="page-contents">
         <div id="drumBlock" class="canvas-container">
             <canvas id="drumCanvas"></canvas>
-
-            <script src="js/drum.js"></script>
+			<div id="instrSwitcher">
+				<button type="button" id="left" onclick="window.location='guitar.php'"><< Guitar</button>
+				<button type="button" id="right" onclick="window.location='piano.php'">Piano >></button>
+			</div>
         </div>
     </div>
 
     <div id="bottomBar" class="bottom-bar">
         <button type="button" id="playButton" class="menu-button">Lay it Down</button>
     </div>
+
+	<script src="js/drum.js"></script>
 </body>
 </html>

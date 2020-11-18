@@ -268,11 +268,17 @@ html, body {
     width: auto;
     transform: translateY(-10px);
     border-radius: 100px;
-    box-shadow: 10px 10px 8px black;
+    box-shadow: 7px 7px 8px black;
 }
 
 #genreCheckboxes {
     display: none;
+}
+#genreCheckboxes input {
+    float: left;
+    transform: translateY(5px);
+    margin-left: 20px;
+    margin-right: 5px;
 }
 #genreCheckboxes label {
     display: inline-block;
@@ -281,12 +287,24 @@ html, body {
 #instrCheckboxes {
     display: none;
 }
+#instrCheckboxes input {
+    float: left;
+    transform: translateY(5px);
+    margin-left: 20px;
+    margin-right: 5px;
+}
 #instrCheckboxes label {
     display: inline-block;
     font-family: "Arial Black", Gadget, sans-serif;
 }
 #expCheckboxes {
     display: none;
+}
+#expCheckboxes input {
+    float: left;
+    transform: translateY(5px);
+    margin-left: 20px;
+    margin-right: 5px;
 }
 #expCheckboxes label {
     display: inline-block;
@@ -328,42 +346,95 @@ html, body {
     border-right: 1px;
 }
 
-.binary-switch {
-    position: relative;
-    display: inline-block;
-    width: 400px;
-    height: 100%;
+.info-submit {
+    font-family: "Arial Black", Gadget, sans-serif;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    outline: none;
 }
 
-.binary-switch .left-label {
-    width: 120px;
-    height: 100%;
-    color: white;
+.form-img {
+    margin: 0 auto 20px auto;
+}
+#loginImg {
+    width: 60%;
+}
+#registerImg {
+    width: 70%;
+    margin-top: 30px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 30px 40px 30px;
+    width: 15%;
+    height: 400px;
+    margin-left: 37%;
+    margin-top: 10%;
+    background-color: #9DA9D5;
+    box-shadow: 5px 5px 5px #354277, -5px -5px 5px white;
+    border-radius: 50px;
+}
+
+.form-input {
+    width: 70%;
+    height: 30px;
+    margin: 0 auto 20px auto;
+    border-radius: 10px;
+    outline: none;
     text-align: center;
+    color: black;
+    transition: .5s ease;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: .75em;
+    box-shadow: -1px -1px 4px black, 2px 2px 4px white;
+}
+
+.form-input:focus {
+    width: 90%;
+    transition: .5s ease;
+}
+
+.submit-button {
+    width: 50%;
+    height: 30px;
+    margin: 0 auto 0 auto;
+    border-radius: 10px;
+    font-weight: 600;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: .75em;
+}
+
+.notice {
+    position: absolute;
+    border-radius: 5px;
+    padding: 1px 5px 1px 5px;
+    bottom: 26%;
+    opacity: 0;
+    font-size: .7em;
     font-family: "Arial Black", Gadget, sans-serif;
 }
-
-.binary-switch .slider {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: grey;
-    border-radius: 15px;
-    cursor: pointer;
+#error {
+    border-left: 4px solid red;
+    border-top: 1px solid red;
+    border-right: 1px solid red;
+    border-bottom: 1px solid red;
+    background: #fed1d1;
+}
+#success {
+    border-left: 4px solid limegreen;
+    border-top: 1px solid limegreen;
+    border-right: 1px solid limegreen;
+    border-bottom: 1px solid limegreen;
+    background: #C3FCC5;
 }
 
-.binary-switch .knob {
-    position: absolute;
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    top: 50%;
-    transform: translateY(-50%);
-    transition-property: all;
-    transition-duration: 200ms;
-    border-radius: 50%;
-    background-color: white;
+.reg-or-log {
+    color: black;
+    font-weight: 500;
 }

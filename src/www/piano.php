@@ -6,6 +6,7 @@
         echo $header;
     ?>
 </head>
+
 <body>
     <?php
         $top_bar = file_get_contents("html/tooney_title_top_bar.html");
@@ -15,28 +16,29 @@
     <div id="pageContents" class="page-contents">
         <div id="pianoBlock" class="canvas-container">
             <canvas id="pianoCanvas"></canvas>
-
-            <script src="js/piano.js"></script>
+            <div id="instrSwitcher">
+                <button type="button" id="left" onclick="window.location='drum.php'"><< Drums</button>
+                <button type="button" id="right" onclick="window.location='guitar.php'">Guitar >></button>
+            </div>
         </div>
     </div>
 
     <div id="bottomBar" class="bottom-bar">
-        <select id="mode" name="chord-mode">
-            <option value="note">Note Mode</option>
-            <option value="chord">Chord Mode</option>
-        </select>
+        <div class="bottom-bar-radio" id="mode">
+            <input type="radio" value="note_mode" name="mode" class="radio-input" id="note" checked />
+            <label class="radio-label" for="note">Note Mode</label>
+            <input type="radio" value="chord_mode" name="mode" class="radio-input" id="chord" />
+            <label class="radio-label" for="chord">Chord Mode</label>
+        </div>
 
-        <input type="radio" name="chord-degree" id="d1" value="major" checked> Major 
-        <input type="radio" name="chord-degree" id="d2" value="minor"> Minor
-        <!-- <div class="bottom-menu-div">
-            <div id="playMode" class="binary-switch">
-                <span class="left-label">Note Mode</span>
-                <div class="slider">
-                    <div class="knob" id="playModeKnob"></div>
-                </div>
-                <span class="right-label">Chord Mode</span>
-            </div>
-        </div> -->
+        <div class="bottom-bar-radio" id="chordDegree">
+            <input type="radio" value="major" name="chord-deg" class="radio-input" id="major" checked />
+            <label class="radio-label" for="major">Major</label>
+            <input type="radio" value="minor" name="chord-deg" class="radio-input" id="minor" />
+            <label class="radio-label" for="minor">Minor</label>
+        </div>
     </div>
+
+    <script src="js/piano.js"></script>
 </body>
 </html>
