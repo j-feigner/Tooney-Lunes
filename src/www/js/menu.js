@@ -5,6 +5,7 @@ var drum_button = instrument_dropdown.children[3];
 
 var song_maker_button = document.getElementById("songMakerButton");
 var profile_button = document.getElementById("userProfileButton");
+var logout_img = document.getElementById("logoutImg");
 
 piano_button.addEventListener("click", function() {
     var href = "piano.php";
@@ -28,5 +29,10 @@ song_maker_button.addEventListener("click", function() {
 
 profile_button.addEventListener("click", function() {
     var href = "my_profile.php";
+    window.location = href;
+})
+
+logout_img.addEventListener("click", function () {
+    var href = "login.php";
     window.location = href;
 })

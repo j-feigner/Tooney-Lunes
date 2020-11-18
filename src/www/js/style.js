@@ -47,3 +47,30 @@ function showExpCheckboxes() {
         expExpanded = false;
     }
 }
+
+function noticeFadeIn(notice_type) {
+    var noticeElm;
+    if (notice_type == "inv_log") {
+        var noticeElm = document.getElementById("error");
+        noticeElm.innerHTML = "Invalid login.";
+    } else if (notice_type == "taken_u") {
+        var noticeElm = document.getElementById("error");
+        noticeElm.innerHTML = "Taken username.";
+    } else if (notice_type == "taken_e") {
+        var noticeElm = document.getElementById("error");
+        noticeElm.innerHTML = "Taken email.";
+    } else if (notice_type == "insert_f") {
+        var noticeElm = document.getElementById("error");
+        noticeElm.innerHTML = "DB insert fail.";
+    } else if (notice_type == "reg_succ") {
+        var noticeElm = document.getElementById("success");
+        noticeElm.innerHTML = "Registration successful.";
+    }
+    var initOpacity = 0;
+    var timer = setInterval(function () {
+        if (initOpacity >= 0.9) {
+            clearInterval(timer);
+        }
+        noticeElm.style.opacity = initOpacity += 0.1;
+    }, 30);
+}
