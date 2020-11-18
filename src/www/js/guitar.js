@@ -22,8 +22,6 @@ function main() {
     guitar.draw();
     guitar.update();
 
-    var strum_prompt = document.getElementById("strumPrompt");
-
     canvas.addEventListener("click", function(event) {
         var mouse_x = event.offsetX;
         var mouse_y = event.offsetY;
@@ -47,11 +45,6 @@ function main() {
     });
     canvas.addEventListener("mouseup", function() {
         if(guitar.is_strumming) {
-            if(strum_prompt.style.opacity != "0.0") {
-                strum_prompt.style.animationName = "fade-out";
-                strum_prompt.style.animationDuration = "1s";
-                strum_prompt.style.animationIterationCount = "1";
-            }
             guitar.is_strumming = false;
         }
     });
@@ -427,4 +420,9 @@ function createGuitarSoundArray(audio_ctx) {
     })
 
     return buffers;
+}
+
+function createGuitarSoundArray2(audio_ctx) {
+    var sounds = [];
+    loadInstrument("guitar", sounds);
 }

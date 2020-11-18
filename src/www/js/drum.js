@@ -4,30 +4,15 @@ window.onload = main;
 
 function main() {
     var canvas = document.getElementById("drumCanvas");
-    resizeCanvas();
+    resizeCanvas("drumCanvas", "drumBlock");
 
     var audio_ctx = new AudioContext();
-    var gain_node = audio_ctx.createGain();
-    gain_node.connect(audio_ctx.destination);
 
     var kit_width = canvas.width / 2;
     var kit_height = kit_width / 2;
-    
-    var drum_kit = new DrumKit(0, 0, kit_width, kit_height);
-    drum_kit.createDrums();
 
-    drum_kit.drums.forEach(function(drum) {
-        var req = new XMLHttpRequest();
-        req.open("GET", drum.sound.src);
-        req.responseType = "arraybuffer";
-        req.onload = function() {
-            var audio_data = req.response;
-            audio_ctx.decodeAudioData(audio_data, function(buffer) {
-                drum.sound_buffer = buffer;
-            });
-        }
-        req.send();
-    });
+    var drum_kit = new DrumKit(0, 0, kit_width, kit_height);
+    loadInstrument("drum", drum_kit.sounds, drum_kit.createDrums);
 
     window.requestAnimationFrame(function(){drum_kit.animateDrums(canvas)});
 
@@ -59,6 +44,8 @@ function resizeCanvas() {
 function DrumKit(x, y, width, height) {
     this.drums = [];
 
+    this.sounds = [];
+
     this.x = x;
     this.y = y;
     this.width = width;
@@ -72,14 +59,14 @@ function DrumKit(x, y, width, height) {
 
     // Fills drums array and sets properties of each drum in the kit
     // Positions and proportions are ratios of the DrumKit bounding box to ensure proper resizing
-    this.createDrums = function() {
-        this.drums[0] = new Drum("kick", url_header + "kick.mp3", "images/kick.svg", this.center_x - this.width / 3.5 / 2, this.center_y, this.width / 3.5, this.height / 2);
-        this.drums[1] = new Drum("snare", url_header + "snare.mp3", "images/snare.svg", this.center_x + this.width / 5.5, this.center_y + this.height / 7, this.width / 6, this.width / 6);
-        this.drums[2] = new Drum("tom1", url_header + "tom1.mp3", "images/tom.svg", this.center_x - this.width / 10, this.center_y - this.height / 6, this.width / 10, this.width / 10);
-        this.drums[3] = new Drum("tom2", url_header + "tom2.mp3", "images/tom.svg", this.center_x, this.center_y - this.height / 6, this.width / 10, this.width / 10);
-        this.drums[4] = new Drum("hi_hat", url_header + "hi_hat.mp3", "images/cymbal.svg", this.center_x - this.width / 3, this.center_y + this.height / 5.5, this.width / 6.5, this.width / 6.5);
-        this.drums[5] = new Drum("crash", url_header + "crash.mp3", "images/cymbal.svg", this.center_x - this.width / 3, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
-        this.drums[6] = new Drum("ride",  url_header + "ride.mp3", "images/cymbal.svg", this.center_x + this.width / 10, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
+    this.createDrums = () => {
+        this.drums[0] = new Drum("kick", this.sounds[0], "images/kick.svg", this.center_x - this.width / 3.5 / 2, this.center_y, this.width / 3.5, this.height / 2);
+        this.drums[1] = new Drum("snare", this.sounds[1], "images/snare.svg", this.center_x + this.width / 5.5, this.center_y + this.height / 7, this.width / 6, this.width / 6);
+        this.drums[2] = new Drum("hi_hat", this.sounds[2], "images/cymbal.svg", this.center_x - this.width / 3, this.center_y + this.height / 5.5, this.width / 6.5, this.width / 6.5);
+        this.drums[3] = new Drum("tom1", this.sounds[3], "images/tom.svg", this.center_x - this.width / 10, this.center_y - this.height / 6, this.width / 10, this.width / 10);
+        this.drums[4] = new Drum("tom2", this.sounds[4], "images/tom.svg", this.center_x, this.center_y - this.height / 6, this.width / 10, this.width / 10);
+        this.drums[5] = new Drum("crash", this.sounds[5], "images/cymbal.svg", this.center_x - this.width / 3, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
+        this.drums[6] = new Drum("ride",  this.sounds[6], "images/cymbal.svg", this.center_x + this.width / 10, this.center_y - this.height / 3.5, this.width / 4.5, this.width / 4.5);
     }
 
     // Callback function for requestAnimationFrame, draws each drum in the kit
@@ -104,10 +91,10 @@ function DrumKit(x, y, width, height) {
         var eighth_note = s_per_beat / 2;
         var sixteenth_note = s_per_beat / 4;
 
-        this.drums[2].playBuffer(audio_ctx, measure - quarter_note);
-        this.drums[2].playBuffer(audio_ctx, measure - eighth_note - sixteenth_note);
-        this.drums[3].playBuffer(audio_ctx, measure - eighth_note);
-        this.drums[3].playBuffer(audio_ctx, measure - sixteenth_note);
+        this.drums[3].playBuffer(audio_ctx, measure - quarter_note);
+        this.drums[3].playBuffer(audio_ctx, measure - eighth_note - sixteenth_note);
+        this.drums[4].playBuffer(audio_ctx, measure - eighth_note);
+        this.drums[4].playBuffer(audio_ctx, measure - sixteenth_note);
         this.drums[5].playBuffer(audio_ctx, measure);
 
         for(var i = 1; i <= 4; i++) {
@@ -119,14 +106,14 @@ function DrumKit(x, y, width, height) {
             this.drums[1].playBuffer(audio_ctx, measure * i + quarter_note);
             this.drums[1].playBuffer(audio_ctx, measure * i + half_note + quarter_note);
     
-            this.drums[4].playBuffer(audio_ctx, measure * i);
-            this.drums[4].playBuffer(audio_ctx, measure * i + eighth_note);
-            this.drums[4].playBuffer(audio_ctx, measure * i + quarter_note);
-            this.drums[4].playBuffer(audio_ctx, measure * i + quarter_note + eighth_note);
-            this.drums[4].playBuffer(audio_ctx, measure * i + half_note);
-            this.drums[4].playBuffer(audio_ctx, measure * i + half_note + eighth_note);
-            this.drums[4].playBuffer(audio_ctx, measure * i + half_note + quarter_note);
-            this.drums[4].playBuffer(audio_ctx, measure * i + half_note + quarter_note + eighth_note);
+            this.drums[2].playBuffer(audio_ctx, measure * i);
+            this.drums[2].playBuffer(audio_ctx, measure * i + eighth_note);
+            this.drums[2].playBuffer(audio_ctx, measure * i + quarter_note);
+            this.drums[2].playBuffer(audio_ctx, measure * i + quarter_note + eighth_note);
+            this.drums[2].playBuffer(audio_ctx, measure * i + half_note);
+            this.drums[2].playBuffer(audio_ctx, measure * i + half_note + eighth_note);
+            this.drums[2].playBuffer(audio_ctx, measure * i + half_note + quarter_note);
+            this.drums[2].playBuffer(audio_ctx, measure * i + half_note + quarter_note + eighth_note);
         }
     }
 }
@@ -135,11 +122,7 @@ function DrumKit(x, y, width, height) {
 function Drum(drum_name, sound_src, image_src, x, y, width, height) {
     this.name = drum_name;
 
-    this.sound = new Audio();
-    this.sound.src = sound_src;
-    this.sound.crossOrigin = "";
-
-    this.sound_buffer = null;
+    this.sound_buffer = sound_src;
 
     this.img = new Image();
     this.img.src = image_src;
@@ -171,19 +154,6 @@ function Drum(drum_name, sound_src, image_src, x, y, width, height) {
         } else {
             ctx.drawImage(this.img, this.rect.x, this.rect.y, this.rect.w, this.rect.h);
         }
-    }
-
-    // Plays sounds and sets play flag variable for 100ms
-    this.play = function() {
-        var play_sound = new Audio();
-        play_sound.src = this.sound.src;
-        play_sound.play();
-        delete play_sound;
-
-        this.is_playing = true;
-        setTimeout( () => {
-            this.is_playing = false;
-        }, 200);
     }
 
     this.playBuffer = function(audio_ctx, delay) {

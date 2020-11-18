@@ -40,5 +40,6 @@
     </div>
 
     <script src="js/piano.js"></script>
+    <script src="js/utils.js"></script>
 </body>
 </html>
