@@ -28,17 +28,17 @@ function resizeCanvas2(canvas, container) {
 
 // Requests and loads instrument data from server from given instrument name
 // Inserts data into destination array within loadSounds()
-function loadInstrument(instr_selection, destination) {
+function loadInstrument(instr_selection, destination, callback) {
     var req = new XMLHttpRequest();
     req.open("GET", "load_instrument.php?name=" + instr_selection);
     req.onload = () => {
-        loadSounds(req.responseText, instr_selection, destination);
+        loadSounds(req.responseText, instr_selection, destination, callback);
     }
     req.send();
 }
 
 // Callback function for loadInstrument
-function loadSounds(path_array, instrument, destination) {
+function loadSounds(path_array, instrument, destination, callback) {
     var srcs = JSON.parse(path_array);
     var ctx = new AudioContext();
 
@@ -60,7 +60,7 @@ function loadSounds(path_array, instrument, destination) {
                 destination[index] = buffer;
 
                 if(--req_remaining === 0) { // All sounds successfully loaded
-                    var stopper = 0;
+                    callback();
                 }
             }, (error) => { // Decode failure callback
                 alert(error);

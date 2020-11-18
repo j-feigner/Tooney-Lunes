@@ -26,6 +26,7 @@
         <button type="button" id="playButton" class="menu-button">Lay it Down</button>
     </div>
 
-	<script src="js/drum.js"></script>
+    <script src="js/drum.js"></script>
+    <script src="js/utils.js"></script>
 </body>
 </html>

@@ -7,10 +7,12 @@ function main() {
     var canvas = document.getElementById("pianoCanvas");
     resizeCanvas();
 
-    var piano_width = canvas.width;
-    var piano_height = canvas.height;
+    var piano_width = canvas.width * 0.95;
+    var piano_height = canvas.height * 0.55;
 
-    var piano = new Piano(0, 0, piano_width, piano_height);
+    var x = (canvas.width - piano_width) / 2;
+
+    var piano = new Piano(x, 50, piano_width, piano_height);
     piano.createKeys();
     piano.draw();
     piano.update();
