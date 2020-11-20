@@ -1,7 +1,7 @@
 <?php
 	session_start();
 
-	$servername = "tooney-lunes";
+	$servername = "tuneyloons";
 	$username = "root";
 	$password = "";
 	$dbname = "tuneyloonsdb";

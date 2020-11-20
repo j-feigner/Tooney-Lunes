@@ -22,11 +22,18 @@
 		//var_dump($_SESSION);
 	?>
 
+
 	<form id="loginForm" class="form" action="validate_login.php" method="POST">
 		<img id="loginImg" class="form-img" src="images\login_title.png" />
 		<input type="text" class="form-input" id="identifier" name="identifier" placeholder="Username / Email" required>
 		<input type="password" class="form-input" id="password" name="password" placeholder="Password" required>
-		<input type="submit" id="login-button" class="submit-button" value="Login">
+		
+		<div class = "loginButtons">
+			<input type="submit" id="login-button" class="submit-button" value="Login">
+			<div class = "spaceThis"></div>
+			<input type="button" id="registerLink" class="submit-button" value="Signup" onclick="window.location='register.php'">
+		</div>
+		
 		<p id="error" class="notice"></p>
 		<p id="success" class="notice"></p>
 		<?php if (isset($_SESSION['notice'])) {
@@ -35,8 +42,27 @@
 			<?php } else if ($_SESSION['notice'] == "reg_succ") {?>
 				<script>noticeFadeIn("reg_succ")</script>
 		<?php }} unset($_SESSION['notice']); ?>
-		<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="register.php">Register here</a></p>
+				
+		<!-- SIGNUP POPUP -->
+		<!--<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Signup</button>-->
+		<!--<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="register.php">Register here</a></p>-->
+		
+			<div>
+			<label>
+			<input type="checkbox" checked="checked" name="remember"> Remember me
+			</label>
+			</div>
+			
+			<!--<div class="container">
+			<span class="psw"> <a href="#">Forgot password?</a></span>
+			</div>-->
+			
+			<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="register.php">Forgot password?</a></p>
+		
+			
 	</form>
+	
+	
 </body>
 
 </html>
