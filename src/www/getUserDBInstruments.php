@@ -24,7 +24,8 @@ $userInstrData = array();
 while ($row = $result->fetch_assoc()) {
 	$userInstrData[] = $row;
 }
+$conn->close();
 
 echo json_encode($userInstrData);
-
+exit();
 ?>

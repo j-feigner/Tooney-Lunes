@@ -1,3 +1,113 @@
+function displayUserSearch(searchResults) {
+    var searchResultDiv = document.getElementById("searchResult");
+    searchResultDiv.classList.add("user-card");
+
+    console.log(searchResults);
+
+    if (!searchResults) {
+        searchResultDiv.innerHTML = "No user found.";
+    } else {
+        var usernameP = document.createElement("p");
+        usernameP.innerHTML = searchResults[0][0];
+        usernameP.style.margin = "0";
+
+        var emailP = document.createElement("p");
+        emailP.innerHTML = searchResults[0][1];
+        emailP.style.margin = "0";
+        emailP.style.fontSize = ".7em";
+        emailP.style.userSelect = "text";
+        emailP.style.msUserSelect = "text";
+        emailP.style.webkitUserSelect = "text";
+
+        searchResultDiv.appendChild(usernameP);
+        searchResultDiv.appendChild(emailP);
+    }
+
+
+//searchResultP.innerHTML = "<h1>Account Details</h1><br>" +
+//                            userAccountDetails[0] + "<br>" +
+//                            userAccountDetails[1] + "<br>" +
+//                            userAccountDetails[2] + "<br>";
+//if (userGenres.length != 0) {
+//    searchResultP.innerHTML += "<h1>Genre Details</h1><br>";
+//    for (var i = 0; i < userGenres.length; i++) {
+//        searchResultP.innerHTML += userGenres[i] + "<br>";
+//    }
+//}
+//if (userInstruments.length != 0) {
+//    searchResultP.innerHTML += "<h1>Instrument Specialties</h1><br>";
+//    for (var i = 0; i < userInstruments.length; i++) {
+//        searchResultP.innerHTML += userInstruments[i] + "<br>";
+//    }
+//}
+//if (userExperience.length != 0) {
+//    searchResultP.innerHTML += "<h1>Music Experience</h1><br>";
+//    for (var i = 0; i < userExperience.length; i++) {
+//        searchResultP.innerHTML += userExperience[i] + "<br>";
+//    }
+//}
+}
+
+function setSearchFocusStyle() {
+    var searchUserBar = document.getElementById("searchUser");
+    var searchContainer = document.getElementById("searchContainer");
+
+    searchUserBar.onfocus = function () {
+        searchContainer.style.boxShadow = "3px 3px 4px black";
+        searchContainer.style.transform = "translateX(-2px) translateY(-2px)";
+        searchContainer.style.transition = "box-shadow .2s ease-out, transform .2s ease-out, border-color .2s ease-out";
+        searchContainer.style.borderColor = "#3cbebe";
+    }
+
+    searchUserBar.onblur = function () {
+        searchContainer.style.boxShadow = "none";
+        searchContainer.style.transform = "none";
+        searchContainer.style.transition = "box-shadow .5s ease-out, transform .5s ease-out, border-color .2s linear";
+        searchContainer.style.borderColor = "black";
+    }
+}
+
+function searchUserEventListener() {
+    var searchUserBar = document.getElementById("searchUser");
+    var searchIcon = document.getElementById("searchIcon");
+
+    searchUserBar.addEventListener("keyup", function (event) {
+        if (event.key === "Enter") {
+            searchUser();
+            searchUserBar.focus();
+            searchUserBar.blur();
+            socialDisplay();
+        }
+    });
+
+    searchIcon.addEventListener("click", function () {
+        searchUser();
+        searchUserBar.blur();
+        socialDisplay();
+    });
+
+    clearIcon.addEventListener("click", function () {
+        searchUserBar.value = "";
+        searchUserBar.focus();
+        document.getElementById("searchResult").innerHTML = "";
+        socialDisplay();
+    });
+}
+
+function socialDisplay() {
+    searchUserBar = document.getElementById("searchUser");
+    searchResult = document.getElementById("searchResult");
+    otherThings = document.getElementById("otherThings");
+
+    if (searchUserBar.value != "") {
+        searchResult.style.display = "block";
+        otherThings.style.display = "none";
+    } else {
+        searchResult.style.display = "none";
+        otherThings.style.display = "block";
+    }
+}
+
 function profileDetailsSlideIn() {
     var username_container = document.getElementById("usernameContainer");
     var email_container = document.getElementById("emailContainer");
@@ -37,13 +147,13 @@ function showInstrCheckboxes() {
     }
 }
 var expExpanded = false;
-function showExpCheckboxes() {
-    var expCheckboxes = document.getElementById("expCheckboxes");
+function showExpRadios() {
+    var expRadios = document.getElementById("expRadios");
     if (!expExpanded) {
-        expCheckboxes.style.display = "block";
+        expRadios.style.display = "block";
         expExpanded = true;
     } else {
-        expCheckboxes.style.display = "none";
+        expRadios.style.display = "none";
         expExpanded = false;
     }
 }

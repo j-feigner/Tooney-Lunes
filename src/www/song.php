@@ -18,8 +18,8 @@
             <img src="images/plus.svg" width="100%">
         </div>
         
-        <script src="js/song_maker.js"></script>
-        <script src="js/utils.js"></script>
+        <script src="js\song_maker.js"></script>
+        <script src="js\utils.js"></script>
     </div>
 
     <div id="bottomBar" class="bottom-bar">

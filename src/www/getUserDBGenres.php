@@ -24,7 +24,8 @@ $userGenreData = array();
 while ($row = $result->fetch_assoc()) {
 	$userGenreData[] = $row;
 }
+$conn->close();
 
 echo json_encode($userGenreData);
-
+exit();
 ?>
