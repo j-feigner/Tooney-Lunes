@@ -2,20 +2,8 @@ window.onload = main;
 
 function main() {
     var audio_ctx = new AudioContext();
-
-    // Initialize first grid
     var grids = [];
-
-    // Create song object
     var song = new Song();
-    song.tracks[0] = new SongTrack("piano");
-
-    // Create first sample grid with piano sounds
-    grids.push(createGrid("Melody", "piano", audio_ctx));
-
-    // Render Song Title from loaded song
-    var title_label = document.getElementById("songTitle");
-    title_label.innerHTML = song.title;
 
     // Add grid to screen
     var add_grid_button = document.getElementById("addGridButton");
@@ -52,8 +40,6 @@ function main() {
         req.send();
     });
 
-    var test_tracks = [];
-
     // Play song button
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
@@ -78,9 +64,26 @@ function main() {
         var load_title = prompt("Enter song name: ");
         var req = new XMLHttpRequest();
         req.open("GET", "load_song.php?title=" + load_title);
-        req.onload = function() {
-            var reponse = JSON.parse(req.responseText);
-            loadSong(response);
+        req.onload = () => {
+            var response = JSON.parse(req.responseText);
+
+            song = new Song();
+            grids = [];
+
+            song.title = response.title;
+            song.tempo = response.tempo;
+            song.tracks = [];
+
+            response.tracks.forEach((track, track_index) => {
+                song.tracks[track_index] = new SongTrack(track.instrument);
+                song.tracks[track_index].beat_data = track.beat_data;
+                
+                grids[track_index] = createGrid(track_index, track.instrument, audio_ctx);
+                grids[track_index].loadTrack(track.beat_data);
+                grids[track_index].draw();
+            })
+
+            document.getElementById("songTitle").innerHTML = song.title;
         }
         req.send();
     });
@@ -96,7 +99,7 @@ function main() {
 }
 
 function Song() {
-    this.title = "Test Title"
+    this.title = "Untitled"
     this.tracks = [];
     this.num_beats = 32;
     this.tempo = 120 * 4;
@@ -266,22 +269,12 @@ function Grid(num_cols, num_rows, canvas, audio_ctx) {
         return beats;
     }
 
-    this.getTrackData = function() {
-        var track_data = "";
-        this.columns.forEach((column) => {
-            var beat_data = "";
-            column.cells.forEach((cell, note_index) => {
-                if(cell.is_filled) {
-                    if(beat_data === "") {
-                        beat_data += note_index;
-                    } else {
-                        beat_data += "," + note_index;
-                    }
-                }
+    this.loadTrack = function(beat_data) {
+        beat_data.forEach((beat, beat_index) => {
+            beat.forEach((note) => {
+                this.columns[beat_index].cells[note].is_filled = true;
             })
-            track_data += beat_data + "\n";
         })
-        return track_data;
     }
 }
 
@@ -399,8 +392,4 @@ function saveSong(song) {
         }
         req.send();
     }
-}
-
-function loadSong(song_json) {
-    var stopper = 0; 
 }

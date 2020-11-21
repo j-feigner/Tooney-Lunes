@@ -58,8 +58,10 @@ if($result->num_rows > 0) {
     die();
 }  
 
+// Echo assembled JSON to script for processing
 echo json_encode($song_json);
 
+// Returns instrument name from Instrument table by given id
 function getInstrumentName($conn, $instr_id) {
     $result = $conn->query("SELECT instr_name
                               FROM Instrument
