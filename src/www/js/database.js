@@ -1,3 +1,40 @@
+function updateGenres() {
+    var genreCheckboxDiv = document.getElementById("genreCheckboxes");
+    var checkedGenres = [];
+    for (var i = 0; i < genreCheckboxDiv.children.length; i++) {
+        var currentCheckbox = genreCheckboxDiv.children[i].firstElementChild;
+        if (currentCheckbox == null) {
+            // pass
+        } else if (currentCheckbox.checked) {
+            checkedGenres.push(currentCheckbox.value);
+        }
+    }
+
+    var updateGenreReq = new XMLHttpRequest();
+    var method = "GET";
+    var url = "updateDBGenres.php";
+    if (checkedGenres.length > 0) {
+        for (var i = 0; i < checkedGenres.length; i++) {
+            if (i == 0) {
+                url += "?" + i + "=" + encodeURIComponent(checkedGenres[i]);
+            } else {
+                url += "&" + i + "=" + encodeURIComponent(checkedGenres[i]);
+            }
+        }
+    }
+    var asynch = true;
+    updateGenreReq.open(method, url, asynch);
+    updateGenreReq.send();
+
+    updateGenreReq.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var signal = this.responseText;
+            populateUserGenres();
+            document.getElementById("genreSettings").click();
+        }
+    }
+}
+
 function populateUserGenres() {
     var userGenreReq = new XMLHttpRequest();
     var method = "GET";
@@ -15,13 +52,16 @@ function populateUserGenres() {
                 newUserGenreInfo = "";
             } else if (userGenreDataLength == 1) {
                 newUserGenreInfo = userGenreData[0]['genre_title'];
+                document.getElementById(userGenreData[0]['genre_title'].toLowerCase()).checked = true;
             } else {
                 newUserGenreInfo = "";
                 for (var i = 0; i < userGenreDataLength; i++) {
                     if ((i + 1) == userGenreDataLength) {
                         newUserGenreInfo += userGenreData[i]['genre_title'];
+                        document.getElementById(userGenreData[i]['genre_title'].toLowerCase()).checked = true;
                     } else {
                         newUserGenreInfo += userGenreData[i]['genre_title'] + ", ";
+                        document.getElementById(userGenreData[i]['genre_title'].toLowerCase()).checked = true;
                     }
                 }
             }
@@ -59,12 +99,50 @@ function populateGenres() {
                 var submitButton = document.createElement("button");
                 submitButton.setAttribute("type", "button");
                 submitButton.setAttribute("onclick", "updateGenres()");
+                submitButton.id = "genreSubmit";
                 submitButton.className = "info-submit";
                 submitButton.innerHTML = "Submit";
 
                 genreCheckboxDiv.appendChild(newLabel);
             }
             genreCheckboxDiv.appendChild(submitButton);
+        }
+    }
+}
+
+function updateInstruments() {
+    var instrCheckboxDiv = document.getElementById("instrCheckboxes");
+    var checkedInstruments = [];
+    for (var i = 0; i < instrCheckboxDiv.children.length; i++) {
+        var currentCheckbox = instrCheckboxDiv.children[i].firstElementChild;
+        if (currentCheckbox == null) {
+            // pass
+        } else if (currentCheckbox.checked) {
+            checkedInstruments.push(currentCheckbox.value);
+        }
+    }
+
+    var updateInstrReq = new XMLHttpRequest();
+    var method = "GET";
+    var url = "updateDBInstruments.php";
+    if (checkedInstruments.length > 0) {
+        for (var i = 0; i < checkedInstruments.length; i++) {
+            if (i == 0) {
+                url += "?" + i + "=" + encodeURIComponent(checkedInstruments[i]);
+            } else {
+                url += "&" + i + "=" + encodeURIComponent(checkedInstruments[i]);
+            }
+        }
+    }
+    var asynch = true;
+    updateInstrReq.open(method, url, asynch);
+    updateInstrReq.send();
+
+    updateInstrReq.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var signal = this.responseText;
+            populateUserInstruments();
+            document.getElementById("instrSettings").click();
         }
     }
 }
@@ -86,13 +164,16 @@ function populateUserInstruments() {
                 newUserInstrInfo = "";
             } else if (userInstrDataLength == 1) {
                 newUserInstrInfo = userInstrData[0]['instr_name'];
+                document.getElementById(userInstrData[0]["instr_name"].toLowerCase()).checked = true;
             } else {
                 newUserInstrInfo = "";
                 for (var i = 0; i < userInstrDataLength; i++) {
                     if ((i + 1) == userInstrDataLength) {
                         newUserInstrInfo += userInstrData[i]['instr_name'];
+                        document.getElementById(userInstrData[i]["instr_name"].toLowerCase()).checked = true;
                     } else {
                         newUserInstrInfo += userInstrData[i]['instr_name'] + ", ";
+                        document.getElementById(userInstrData[i]["instr_name"].toLowerCase()).checked = true;
                     }
                 }
             }
@@ -130,12 +211,46 @@ function populateInstruments() {
                 var submitButton = document.createElement("button");
                 submitButton.setAttribute("type", "button");
                 submitButton.setAttribute("onclick", "updateInstruments()");
+                submitButton.id = "instrumentSubmit";
                 submitButton.className = "info-submit";
                 submitButton.innerHTML = "Submit";
 
                 instrCheckboxDiv.appendChild(newLabel);
             }
             instrCheckboxDiv.appendChild(submitButton);
+        }
+    }
+}
+
+function updateExperience() {
+    var expRadiosDiv = document.getElementById("expRadios");
+    var checkedExperience;
+    for (var i = 0; i < expRadiosDiv.children.length; i++) {
+        var currentRadio = expRadiosDiv.children[i].firstElementChild;
+        if (currentRadio == null) {
+            console.log(currentRadio.nodeName);
+            // pass
+        } else if (currentRadio.checked) {
+            checkedExperience = currentRadio.value;
+            break;
+        }
+    }
+
+    var updateExpReq = new XMLHttpRequest();
+    var method = "GET";
+    var url = "updateDBExperience.php";
+    if (typeof checkedExperience !== "undefined") {
+        url += "?exp_title=" + encodeURIComponent(checkedExperience);
+    }
+    var asynch = true;
+    updateExpReq.open(method, url, asynch);
+    updateExpReq.send();
+
+    updateExpReq.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var signal = this.responseText;
+            populateUserExperience();
+            document.getElementById("expSettings").click();
         }
     }
 }
@@ -155,17 +270,9 @@ function populateUserExperience() {
 
             if (userExpDataLength == 0) {
                 newUserExpInfo = "";
-            } else if (userExpDataLength == 1) {
-                newUserExpInfo = userExpData[0]['exp_title'];
             } else {
-                newUserExpInfo = "";
-                for (var i = 0; i < userExpDataLength; i++) {
-                    if ((i + 1) == userExpDataLength) {
-                        newUserExpInfo += userExpData[i]['exp_title'];
-                    } else {
-                        newUserExpInfo += userExpData[i]['exp_title'] + ", ";
-                    }
-                }
+                newUserExpInfo = userExpData[0]['exp_title'];
+                document.getElementById(userExpData[0]['exp_title'].toLowerCase()).checked = true;
             }
             document.getElementById("expInfo").innerHTML = newUserExpInfo;
         }
@@ -185,12 +292,12 @@ function populateExperience() {
             var expData = JSON.parse(this.responseText);
             var expDataLength = Object.keys(expData).length
 
-            var expCheckboxDiv = document.getElementById("expCheckboxes");
+            var expRadioDiv = document.getElementById("expRadios");
             for (var i = 0; i < expDataLength; i++) {
                 var newInput = document.createElement("input");
-                newInput.setAttribute("type", "checkbox");
+                newInput.setAttribute("type", "radio");
                 newInput.id = expData[i]["exp_title"].toLowerCase();
-                newInput.name = expData[i]["exp_title"].toLowerCase();
+                newInput.name = "experience";
                 newInput.value = expData[i]["exp_title"];
 
                 var newLabel = document.createElement("label");
@@ -201,12 +308,56 @@ function populateExperience() {
                 var submitButton = document.createElement("button");
                 submitButton.setAttribute("type", "button");
                 submitButton.setAttribute("onclick", "updateExperience()");
+                submitButton.id = "experienceSubmit";
                 submitButton.className = "info-submit";
                 submitButton.innerHTML = "Submit";
 
-                expCheckboxDiv.appendChild(newLabel);
+                expRadioDiv.appendChild(newLabel);
             }
-            expCheckboxDiv.appendChild(submitButton);
+            expRadioDiv.appendChild(submitButton);
         }
     }
+}
+
+function searchUser() {
+    if (document.getElementById("searchUser").value == "") return;
+
+    var searchUserReq = new XMLHttpRequest();
+    var method = "GET";
+    var url = "searchDBUser.php?search=" + document.getElementById("searchUser").value;
+    var asynch = true;
+    searchUserReq.open(method, url, asynch);
+    searchUserReq.send();
+
+    searchUserReq.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var searchResult = JSON.parse(this.responseText);
+            var searchResultLength = Object.keys(searchResult).length;
+
+            localStorage.removeItem("userSearchData");
+            if (searchResultLength != 0) {
+                var userGenres = [];
+                var userInstruments = [];
+                var userExperience = [];
+                var userAccountDetails = [searchResult[0]['username'],
+                                            searchResult[0]['email'],
+                                            searchResult[0]['user_id']];
+                if (searchResultLength > 1) {
+                    for (var i = 1; i < searchResultLength; i++) {
+                        var currentKey = Object.keys(searchResult[i])[0];
+                        if (currentKey == "genre_title") {
+                            userGenres.push(searchResult[i][currentKey]);
+                        } else if (currentKey == "instr_name") {
+                            userInstruments.push(searchResult[i][currentKey]);
+                        } else if (currentKey == "exp_title") {
+                            userExperience.push(searchResult[i][currentKey]);
+                        }
+                    }
+                }
+                displayUserSearch([userAccountDetails, userGenres, userInstruments, userExperience]);
+            } else {
+                displayUserSearch(false);
+            }
+        }
+    };
 }
