@@ -50,7 +50,7 @@ CREATE TABLE Song (
 DROP TABLE IF EXISTS Instrument;
 CREATE TABLE Instrument (
     instr_id        INT(6) UNSIGNED AUTO_INCREMENT,
-    instr_name      VARCHAR(10) NOT NULL,
+    instr_name      VARCHAR(30) NOT NULL,
     PRIMARY KEY (instr_id)
 );
 
@@ -63,4 +63,25 @@ CREATE TABLE User_Instruments (
 		REFERENCES Users(user_id),
 	FOREIGN KEY (instr_id)
 		REFERENCES Instrument(instr_id)
+);
+
+DROP TABLE IF EXISTS Songs;
+CREATE TABLE Songs (
+    song_id         INT(8) UNSIGNED AUTO_INCREMENT,
+    user_id         INT(6),
+    song_title      VARCHAR(20) NOT NULL,
+    tempo           SMALLINT UNSIGNED NOT NULL,
+    PRIMARY KEY (user_id, song_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+DROP TABLE IF EXISTS Song_Tracks;
+CREATE TABLE Song_Tracks (
+    track_id        INT(16) UNSIGNED AUTO_INCREMENT,
+    song_id         INT(8),
+    instr_id        INT(6),
+    track_data      TEXT,
+    PRIMARY KEY (track_id, song_id),
+    FOREIGN KEY (song_id) REFERENCES Songs(song_id),
+    FOREIGN KEY (instr_id) REFERENCES Instrument(instr_id)
 );

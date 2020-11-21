@@ -1,7 +1,10 @@
 TRUNCATE TABLE Users;
 
-
 TRUNCATE TABLE Genre;
+
+TRUNCATE TABLE Songs;
+
+TRUNCATE TABLE Song_Tracks;
 
 INSERT INTO Genre (genre_title)
 VALUES ('Rock');
@@ -82,16 +85,16 @@ VALUES (4, 'Flash in the Pan', 160, 'GM');
 TRUNCATE TABLE Instrument;
 
 INSERT INTO Instrument (instr_name)
-VALUES ('Piano');
+VALUES ('piano');
 
 INSERT INTO Instrument (instr_name)
-VALUES ('Guitar');
+VALUES ('guitar');
 
 INSERT INTO Instrument (instr_name)
-VALUES ('Drums');
+VALUES ('drum');
 
 INSERT INTO Instrument (instr_name)
-VALUES ('Synth');
+VALUES ('synth_clean_supersaw');
 
 
 TRUNCATE TABLE User_Instruments;

@@ -48,6 +48,8 @@ function main() {
         req.send();
     });
 
+    var test_tracks = [];
+
     // Play song button
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
@@ -57,6 +59,34 @@ function main() {
         grids.forEach((grid) => {
             grid.start(song.tempo);
         })
+    });
+
+    // Save song button
+    var save_button = document.getElementById("saveSong");
+    save_button.addEventListener("click", function() {
+        if(confirm("Save song in its current state?")) {
+            test_tracks = [];
+            grids.forEach((grid) => {
+                test_tracks.push(grid.getTrackData());
+                song.readGrids(grids);
+            })
+
+            var song_json = JSON.stringify(song);
+           
+            var req = new XMLHttpRequest();
+            req.open("GET", "save_song.php?song=" + song_json);
+            req.onload = function() {
+                alert(req.responseText);
+            }
+            req.send();
+        }
+    });
+
+    var load_button = document.getElementById("loadSong");
+    load_button.addEventListener("click", function() {
+        if(confirm("Load song? Unsaved changes will be lost.")) {
+            loadSong(test_tracks, grids);
+        }
     });
 
     // Tempo control
@@ -70,6 +100,7 @@ function main() {
 }
 
 function Song() {
+    this.title = "Test Title"
     this.tracks = [];
     this.num_beats = 32;
     this.tempo = 120 * 4;
@@ -238,6 +269,24 @@ function Grid(num_cols, num_rows, canvas, audio_ctx) {
         })
         return beats;
     }
+
+    this.getTrackData = function() {
+        var track_data = "";
+        this.columns.forEach((column) => {
+            var beat_data = "";
+            column.cells.forEach((cell, note_index) => {
+                if(cell.is_filled) {
+                    if(beat_data === "") {
+                        beat_data += note_index;
+                    } else {
+                        beat_data += "," + note_index;
+                    }
+                }
+            })
+            track_data += beat_data + "\n";
+        })
+        return track_data;
+    }
 }
 
 function GridColumn(col_x, col_y, col_width, col_height, col_size, color_seq) {
@@ -298,7 +347,7 @@ function GridCell(cell_x, cell_y, cell_width, cell_height, cell_color) {
             ctx.fillStyle = "rgba(235, 235, 235, 0.15)";
         }
         else if(!this.is_playing && !this.is_filled) {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.0)";
+            ctx.fillStyle = "rgba(215, 215, 215, 1.0)";
         }
 
         ctx.clearRect(this.rect.x, this.rect.y, this.rect.w, this.rect.h);
@@ -337,4 +386,22 @@ function createGrid(name, instrument, audio_ctx) {
     new_grid.initialize();
 
     return new_grid;
+}
+
+function loadSong(tracks_data, grids) {
+    tracks_data.forEach((track, track_index) => {
+        var beats = track.split('\n');
+        beats.forEach((beat, beat_index) => {
+            if(beat != "") {
+                var current_beat = beat.split(',');
+                current_beat.forEach((note) => {
+                    grids[track_index].columns[beat_index].cells[parseInt(note)].is_filled = true;
+                })
+            }
+        })
+    })
+
+    grids.forEach((grid) => {
+        grid.draw();
+    })
 }
