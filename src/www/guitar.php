@@ -14,7 +14,7 @@
 
     <div id="pageContents" class="page-contents">
         <div id="guitarBlock" class="canvas-container">
-            <img src="../images/guitar_strum_prompt" id="strumPrompt" class="guitar-prompt">
+            <!-- <img src="../images/guitar_strum_prompt" id="strumPrompt" class="guitar-prompt"> -->
             <canvas id="guitarCanvas"></canvas>
 			<div id="instrSwitcher">
 				<button type="button" id="left" onclick="window.location='piano.php'"><< Piano</button>
