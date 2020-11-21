@@ -64,22 +64,8 @@ function main() {
     // Save song button
     var save_button = document.getElementById("saveSong");
     save_button.addEventListener("click", function() {
-        if(confirm("Save song in its current state?")) {
-            test_tracks = [];
-            grids.forEach((grid) => {
-                test_tracks.push(grid.getTrackData());
-                song.readGrids(grids);
-            })
-
-            var song_json = JSON.stringify(song);
-           
-            var req = new XMLHttpRequest();
-            req.open("GET", "save_song.php?song=" + song_json);
-            req.onload = function() {
-                alert(req.responseText);
-            }
-            req.send();
-        }
+        song.readGrids(grids);
+        saveSong(song);
     });
 
     var load_button = document.getElementById("loadSong");
@@ -386,6 +372,23 @@ function createGrid(name, instrument, audio_ctx) {
     new_grid.initialize();
 
     return new_grid;
+}
+
+function saveSong(song) {
+    var save_title = prompt("Save song as: ", song.title);
+
+    if(confirm("Save song in its current state?")) {
+        song.title = save_title;
+
+        var song_json = JSON.stringify(song);
+       
+        var req = new XMLHttpRequest();
+        req.open("GET", "save_song.php?song=" + song_json);
+        req.onload = function() {
+            alert(req.responseText);
+        }
+        req.send();
+    }
 }
 
 function loadSong(tracks_data, grids) {

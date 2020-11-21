@@ -34,19 +34,25 @@ $song_id = $conn->insert_id;
 $song_tracks = $song_data->tracks;
 for($i = 0; $i < count($song_tracks); $i++) {
     $track = $song_tracks[$i];
-    $instr_name = $track->instrument;
-    $result = $conn->query("SELECT instr_id
-                              FROM Instrument
-                             WHERE '$instr_name' = Instrument.instr_name;");
-    $row = $result->fetch_assoc();
-    $instr_id = $row["instr_id"];
+    $instr_id = getInstrumentID($conn, $track->instrument);
     $track_data = serialize($track->beat_data);
+
     $tracks_insert = "INSERT INTO Song_Tracks(song_id, instr_id, track_data) 
                       VALUES ('$song_id', '$instr_id', '$track_data');";
+
     if(!$conn->query($tracks_insert)) {
         echo "Error: ".$conn->error;
     }
 }
 
-echo "SONG SAVED!!";
+echo "Song Saved Successfully";
+
+function getInstrumentID($conn, $instr_name) {
+    $result = $conn->query("SELECT instr_id
+                              FROM Instrument
+                             WHERE '$instr_name' = Instrument.instr_name;");
+    $row = $result->fetch_assoc();
+    $instr_id = $row["instr_id"];
+    return $instr_id;
+}
 ?>
