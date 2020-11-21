@@ -69,7 +69,7 @@ DROP TABLE IF EXISTS Songs;
 CREATE TABLE Songs (
     song_id         INT(8) UNSIGNED AUTO_INCREMENT,
     user_id         INT(6),
-    song_title      VARCHAR(20) NOT NULL,
+    song_title      VARCHAR(30) NOT NULL,
     tempo           SMALLINT UNSIGNED NOT NULL,
     PRIMARY KEY (user_id, song_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
