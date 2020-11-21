@@ -1,17 +1,5 @@
 TRUNCATE TABLE Users;
 
-INSERT INTO Users (username, email, password, exp_id)
-VALUES ('jordan-feigner', 'jrf76@humboldt.edu', 'pass1', 4);
-
-INSERT INTO Users (username, email, password, exp_id)
-VALUES ('james-pelligra', 'jmp192@humboldt.edu', 'pass2', 2);
-
-INSERT INTO Users (username, email, password, exp_id)
-VALUES ('brian-corbett', 'bac18@humboldt.edu', 'pass3', 3);
-
-INSERT INTO Users (username, email, password, exp_id)
-VALUES ('matthew-nicholson', 'mdn117@humboldt.edu', 'pass4', 1);
-
 
 TRUNCATE TABLE Genre;
 

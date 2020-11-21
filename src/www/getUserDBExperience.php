@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 
 $sql = "SELECT exp_title
 		FROM users u, experience e
-		WHERE u.user_id = '" . $_SESSION['user_id'] ."'
+		WHERE u.user_id = '". $_SESSION['user_id'] ."'
 			AND u.exp_id = e.exp_id;";
 
 $result = $conn->query($sql);
@@ -23,7 +23,8 @@ $userExpData = array();
 while ($row = $result->fetch_assoc()) {
 	$userExpData[] = $row;
 }
+$conn->close();
 
 echo json_encode($userExpData);
-
+exit();
 ?>

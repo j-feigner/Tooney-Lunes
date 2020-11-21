@@ -3,7 +3,7 @@ CREATE TABLE Users (
     user_id         INT(6) UNSIGNED AUTO_INCREMENT,
     username        VARCHAR(20) NOT NULL,
     email           VARCHAR(40) NOT NULL,
-	password		VARCHAR(40) NOT NULL,
+	password		VARCHAR(255) NOT NULL,
 	exp_id			VARCHAR(20),
     PRIMARY KEY (user_id),
 	FOREIGN KEY (exp_id)
@@ -20,7 +20,12 @@ CREATE TABLE Genre (
 DROP TABLE IF EXISTS User_Genres;
 CREATE TABLE User_Genres (
 	user_id			INT(6),
-	genre_id		INT(6)
+	genre_id		INT(6),
+	PRIMARY KEY (user_id, genre_id),
+	FOREIGN KEY (user_id)
+		REFERENCES Users(user_id),
+	FOREIGN KEY (genre_id)
+		REFERENCES Genre(genre_id)
 );
 
 DROP TABLE IF EXISTS Experience;
@@ -52,5 +57,10 @@ CREATE TABLE Instrument (
 DROP TABLE IF EXISTS User_Instruments;
 CREATE TABLE User_Instruments (
 	user_id			INT(6),
-	instr_id		INT(6)
+	instr_id		INT(6),
+	PRIMARY KEY (user_id, instr_id),
+	FOREIGN KEY (user_id)
+		REFERENCES Users(user_id),
+	FOREIGN KEY (instr_id)
+		REFERENCES Instrument(instr_id)
 );
