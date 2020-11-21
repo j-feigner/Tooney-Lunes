@@ -5,7 +5,7 @@
     top: 12%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 5%;
+    margin-bottom: 2%;
 }
 
 .stacking-canvas {
@@ -45,6 +45,23 @@
     transform: translate(-50%, -50%);
 }
 
+.song-title-container {
+    position: relative;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: xx-large;
+    text-align: center;
+}
+
+.song-title-container p {
+    width: 50%;
+    margin-top: 5%;
+    margin-bottom: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #bottomBar {
     position: fixed;
 }
@@ -53,7 +70,7 @@
     position: relative;
     width: 100px;
     height: 100px;
-    top: 10%;
+    top: 20%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 25%;

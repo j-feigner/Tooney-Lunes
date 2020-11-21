@@ -14,6 +14,10 @@
     ?>
 
     <div id="pageContents" class="page-contents">
+        <div class="song-title-container">
+            <p id="songTitle">Song Title</p>
+        </div>
+
         <div id="addGridButton">
             <img src="images/plus.svg" width="100%">
         </div>
