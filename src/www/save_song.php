@@ -53,6 +53,7 @@ for($i = 0; $i < count($song_tracks); $i++) {
 
 echo "Song Saved Successfully";
 
+// Returns instr_id from Instrument table from given instrument name string
 function getInstrumentID($conn, $instr_name) {
     $result = $conn->query("SELECT instr_id
                               FROM Instrument

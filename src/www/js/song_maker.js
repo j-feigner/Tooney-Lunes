@@ -13,6 +13,10 @@ function main() {
     // Create first sample grid with piano sounds
     grids.push(createGrid("Melody", "piano", audio_ctx));
 
+    // Render Song Title from loaded song
+    var title_label = document.getElementById("songTitle");
+    title_label.innerHTML = song.title;
+
     // Add grid to screen
     var add_grid_button = document.getElementById("addGridButton");
     add_grid_button.addEventListener("click", function() {
@@ -68,11 +72,17 @@ function main() {
         saveSong(song);
     });
 
+    // Load song button
     var load_button = document.getElementById("loadSong");
     load_button.addEventListener("click", function() {
-        if(confirm("Load song? Unsaved changes will be lost.")) {
-            loadSong(test_tracks, grids);
+        var load_title = prompt("Enter song name: ");
+        var req = new XMLHttpRequest();
+        req.open("GET", "load_song.php?title=" + load_title);
+        req.onload = function() {
+            var reponse = JSON.parse(req.responseText);
+            loadSong(response);
         }
+        req.send();
     });
 
     // Tempo control
@@ -391,20 +401,6 @@ function saveSong(song) {
     }
 }
 
-function loadSong(tracks_data, grids) {
-    tracks_data.forEach((track, track_index) => {
-        var beats = track.split('\n');
-        beats.forEach((beat, beat_index) => {
-            if(beat != "") {
-                var current_beat = beat.split(',');
-                current_beat.forEach((note) => {
-                    grids[track_index].columns[beat_index].cells[parseInt(note)].is_filled = true;
-                })
-            }
-        })
-    })
-
-    grids.forEach((grid) => {
-        grid.draw();
-    })
+function loadSong(song_json) {
+    var stopper = 0; 
 }

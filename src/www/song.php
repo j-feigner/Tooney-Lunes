@@ -15,7 +15,7 @@
 
     <div id="pageContents" class="page-contents">
         <div class="song-title-container">
-            <p id="songTitle">Song Title</p>
+            <p id="songTitle"></p>
         </div>
 
         <div id="addGridButton">
