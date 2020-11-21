@@ -9,6 +9,7 @@
         $header = file_get_contents("html\header.html");
         echo $header;
     ?>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script type="text/javascript" src="js\style.js"></script>
     <script type="text/javascript" src="js\database.js"></script>
 </head>
@@ -34,37 +35,59 @@
                 <img onclick="showGenreCheckboxes()" id="genreSettings" class="settings-img" src="images\settings.png" />
             </div>
             <p id="genreInfo" class="info"></p>
-			<script>populateUserGenres()</script>
             <div class="multi-select">
                 <div id="genreCheckboxes"></div>
-                <script>populateGenres()</script>
             </div>
+			<script>populateGenres()</script>
+			<script>populateUserGenres()</script>
         </div>
         <div id="instrInfoContainer" class="info-container">
             <div class="info-oval">
-                <p class="info-title">Instrument Specialty</p>
+                <p class="info-title">Instrument Specialties</p>
                 <img onclick="showInstrCheckboxes()" id="instrSettings" class="settings-img" src="images\settings.png" />
             </div>
             <p id="instrInfo" class="info"></p>
-			<script>populateUserInstruments()</script>
             <div class="multi-select">
                 <div id="instrCheckboxes"></div>
-                <script>populateInstruments()</script>
             </div>
+			<script>populateInstruments()</script>
+			<script>populateUserInstruments()</script>
         </div>
         <div id="expInfoContainer" class="info-container">
             <div class="info-oval">
                 <p class="info-title">Music Experience</p>
-                <img onclick="showExpCheckboxes()" id="expSettings" class="settings-img" src="images\settings.png" />
+                <img onclick="showExpRadios()" id="expSettings" class="settings-img" src="images\settings.png" />
             </div>
             <p id="expInfo" class="info"></p>
-			<script>populateUserExperience()</script>
             <div class="multi-select">
-                <div id="expCheckboxes"></div>
-				<script>populateExperience()</script>
+                <div id="expRadios"></div>
             </div>
+			<script>populateExperience()</script>
+			<script>populateUserExperience()</script>
         </div>
     </div>
+
+	<div class="social-container" id="socialContainer">
+		<div class="search-container" id="searchContainer">
+			<table class="search-elements-container">
+				<tr>
+					<td class="search-column" id="searchColumn">
+						<input type="text" id="searchUser" class="search-user" placeholder="Search user">
+					</td>
+					<td>
+						<a href="#"><span id="clearIcon" class="material-icons">clear</span></a>
+					</td>
+					<td>
+						<a href="#"><span id="searchIcon" class="material-icons">search</span></a>
+					</td>
+					<script>searchUserEventListener(); setSearchFocusStyle()</script>
+				</tr>
+			</table>
+		</div>
+		<div id="searchResult" class="social-content" style="display: none;"></div>
+		<div id="otherThings" class="social-content">HELLO</div>
+	</div>
+
 </body>
 
 </html>
