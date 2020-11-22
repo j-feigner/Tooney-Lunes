@@ -14,13 +14,20 @@
     ?>
 
     <div id="pageContents" class="page-contents">
+        <div id="introPrompt" class="song-maker-prompt">
+            <div class="song-maker-prompt-intro">
+                <div id="newSong" class="song-maker-prompt-button">New Song</div>
+                <div id="loadSong" class="song-maker-prompt-button">Load Song</div>
+            </div>
+        </div>
+
         <div class="song-title-container">
             <p id="songTitle"></p>
         </div>
 
         <div id="addGridButton">
             <img src="images/plus.svg" width="100%">
-        </div>
+        </div> 
         
         <script src="js/song_maker.js"></script>
         <script src="js/database.js"></script>
@@ -30,7 +37,6 @@
     <div id="bottomBar" class="bottom-bar">
         <button type="button" id="playSong" class="menu-button">Play Song</button>
         <button type="button" id="saveSong" class="menu-button">Save Song</button>
-        <button type="button" id="loadSong" class="menu-button">Load Song</button>
         <input type="range" id="songTempo" min="60" max="200" step="1" value="120">
         <span id="tempoValue"></span>
     </div>

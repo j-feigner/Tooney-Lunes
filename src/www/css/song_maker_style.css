@@ -1,3 +1,62 @@
+.song-maker-prompt {
+    position: absolute;
+    width: 75%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0px;
+    background-color: rgba(25, 25, 25, 0.8);
+    border-radius: 10px;
+    animation-name: fade-in-up;
+    animation-duration: 750ms;
+    animation-fill-mode: forwards;
+    z-index: 1;
+}
+
+.song-maker-prompt-intro {
+    position: absolute;
+    width: 900px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -450px;
+    text-align: center;
+}
+
+.fade-out {
+    animation-name: fade-out-down;
+    animation-duration: 750ms;
+    animation-fill-mode: forwards;
+}
+
+.song-maker-prompt-button {
+    display: inline-block;
+    width: 350px;
+    height: 150px;
+    margin-top: 75px;
+    margin-bottom: 75px;
+    margin-left: 25px;
+    margin-right: 25px;
+    background-color: white;
+    border: none;
+    border-radius: 70px;
+    outline: 5px solid transparent;
+    color: grey;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 150px;
+    cursor: pointer;
+}
+
+.song-maker-prompt-button:hover {
+    background-color: lightgrey;
+}
+
 .stacking-canvas-container {
     position: relative;
     width: 95%;
@@ -67,6 +126,7 @@
 }
 
 #addGridButton {
+    display: none;
     position: relative;
     width: 100px;
     height: 100px;
@@ -79,4 +139,40 @@
 
 #addGridButton :active {
     transform: scale(0.96);
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0.0;
+        margin-top: 3%;
+    } 
+    to {
+        opacity: 1.0;
+        margin-top: 0%;
+    }
+}
+
+@keyframes fade-out-down {
+    from {
+        opacity: 1.0;
+        margin-top: 0%;
+    }
+    to {
+        opacity: 0.0;
+        margin-top: 3%;
+    }
+}
+
+@keyframes button-shrink-out {
+    0% {
+        font-size: 0px;
+        transform: scale(1.0);
+    }
+    10% {
+        transform: scale(1.15);
+    }
+    100% {
+        font-size: 0px;
+        height: 0px;
+    }
 }

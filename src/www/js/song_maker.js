@@ -5,8 +5,24 @@ function main() {
     var grids = [];
     var song = new Song();
 
-    // Add grid to screen
+    var app = new SongMaker();
+
+    var title_display = document.getElementById("songTitle");
     var add_grid_button = document.getElementById("addGridButton");
+    var new_song_button = document.getElementById("newSong");
+
+    new_song_button.addEventListener("click", () => {
+        // Animate intro prompt
+        var intro_prompt = document.getElementById("introPrompt");
+        intro_prompt.classList.add("fade-out");
+        setTimeout(() => {
+            intro_prompt.remove();
+        }, 750);
+
+        // Create starter grid, song, and display song maker controls
+        app.start();
+    })
+
     add_grid_button.addEventListener("click", function() {
         var container = document.createElement("div");
         var canvas = document.createElement("canvas");
@@ -43,12 +59,7 @@ function main() {
     // Play song button
     var play_button = document.getElementById("playSong");
     play_button.addEventListener("click", function() {
-        song.readGrids(grids);
-        song.play(audio_ctx);
-
-        grids.forEach((grid) => {
-            grid.start(song.tempo);
-        })
+        app.play();
     });
 
     // Save song button
@@ -98,11 +109,43 @@ function main() {
     });
 }
 
+function SongMaker() {
+    this.ctx = new AudioContext();
+    this.song = null;
+    this.grids = [];
+
+    this.start = function() {
+        var starter_song = new Song();
+        starter_song.title = "Untitled";
+        starter_song.tempo = 120;
+        starter_song.tracks[0] = new SongTrack("piano");
+
+        var starter_grid = createGrid("Melody", "piano", this.ctx);
+
+        this.grids.push(starter_grid);
+        this.song = starter_song;
+    }
+
+    this.play = function() {
+        this.updateSongFromGrids();
+        this.song.play(this.ctx);
+        this.grids.forEach((grid) => {
+            grid.start(this.song.tempo);
+        })
+    }
+
+    this.updateSongFromGrids = function() {
+        this.grids.forEach((grid, index) => {
+            this.song.tracks[index].beat_data = grid.getData();
+        })
+    }
+}
+
 function Song() {
-    this.title = "Untitled"
+    this.title = "";
     this.tracks = [];
     this.num_beats = 32;
-    this.tempo = 120 * 4;
+    this.tempo = null;
 
     // Loop through all beat data matrices and set buffer source nodes with proper delays
     this.play = function(audio_ctx) {
