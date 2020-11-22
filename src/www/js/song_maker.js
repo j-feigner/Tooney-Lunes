@@ -18,7 +18,6 @@ function main() {
         }, 750);
 
         // Create starter grid, song, and display song maker controls
-        app.createStarterSong();
         app.start();
     })
 
@@ -78,18 +77,22 @@ function main() {
 function SongMaker() {
     this.container = null;
 
-    this.ctx = new AudioContext();
+    this.ctx = null;
     this.song = null;
 
-    this.title_card = null;
+    this.tracks = [];
+
+    this.song_title = null;
     this.grids = [];
     this.grid_adder = null;
 
     this.start = function() {
+        this.initializeAudioContext();
+        this.initializeGridAdder();
+        this.createStarterSong();
+
         this.title_card = document.getElementById("songTitle");
         this.title_card.innerHTML = this.song.title;
-
-        this.initializeGridAdder();
     }
 
     this.createStarterSong = function() {
@@ -102,6 +105,53 @@ function SongMaker() {
 
         this.grids.push(starter_grid);
         this.song = starter_song;
+    }
+
+    this.createTrack = function(name, instrument) {
+        var new_track = new SongMakerTrack(name, instrument, this.ctx);
+        new_track.createGain();
+
+        var track_container = document.createElement("div");
+        var track_canvas = document.createElement("canvas");
+
+        var track_name = document.createElement("span");
+        track_name.innerHTML = name;
+    
+        var track_gain = document.createElement("input");
+        track_gain.type = "range";
+        track_gain.min = 0.0;
+        track_gain.max = 1.0;
+        track_gain.step = 0.01;
+        track_gain.value = 1.0;
+
+        track_gain.addEventListener("input", function() {
+            new_track.gain_node.gain.value = track_gain.value;
+        })
+    
+        track_container.className = "stacking-canvas-container";
+        track_canvas.className = "stacking-canvas";
+        track_name.className = "stacking-canvas-label"
+        track_gain.className = "stacking-canvas-gain";
+    
+        track_container.appendChild(track_name);
+        track_container.appendChild(track_gain);
+        track_container.appendChild(track_canvas);
+
+        this.container.insertBefore(track_container, this.grid_adder);
+
+        resizeCanvas2(track_canvas, track_container);
+
+        new_track.grid = new Grid(40, 12, track_canvas, this.ctx, new_track.gain_node);
+        new_track.grid.instrument = instrument;
+        new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
+        loadInstrument(instrument, new_track.grid.sounds);
+        new_track.grid.initialize();
+
+        this.tracks.push(new_track);
+    }
+
+    this.initializeAudioContext = function() {
+        this.ctx = new AudioContext();
     }
 
     this.initializeGridAdder = function() {
@@ -124,7 +174,7 @@ function SongMaker() {
             resizeCanvas2(canvas, grid_container);
     
             var req = new XMLHttpRequest();
-            req.open("GET", "html/grid_overlay_create.html");
+            req.open("GET", "html/song_maker_grid_overlay.html");
             req.onload = () => {
                 var prompt_contents = req.responseText;
                 grid_container.innerHTML = prompt_contents;
@@ -134,7 +184,8 @@ function SongMaker() {
                     var name = grid_container.querySelector("#gridTitle").value;
                     var instrument = grid_container.querySelector("#instrumentSelect").value;
                     grid_container.remove();
-                    this.grids.push(createGrid(name, instrument, this.ctx));
+                    this.createTrack(name, instrument);
+                    //this.grids.push(createGrid(name, instrument, this.ctx));
                     this.song.tracks.push(new SongTrack(instrument));
                 })
             }
@@ -174,47 +225,21 @@ function SongMaker() {
     }
 }
 
-function Song() {
-    this.title = "";
-    this.tracks = [];
-    this.num_beats = 32;
-    this.tempo = null;
-
-    // Loop through all beat data matrices and set buffer source nodes with proper delays
-    this.play = function(audio_ctx) {
-        var current_time = audio_ctx.currentTime;
-
-        this.tracks.forEach((track) => {
-            track.beat_data.forEach((beat, beat_index) => {
-                var delay = 60 / this.tempo * beat_index;
-
-                beat.forEach((note) => {
-                    var source = audio_ctx.createBufferSource();
-                    source.buffer = track.sounds[note];
-                    source.connect(audio_ctx.destination);
-                    source.start(current_time + delay);
-                })
-            })
-        })
-    }
-
-    this.readGrids = function(grids) {
-        grids.forEach((grid, track_index) => {
-            this.tracks[track_index].beat_data = grid.getData();
-        })
-    }
-}
-
-function SongTrack(instrument) {
+function SongMakerTrack(track_name, instrument, audio_ctx) {
+    this.name = track_name;
     this.instrument = instrument;
-    this.sounds = [];
-    this.beat_data = [];
+    this.grid = null;
+    this.gain_node = null;
     this.gain = 1.0;
+    this.settings = null;
 
-    loadInstrument(instrument, this.sounds);
+    this.createGain = function() {
+        this.gain_node = audio_ctx.createGain();
+        this.gain_node.connect(audio_ctx.destination);
+    }
 }
 
-function Grid(num_cols, num_rows, canvas, audio_ctx) {
+function Grid(num_cols, num_rows, canvas, audio_ctx, audio_hook) {
     this.ctx = canvas.getContext("2d");
 
     this.instrument = "";
@@ -240,6 +265,7 @@ function Grid(num_cols, num_rows, canvas, audio_ctx) {
 
     this.sounds = [];
     this.audio_ctx = audio_ctx;
+    this.destination = audio_hook;
 
     this.is_playing = false;
 
@@ -328,7 +354,7 @@ function Grid(num_cols, num_rows, canvas, audio_ctx) {
     this.playCellSound = function(index) {
         var source = this.audio_ctx.createBufferSource();
         source.buffer = this.sounds[index];
-        source.connect(audio_ctx.destination);
+        source.connect(this.destination);
         source.start();
     }
 
@@ -428,14 +454,27 @@ function GridCell(cell_x, cell_y, cell_width, cell_height, cell_color) {
 function createGrid(name, instrument, audio_ctx) {
     var container = document.createElement("div");
     var canvas = document.createElement("canvas");
-    var gird_name = document.createElement("span");
-    gird_name.innerHTML = name;
+    var grid_name = document.createElement("span");
+    grid_name.innerHTML = name;
+
+    var grid_gain = document.createElement("input");
+    grid_gain.type = "range";
+    grid_gain.min = 0.0;
+    grid_gain.max = 1.0;
+    grid_gain.step = 0.01;
+    grid_gain.value = 1.0;
+
+    grid_gain.addEventListener("input", function() {
+
+    })
 
     container.className = "stacking-canvas-container";
     canvas.className = "stacking-canvas";
-    gird_name.className = "stacking-canvas-label"
+    grid_name.className = "stacking-canvas-label"
+    grid_gain.className = "stacking-canvas-gain";
 
-    container.appendChild(gird_name);
+    container.appendChild(grid_name);
+    container.appendChild(grid_gain);
     container.appendChild(canvas);
 
     var page_contents = document.getElementById("pageContents");

@@ -83,6 +83,12 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.stacking-canvas-gain {
+    position: absolute;
+    top: -22px;
+    right: 0px;
+}
+
 .grid-overlay {
     position: absolute;
     width: 100%;
