@@ -6,11 +6,9 @@ function main() {
     var song = new Song();
 
     var app = new SongMaker();
+    app.container = document.getElementById("pageContents");
 
-    var title_display = document.getElementById("songTitle");
-    var add_grid_button = document.getElementById("addGridButton");
     var new_song_button = document.getElementById("newSong");
-
     new_song_button.addEventListener("click", () => {
         // Animate intro prompt
         var intro_prompt = document.getElementById("introPrompt");
@@ -20,41 +18,9 @@ function main() {
         }, 750);
 
         // Create starter grid, song, and display song maker controls
+        app.createStarterSong();
         app.start();
     })
-
-    add_grid_button.addEventListener("click", function() {
-        var container = document.createElement("div");
-        var canvas = document.createElement("canvas");
-    
-        container.className = "stacking-canvas-container";
-        canvas.className = "stacking-canvas";
-    
-        container.appendChild(canvas);
-    
-        var page_contents = document.getElementById("pageContents");
-        var insert_point = document.getElementById("addGridButton");
-        page_contents.insertBefore(container, insert_point);
-    
-        resizeCanvas2(canvas, container);
-
-        var req = new XMLHttpRequest();
-        req.open("GET", "html/grid_overlay_create.html");
-        req.onload = () => {
-            var prompt_contents = req.responseText;
-            container.innerHTML = prompt_contents;
-
-            var submit_button = container.querySelector("#createGridButton");
-            submit_button.addEventListener("click", () => {
-                var name = container.querySelector("#gridTitle").value;
-                var instrument = container.querySelector("#instrumentSelect").value;
-                container.remove();
-                grids.push(createGrid(name, instrument, audio_ctx));
-                song.tracks.push(new SongTrack(instrument));
-            })
-        }
-        req.send();
-    });
 
     // Play song button
     var play_button = document.getElementById("playSong");
@@ -65,8 +31,8 @@ function main() {
     // Save song button
     var save_button = document.getElementById("saveSong");
     save_button.addEventListener("click", function() {
-        song.readGrids(grids);
-        saveSong(song);
+        app.updateSongFromGrids();
+        app.saveSongToDatabase();
     });
 
     // Load song button
@@ -110,11 +76,23 @@ function main() {
 }
 
 function SongMaker() {
+    this.container = null;
+
     this.ctx = new AudioContext();
     this.song = null;
+
+    this.title_card = null;
     this.grids = [];
+    this.grid_adder = null;
 
     this.start = function() {
+        this.title_card = document.getElementById("songTitle");
+        this.title_card.innerHTML = this.song.title;
+
+        this.initializeGridAdder();
+    }
+
+    this.createStarterSong = function() {
         var starter_song = new Song();
         starter_song.title = "Untitled";
         starter_song.tempo = 120;
@@ -124,6 +102,44 @@ function SongMaker() {
 
         this.grids.push(starter_grid);
         this.song = starter_song;
+    }
+
+    this.initializeGridAdder = function() {
+        this.grid_adder = document.getElementById("addGridButton");
+        this.grid_adder.style.display = "block";
+
+        this.grid_adder.addEventListener("click", () => {
+            var grid_container = document.createElement("div");
+            var canvas = document.createElement("canvas");
+        
+            grid_container.className = "stacking-canvas-container";
+            canvas.className = "stacking-canvas";
+        
+            grid_container.appendChild(canvas);
+        
+            var page_contents = this.container;
+            var insert_point = document.getElementById("addGridButton");
+            page_contents.insertBefore(grid_container, insert_point);
+        
+            resizeCanvas2(canvas, grid_container);
+    
+            var req = new XMLHttpRequest();
+            req.open("GET", "html/grid_overlay_create.html");
+            req.onload = () => {
+                var prompt_contents = req.responseText;
+                grid_container.innerHTML = prompt_contents;
+    
+                var submit_button = grid_container.querySelector("#createGridButton");
+                submit_button.addEventListener("click", () => {
+                    var name = grid_container.querySelector("#gridTitle").value;
+                    var instrument = grid_container.querySelector("#instrumentSelect").value;
+                    grid_container.remove();
+                    this.grids.push(createGrid(name, instrument, this.ctx));
+                    this.song.tracks.push(new SongTrack(instrument));
+                })
+            }
+            req.send();
+        });
     }
 
     this.play = function() {
@@ -138,6 +154,23 @@ function SongMaker() {
         this.grids.forEach((grid, index) => {
             this.song.tracks[index].beat_data = grid.getData();
         })
+    }
+
+    this.saveSongToDatabase = function() {
+        var save_title = prompt("Save song as: ", this.song.title);
+
+        if(confirm("Save song in its current state?")) {
+            this.song.title = save_title;
+    
+            var song_json = JSON.stringify(this.song);
+           
+            var req = new XMLHttpRequest();
+            req.open("GET", "save_song.php?song=" + song_json);
+            req.onload = function() {
+                alert(req.responseText);
+            }
+            req.send();
+        }
     }
 }
 
