@@ -34,12 +34,5 @@
         <script src="js/database.js"></script>
         <script src="js/utils.js"></script>
     </div>
-
-    <div id="bottomBar" class="bottom-bar">
-        <button type="button" id="playSong" class="menu-button">Play Song</button>
-        <button type="button" id="saveSong" class="menu-button">Save Song</button>
-        <input type="range" id="songTempo" min="60" max="200" step="1" value="120">
-        <span id="tempoValue"></span>
-    </div>
 </body>
 </html>
