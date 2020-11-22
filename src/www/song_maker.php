@@ -29,6 +29,7 @@
             <img src="images/plus.svg" width="100%">
         </div> 
         
+        <script src="js/song.js"></script>
         <script src="js/song_maker.js"></script>
         <script src="js/database.js"></script>
         <script src="js/utils.js"></script>
