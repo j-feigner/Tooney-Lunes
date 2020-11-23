@@ -25,13 +25,7 @@
             <p id="songTitle"></p>
         </div>
 
-        <div id="addGridButton">
-            <img src="images/plus.svg" width="100%">
-        </div> 
-
-        <div class="song-maker-controls">
-            <button type="button" class="play-song">Play</button>
-        </div>
+        <div class="song-maker-insert-container"></div>
         
         <script src="js/song.js"></script>
         <script src="js/song_maker.js"></script>

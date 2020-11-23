@@ -176,12 +176,108 @@
     margin-right: auto;
 }
 
-.song-maker-controls {
+.song-maker-ui {
     position: fixed;
-    width: 400px;
-    height: 100px;
-    top: 90%;
+    width: 800px;
+    height: 200px;
+    top: 88%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    animation-name: song-maker-ui-slide-in;
+    animation-duration: 800ms;
+    animation-fill-mode: forwards;
+}
+
+.master-volume-container {
+    position: absolute;
+    width: 350px;
+    height: 40px;
+    top: 50px;
+    left: 50px;
+    background-color: #AC3B61; 
+    border-radius: 20px 0px 0px 0px;
+}
+
+.master-volume-container input {
+    position: relative;
+    width: 170px;
+    top: 10px;
+    left: 30px;
+}
+
+.master-volume-label {
+    position: relative;
+    left: 20px;
+    top: 8px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.tempo-container {
+    position: absolute;
+    width: 350px;
+    height: 40px;
+    top: 50px;
+    right: 50px;
+    background-color: #AC3B61; 
+    border-radius: 0px 20px 0px 0px;
+}
+
+.tempo-container input {
+    position: relative;
+    width: 170px;
+    top: 10px;
+    left: 70px;
+}
+
+.tempo-label {
+    position: relative;
+    top: 8px;
+    left: 85px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.add-track-button-container {
+    position: relative;
+    width: 100px;
+    height: 98px;
+    top: 90px;
+    left: 400px;
+    transform: translateX(-50%);
+    border-radius: 60px 60px 0px 0px;
+    background-color: white;
+    animation-name: add-track-button-slide-in;
+    animation-duration: 800ms;
+    animation-fill-mode: forwards;
+    animation-delay: 800ms;
+}
+
+.add-track-button-container img {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    transition: transform 250ms;
+}
+
+.add-track-button-container img:active {
+    transform: scale(0.96);
+}
+
+.song-maker-controls {
+    position: relative;
+    width: 800px;
+    height: 100px;
+    top: 40px;
+    left: 400px;
     transform: translate(-50%, -50%);
     border: none;
     border-radius: 100px;
@@ -190,39 +286,40 @@
 
 .song-maker-controls .play-song {
     position: relative;
-    width: 50px;
-    height: 50px;
-    top: 25px;
-    left: 175px;
+    width: 80px;
+    height: 80px;
+    top: 10px;
+    left: 360px;
+    padding: 0px;
     border: none;
-    border-radius: 25px;
-    background-color: white;
+    border-radius: 40px;
+    background-color: #AC3B61;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: 10px;
     outline: none;
     cursor: pointer;
+    transition: transform 250ms;
+}
+
+.song-maker-controls .play-song img {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 20px;
+    left: 24px;
 }
 
 .song-maker-controls .play-song:hover {
     background-color: grey;
 }
 
-#addGridButton {
-    display: none;
-    position: relative;
-    width: 100px;
-    height: 100px;
-    top: 20%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 25%;
-    cursor: pointer;
+.song-maker-controls .play-song:active {
+    transform: scale(0.96);
 }
 
-#addGridButton :active {
-    transition: transform 200ms;
-    transform: scale(0.96);
+.song-maker-insert-container {
+    height: 400px;
 }
 
 @keyframes fade-in {
@@ -262,6 +359,24 @@
     }
     to {
         left: 0px;
+    }
+}
+
+@keyframes song-maker-ui-slide-in {
+    from {
+        top: 120%;
+    }
+    to {
+        top: 88%;
+    }
+}
+
+@keyframes add-track-button-slide-in {
+    from { 
+        top: 90px;
+    }
+    to {
+        top: -10px;
     }
 }
 

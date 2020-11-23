@@ -24,41 +24,122 @@ function SongMaker() {
     this.container = null;
 
     this.ctx = null;
-    this.song = null;
+    this.gain_node = null;
+
+    this.size = 40;
 
     this.tracks = [];
 
     this.song_title = null;
     this.song_tempo = 120;
-    this.track_adder = null;
 
+    this.track_adder = null;
     this.play_button = null;
     this.stop_button = null;
     this.volume = null;
 
+    this.insert_point = null;
+
+    this.is_playing = false;
+    this.is_paused = false;
+
     this.start = function() {
+        this.insert_point = this.container.querySelector(".song-maker-insert-container");
+
         this.initializeAudioContext();
-        this.initializeTrackAdder();
-        this.createStarterSong();
+        this.createStarterTrack();
         this.createMenu();
 
         this.title_card = document.getElementById("songTitle");
-        this.title_card.innerHTML = this.song.title;
+        this.title_card.innerHTML = "New Song 1";
     }
 
-    this.createStarterSong = function() {
-        var starter_song = new Song();
-        starter_song.title = "Untitled";
-        starter_song.tempo = 120;
-        
-        this.song = starter_song;
+    this.initializeAudioContext = function() {
+        this.ctx = new AudioContext();
+        this.gain_node = this.ctx.createGain();
+        this.gain_node.connect(this.ctx.destination);
+    }
+
+    this.createStarterTrack = function() {
+        var req = new XMLHttpRequest();
+        req.open("GET", "html/song_maker_track.html", true);
+        req.onload = () => {
+            var div = document.createElement("div");
+            div.innerHTML = req.responseText;
+
+            var name = "Melody";
+            var instrument = "piano";
+
+            var track_container = div.firstChild;
+            track_container.style.animation = "none";
+            this.container.insertBefore(track_container, this.insert_point);
+
+            // Create and initialize new track
+            var new_track = new SongMakerTrack(name, instrument, this.ctx, this.gain_node);
+            new_track.createGain();
+            loadInstrument(instrument, new_track.sounds);
+
+            // Set track label and make visible
+            var track_label = track_container.querySelector(".track-label");
+            track_label.innerHTML = name;
+            track_label.style.display = "block";
+
+            // Set gain and make visible
+            var track_gain = track_container.querySelector(".track-gain");
+            track_gain.addEventListener("input", () => {
+                new_track.gain_node.gain.value = track_gain.value;
+            })
+            track_gain.style.display = "block";
+
+            // Create and initialize grid values for new track
+            var grid_canvas = track_container.querySelector(".grid-canvas");
+            resizeCanvas2(grid_canvas, track_container);
+            new_track.grid = new Grid(40, 12, grid_canvas, this.ctx, new_track.gain_node);
+            new_track.grid.instrument = new_track.instrument;
+            new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
+            new_track.grid.initialize();
+            this.tracks.push(new_track);
+
+            // Empty and hide track overlay
+            var track_overlay = track_container.querySelector(".track-overlay");
+            track_overlay.innerHTML = "";
+            track_overlay.style.display = "none"; 
+        }
+        req.send();
     }
 
     this.createMenu = function() {
-        var play_button = this.container.querySelector(".song-maker-controls .play-song");
-        play_button.addEventListener("click", () => {
-            this.play();
-        })
+        // Grab menu and inject into container
+        var req = new XMLHttpRequest();
+        req.open("GET", "html/song-maker-ui.html", true);
+        req.onload = () => {
+            var div = document.createElement("div");
+            div.innerHTML = req.responseText;
+
+            this.container.appendChild(div.firstChild);
+
+            // Create event listeners for menu items
+            this.track_adder = this.container.querySelector(".add-track-button-container img");
+            this.track_adder.addEventListener("click", () => {
+                this.newTrack();
+            })
+
+            this.play_button = this.container.querySelector(".song-maker-controls .play-song");
+            this.play_button.addEventListener("click", () => {
+                this.play();
+            })
+    
+            this.volume_control = this.container.querySelector(".master-volume-container input");
+            this.volume_control.addEventListener("input", () => {
+                this.gain_node.gain.value = this.volume_control.value;
+            })
+    
+            this.tempo_control = this.container.querySelector(".tempo-container input");
+            this.tempo_control.addEventListener("input", () => {
+                this.song_tempo = this.tempo_control.value;
+            })
+        }
+        req.send();
     }
 
     this.newTrack = function() {
@@ -79,7 +160,7 @@ function SongMaker() {
                 var instrument = track_container.querySelector(".track-creation-form select").value;
 
                 // Create and initialize new track
-                var new_track = new SongMakerTrack(name, instrument, this.ctx);
+                var new_track = new SongMakerTrack(name, instrument, this.ctx, this.gain_node);
                 new_track.createGain();
                 loadInstrument(instrument, new_track.sounds);
 
@@ -111,22 +192,9 @@ function SongMaker() {
             })
 
             // Add track to SongMaker div container and add new track to song
-            this.container.insertBefore(track_container, this.track_adder);
+            this.container.insertBefore(track_container, this.insert_point);
         }
         req.send();
-    }
-
-    this.initializeAudioContext = function() {
-        this.ctx = new AudioContext();
-    }
-
-    this.initializeTrackAdder = function() {
-        this.track_adder = document.getElementById("addGridButton");
-        this.track_adder.style.display = "block";
-
-        this.track_adder.addEventListener("click", () => {
-            this.newTrack();
-        });
     }
 
     this.play = function() {
@@ -161,7 +229,7 @@ function SongMaker() {
     }
 }
 
-function SongMakerTrack(track_name, instrument, audio_ctx) {
+function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
     this.name = track_name;
     this.instrument = instrument;
     this.grid = null;
@@ -191,7 +259,7 @@ function SongMakerTrack(track_name, instrument, audio_ctx) {
 
     this.createGain = function() {
         this.gain_node = audio_ctx.createGain();
-        this.gain_node.connect(audio_ctx.destination);
+        this.gain_node.connect(ctx_destination);
     }
 }
 
