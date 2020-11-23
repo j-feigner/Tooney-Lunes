@@ -48,7 +48,7 @@ function SongMaker() {
 
         this.initializeAudioContext();
         this.createStarterTrack();
-        this.createMenu();
+        this.createUI();
 
         this.title_card = document.getElementById("songTitle");
         this.title_card.innerHTML = "New Song 1";
@@ -94,7 +94,7 @@ function SongMaker() {
             // Create and initialize grid values for new track
             var grid_canvas = track_container.querySelector(".grid-canvas");
             resizeCanvas2(grid_canvas, track_container);
-            new_track.grid = new Grid(40, 12, grid_canvas, this.ctx, new_track.gain_node);
+            new_track.grid = new Grid(64, 12, grid_canvas, this.ctx, new_track.gain_node);
             new_track.grid.instrument = new_track.instrument;
             new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
             new_track.grid.initialize();
@@ -108,7 +108,7 @@ function SongMaker() {
         req.send();
     }
 
-    this.createMenu = function() {
+    this.createUI = function() {
         // Grab menu and inject into container
         var req = new XMLHttpRequest();
         req.open("GET", "html/song-maker-ui.html", true);
@@ -136,7 +136,7 @@ function SongMaker() {
     
             this.tempo_control = this.container.querySelector(".tempo-container input");
             this.tempo_control.addEventListener("input", () => {
-                this.song_tempo = this.tempo_control.value;
+                this.song_tempo = this.tempo_control.value * 4;
             })
         }
         req.send();
@@ -232,10 +232,17 @@ function SongMaker() {
 function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
     this.name = track_name;
     this.instrument = instrument;
+
     this.grid = null;
     this.grid_data = [];
+
+    this.beat_length = 2;
+
     this.sounds = [];
+    this.sound_offset = 0;
+
     this.gain_node = null;
+
     this.settings = null;
 
     this.play  = function(tempo) {
@@ -246,7 +253,7 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
 
             beat.forEach((note) => {
                 var source = audio_ctx.createBufferSource();
-                source.buffer = this.sounds[note];
+                source.buffer = this.sounds[note + this.sound_offset];
                 source.connect(this.gain_node);
                 source.start(current_time + delay);
             })
@@ -285,6 +292,8 @@ function Grid(num_cols, num_rows, canvas, audio_ctx, audio_hook) {
     this.column_size = num_rows;
     this.column_width = this.rect.w / this.size;
 
+    this.column_color_1 = "rgba(245, 245, 245, 1.0)";
+    this.column_color_2 = "rgba(220, 220, 220, 1.0)";
     this.color_seq = [];
 
     this.sounds = [];
@@ -295,10 +304,14 @@ function Grid(num_cols, num_rows, canvas, audio_ctx, audio_hook) {
 
     // Initialize column objects with calculated rect coordinates
     this.createColumns = function() {
+        var column_color = this.column_color_1;
         for(var i = 0; i < this.size; i++) {
+            if(i % 4 === 0) {
+                (column_color === this.column_color_1) ? column_color = this.column_color_2 : column_color = this.column_color_1; 
+            }
             var col_x = this.rect.x + this.column_width * i;
 
-            this.columns[i] = new GridColumn(col_x, this.rect.y, this.column_width, this.rect.h, this.column_size, this.color_seq);
+            this.columns[i] = new GridColumn(col_x, this.rect.y, this.column_width, this.rect.h, this.column_size, column_color, this.color_seq);
             this.columns[i].createCells();
         }
     }
@@ -405,7 +418,7 @@ function Grid(num_cols, num_rows, canvas, audio_ctx, audio_hook) {
     }
 }
 
-function GridColumn(col_x, col_y, col_width, col_height, col_size, color_seq) {
+function GridColumn(col_x, col_y, col_width, col_height, col_size, col_color, cell_colors) {
     this.rect = {
         x: col_x,
         y: col_y,
@@ -423,7 +436,7 @@ function GridColumn(col_x, col_y, col_width, col_height, col_size, color_seq) {
     this.createCells = function() {
         for(var i = 0; i < this.size; i++) {
             var cell_y = this.rect.y + this.rect.h - (this.cell_height * i) - this.cell_height;
-            this.cells[i] = new GridCell(this.rect.x, cell_y, this.rect.w, this.cell_height, color_seq[i]);
+            this.cells[i] = new GridCell(this.rect.x, cell_y, this.rect.w, this.cell_height, col_color, cell_colors[i]);
         }
     }
 
@@ -435,7 +448,7 @@ function GridColumn(col_x, col_y, col_width, col_height, col_size, color_seq) {
     }
 }
 
-function GridCell(cell_x, cell_y, cell_width, cell_height, cell_color) {
+function GridCell(cell_x, cell_y, cell_width, cell_height, base_color, fill_color) {
     this.rect = {
         x: cell_x + 0.5,
         y: cell_y + 0.5,
@@ -443,7 +456,8 @@ function GridCell(cell_x, cell_y, cell_width, cell_height, cell_color) {
         h: cell_height - 0.5
     };
 
-    this.color = cell_color;
+    this.base_color = base_color;
+    this.filled_color = fill_color;
 
     this.is_playing = false;
     this.is_filled = false;
@@ -457,13 +471,13 @@ function GridCell(cell_x, cell_y, cell_width, cell_height, cell_color) {
             ctx.fillStyle = "rgba(235, 235, 235, 0.7)";
         }
         else if(!this.is_playing && this.is_filled) {
-            ctx.fillStyle = this.color;
+            ctx.fillStyle = this.filled_color;
         }
         else if(this.is_playing && !this.is_filled) {
             ctx.fillStyle = "rgba(235, 235, 235, 0.15)";
         }
         else if(!this.is_playing && !this.is_filled) {
-            ctx.fillStyle = "rgba(245, 245, 245, 1.0)";
+            ctx.fillStyle = this.base_color;
         }
 
         ctx.clearRect(this.rect.x, this.rect.y, this.rect.w, this.rect.h);
