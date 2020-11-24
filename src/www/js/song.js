@@ -1,9 +1,7 @@
 function Song() {
     this.title = "";
-    this.tracks = [];
     this.tempo = null;
-    this.master_gain_level = 1.0;
-    this.gain_node = null;
+    this.tracks = [];
 
     // Loop through all beat data matrices and set buffer source nodes with proper delays
     this.play = function(audio_ctx) {
@@ -23,10 +21,8 @@ function Song() {
         })
     }
 
-    this.readGrids = function(grids) {
-        grids.forEach((grid, track_index) => {
-            this.tracks[track_index].beat_data = grid.getData();
-        })
+    this.save = function() {
+        
     }
 }
 
@@ -34,8 +30,6 @@ function SongTrack(instrument) {
     this.instrument = instrument;
     this.sounds = [];
     this.beat_data = [];
-    this.gain_level = 1.0;
-    this.gain_node = null;
 
     loadInstrument(instrument, this.sounds);
 }

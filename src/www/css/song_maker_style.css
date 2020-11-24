@@ -319,7 +319,6 @@
 }
 
 .song-maker-controls .save-song {
-    display: none;
     position: relative;
     top: -20px;
     left: 400px;
@@ -334,6 +333,24 @@
 }
 
 .song-maker-controls .save-song:hover {
+    background: lightslategray;
+}
+
+.song-maker-controls .load-song {
+    position: relative;
+    top: -20px;
+    left: 500px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 30px;
+    background-color: lightgrey;
+    outline: none;
+    cursor: pointer;
+    transition: transform 250ms;
+}
+
+.song-maker-controls .load-song:hover {
     background: lightslategray;
 }
 

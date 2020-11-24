@@ -79,7 +79,9 @@ DROP TABLE IF EXISTS Song_Tracks;
 CREATE TABLE Song_Tracks (
     track_id        INT(16) UNSIGNED AUTO_INCREMENT,
     song_id         INT(8),
+    track_name      VARCHAR(20),
     instr_id        INT(6),
+    volume          FLOAT(2,1),
     track_data      TEXT,
     PRIMARY KEY (track_id, song_id),
     FOREIGN KEY (song_id) REFERENCES Songs(song_id),

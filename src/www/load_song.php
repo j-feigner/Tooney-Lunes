@@ -41,7 +41,8 @@ if($result->num_rows == 1) {
 // Find song tracks by song id and assign track arrays to JSON
 $sql = "SELECT *
           FROM Song_Tracks
-         WHERE Song_Tracks.song_id = '$song_id';";
+         WHERE Song_Tracks.song_id = '$song_id'
+         ORDER BY Song_Tracks.track_id;";
 $result = $conn->query($sql);
 if($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
