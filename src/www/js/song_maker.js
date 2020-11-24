@@ -6,20 +6,28 @@ function main() {
     var app = new SongMaker();
     app.container = document.getElementById("pageContents");
 
+    var intro_prompt = document.getElementById("introPrompt");
+
     var new_song_button = document.getElementById("newSong");
     new_song_button.addEventListener("click", () => {
-        // Animate intro prompt
-        var intro_prompt = document.getElementById("introPrompt");
         intro_prompt.classList.add("fade-out");
         setTimeout(() => {
             intro_prompt.remove();
         }, 750);
 
         // Create starter grid, song, and display song maker controls
-        app.start();
+        app.startFromNew();
     })
 
     var load_song_button = document.getElementById("loadSong");
+    load_song_button.addEventListener("click", () => {
+        intro_prompt.classList.add("fade-out");
+        setTimeout(() => {
+            intro_prompt.remove();
+        }, 750);
+
+        app.startFromLoad();
+    })
 }
 
 function SongMaker() {
@@ -45,7 +53,7 @@ function SongMaker() {
     this.is_playing = false;
     this.is_paused = false;
 
-    this.start = function() {
+    this.startFromNew = function() {
         this.song = new Song();
         this.song.title = "New Song"
         this.song.tempo = 120;
@@ -53,11 +61,20 @@ function SongMaker() {
         this.insert_point = this.container.querySelector(".song-maker-insert-container");
 
         this.initializeAudioContext();
-        //this.createStarterTrack();
+        this.createStarterTrack();
         this.createUI();
 
         this.title_card = document.getElementById("songTitle");
         this.title_card.innerHTML = this.song.title;
+    }
+
+    this.startFromLoad = function() {
+        this.insert_point = this.container.querySelector(".song-maker-insert-container");
+        this.title_card = document.getElementById("songTitle");
+
+        this.initializeAudioContext();
+        this.createUI();
+        this.loadSongFromDatabase();
     }
 
     this.initializeAudioContext = function() {
@@ -306,9 +323,10 @@ function SongMaker() {
             req.onload = () => {
                 this.song = JSON.parse(req.responseText);
                 this.tracks = [];
-                this.song.tracks.forEach((track, index) => {
+                this.song.tracks.forEach((track) => {
                     this.createSongMakerTrack(track);
                 })
+                this.title_card.innerHTML = this.song.title;
             }
             req.send();
         }
