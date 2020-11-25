@@ -1,51 +1,37 @@
 function displayUserSearch(searchResults) {
     var searchResultDiv = document.getElementById("searchResult");
+    searchResultDiv.innerHTML = "";
     searchResultDiv.classList.add("user-card");
-
-    console.log(searchResults);
 
     if (!searchResults) {
         searchResultDiv.innerHTML = "No user found.";
     } else {
-        var usernameP = document.createElement("p");
-        usernameP.innerHTML = searchResults[0][0];
-        usernameP.style.margin = "0";
+        var usernameA = document.createElement("a");
+        usernameA.innerHTML = searchResults[0][0];
+        usernameA.id = "userLink";
+        usernameA.style.margin = "0";
+        usernameA.href = "other_user_profile.php?username=" + searchResults[0][0];
+        usernameA.style.color = "black";
+        usernameA.style.textDecoration = "none";
 
-        var emailP = document.createElement("p");
-        emailP.innerHTML = searchResults[0][1];
-        emailP.style.margin = "0";
-        emailP.style.fontSize = ".7em";
-        emailP.style.userSelect = "text";
-        emailP.style.msUserSelect = "text";
-        emailP.style.webkitUserSelect = "text";
+        usernameA.addEventListener("mouseover", function () {
+            usernameA.style.textDecoration = "underline";
+        });
+        usernameA.addEventListener("mouseout", function () {
+            usernameA.style.textDecoration = "none";
+        });
 
-        searchResultDiv.appendChild(usernameP);
-        searchResultDiv.appendChild(emailP);
+        //var emailP = document.createElement("p");
+        //emailP.innerHTML = searchResults[0][1];
+        //emailP.style.margin = "0";
+        //emailP.style.fontSize = ".7em";
+        //emailP.style.userSelect = "text";
+        //emailP.style.msUserSelect = "text";
+        //emailP.style.webkitUserSelect = "text";
+
+        searchResultDiv.appendChild(usernameA);
+        //searchResultDiv.appendChild(emailP);
     }
-
-
-//searchResultP.innerHTML = "<h1>Account Details</h1><br>" +
-//                            userAccountDetails[0] + "<br>" +
-//                            userAccountDetails[1] + "<br>" +
-//                            userAccountDetails[2] + "<br>";
-//if (userGenres.length != 0) {
-//    searchResultP.innerHTML += "<h1>Genre Details</h1><br>";
-//    for (var i = 0; i < userGenres.length; i++) {
-//        searchResultP.innerHTML += userGenres[i] + "<br>";
-//    }
-//}
-//if (userInstruments.length != 0) {
-//    searchResultP.innerHTML += "<h1>Instrument Specialties</h1><br>";
-//    for (var i = 0; i < userInstruments.length; i++) {
-//        searchResultP.innerHTML += userInstruments[i] + "<br>";
-//    }
-//}
-//if (userExperience.length != 0) {
-//    searchResultP.innerHTML += "<h1>Music Experience</h1><br>";
-//    for (var i = 0; i < userExperience.length; i++) {
-//        searchResultP.innerHTML += userExperience[i] + "<br>";
-//    }
-//}
 }
 
 function setSearchFocusStyle() {
@@ -73,14 +59,14 @@ function setSearchFocusStyle() {
         searchContainer.style.transform = "translateX(-2px) translateY(-2px)";
         searchContainer.style.transition = "box-shadow .2s ease-out, transform .2s ease-out, border-color .2s ease-out";
         searchContainer.style.borderColor = "#3cbebe";
-    }
+    };
 
     searchUserBar.onblur = function () {
         searchContainer.style.boxShadow = "none";
         searchContainer.style.transform = "none";
         searchContainer.style.transition = "box-shadow .5s ease-out, transform .5s ease-out, border-color .2s linear";
         searchContainer.style.borderColor = "black";
-    }
+    };
 }
 
 function searchUserEventListener() {
@@ -126,19 +112,60 @@ function socialDisplay() {
 
 function profileDetailsSlideIn() {
     var username_container = document.getElementById("usernameContainer");
-    var email_container = document.getElementById("emailContainer");
-
     var username_width = username_container.offsetWidth;
-    var email_width = email_container.offsetWidth;
-
     username_container.style.borderBottomRightRadius = "20px";
-    email_container.style.borderBottomRightRadius = "20px";
-
     if (username_width >= "288")
         username_container.style.borderTopRightRadius = "20px";
-    if (email_width >= username_width - 12)
-        email_container.style.borderTopRightRadius = "20px";
+
+    var email_container = document.getElementById("emailContainer");
+    if (email_container != null) {
+        var email_width = email_container.offsetWidth;
+        email_container.style.borderBottomRightRadius = "20px";
+        if (email_width >= username_width - 12)
+            email_container.style.borderTopRightRadius = "20px";
+    }
+
+    var profilePictureContainer = document.getElementById("profilePictureContainer");
+    if (typeof email_width != "undefined") {
+        if (username_width >= email_width) {
+            profilePictureContainer.style.left = (username_width + 20) + "px";
+        } else {
+            profilePictureContainer.style.left = (email_width + 20) + "px";
+        }
+    } else {
+        profilePictureContainer.style.left = (username_width + 20) + "px";
+    }
 }
+
+function showProfilePictureForm() {
+    var profilePictureForm = document.getElementById("profilePictureForm");
+    profilePictureForm.style.display = "flex";
+}
+
+function showProfilePicturePreview() {
+    var defaultFileInput = document.getElementById("defaultFileInput");
+    var customFileInput = document.getElementById("customFileInput");
+    var picturePreviewImg = document.getElementById("picturePreview");
+
+    defaultFileInput.click();
+    defaultFileInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const result = reader.result;
+                picturePreviewImg.src = result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+//function profilePictureStyle() {
+//    var profilePictureContainer = document.getElementById("profilePictureContainer");
+//    var addPhotoIcon = document.getElementById("addPhotoIcon");
+//    var profilePictureInput = document.getElementById("profilePictureInput");
+//}
 
 var genreExpanded = false;
 function showGenreCheckboxes() {
@@ -173,30 +200,65 @@ function showExpRadios() {
         expExpanded = false;
     }
 }
+var bioExpanded = false;
+function showBioEditor() {
+    var bioInfo = document.getElementById("bioInfo");
+    var bioInput = document.getElementById("bioInput");
+    var inputLength = bioInput.value.length;
+    var bioSubmit = document.getElementById("bioSubmit");
+    var wordCount = document.getElementById("wordCount");
+    wordCount.innerHTML = inputLength;
 
-function noticeFadeIn(notice_type) {
-    var noticeElm;
+    if (!bioExpanded) {
+        bioInfo.style.display = "none";
+        bioInput.style.display = "block";
+        bioSubmit.style.display = "inline-block";
+        wordCount.style.display = "inline-block";
+        bioExpanded = true;
+    } else {
+        bioInfo.style.display = "block";
+        bioInput.style.display = "none";
+        bioSubmit.style.display = "none";
+        wordCount.style.display = "none";
+        bioExpanded = false;
+    }
+
+    bioInput.addEventListener("input", () => {
+        inputLength = bioInput.value.length;
+        wordCount.innerHTML = inputLength;
+    });
+}
+
+function noticeFade(notice_type) {
     if (notice_type == "inv_log") {
         var noticeElm = document.getElementById("error");
         noticeElm.innerHTML = "Invalid login.";
     } else if (notice_type == "taken_u") {
         var noticeElm = document.getElementById("error");
-        noticeElm.innerHTML = "Taken username.";
+        noticeElm.innerHTML = "Username taken.";
     } else if (notice_type == "taken_e") {
         var noticeElm = document.getElementById("error");
-        noticeElm.innerHTML = "Taken email.";
+        noticeElm.innerHTML = "Email taken.";
     } else if (notice_type == "insert_f") {
         var noticeElm = document.getElementById("error");
         noticeElm.innerHTML = "DB insert fail.";
     } else if (notice_type == "reg_succ") {
         var noticeElm = document.getElementById("success");
-        noticeElm.innerHTML = "Registration successful.";
+        noticeElm.innerHTML = "Registration successful!";
     }
-    var initOpacity = 0;
-    var timer = setInterval(function () {
-        if (initOpacity >= 0.9) {
-            clearInterval(timer);
+    var currentOpacity = 0;
+    var fadeInTimer = setInterval(function () {
+        if (currentOpacity >= 0.9) {
+            clearInterval(fadeInTimer);
         }
-        noticeElm.style.opacity = initOpacity += 0.1;
+        noticeElm.style.opacity = currentOpacity += 0.1;
     }, 30);
+    setTimeout(() => {
+        var fadeOutTimer = setInterval(function () {
+            if (currentOpacity <= 0) {
+                clearInterval(fadeOutTimer);
+            }
+            noticeElm.style.opacity = currentOpacity -= 0.1;
+        }, 30);
+    }, 5000);
 }

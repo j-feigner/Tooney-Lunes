@@ -68,6 +68,9 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $userData = array_merge($userAccountResult, $userInstrumentResult, $userGenresResult, $userExperienceResult);
+$_SESSION['searchUserID'] = $userAccountResult[0]['user_id'];
+$_SESSION['searchUserUsername'] = $userAccountResult[0]['username'];
+$_SESSION['searchUserEmail'] = $userAccountResult[0]['email'];
 
 echo json_encode($userData);
 $conn->close();
