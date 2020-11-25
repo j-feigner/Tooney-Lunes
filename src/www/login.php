@@ -58,8 +58,8 @@
 			</div>-->
 			
 			<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="register.php">Forgot password?</a></p>
-		
 			
+
 	</form>
 	
 	
