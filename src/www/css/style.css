@@ -215,7 +215,7 @@ html, body {
     position: relative;
     background-color: white;
     outline: none;
-    width: 250px;
+    width: 50%;
     height: 40px;
     margin: 10px auto 10px auto;
     padding: 0 10px;
@@ -268,6 +268,40 @@ html, body {
     background-color: #7f8ec7;
     font-family: "Arial Black", Gadget, sans-serif;
     box-shadow: 10px 10px 8px #888888;
+}
+
+.search-area {
+   display: flex;
+   flex-direction: row;
+}
+
+.search-by {
+    position: relative;
+    background-color: #ac3b61;
+    width: 29%;
+    height: auto;
+    margin: 10px auto 10px auto;
+    padding: 0 10px;
+    border: 2px solid black;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.search-by-list {
+    background-color: white;
+    outline: none;
+    width: 100%;
+    padding: 0 10px;
+    border: 2px solid black;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 75%;
+}
+
+.search-by-label {
+    font-family: "Arial Black", Gadget, sans-serif;
+    color: white;
+    text-shadow: 5px 5px 8px black;
 }
 
 .profile-info-container {
