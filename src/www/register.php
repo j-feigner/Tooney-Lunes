@@ -25,14 +25,17 @@
 		<input type="password" class="form-input" id="password" name="password" placeholder="Password" required>
 		<input type="submit" id="register-button" class="submit-button" value="Register">
 		<p class="notice" id="error"></p>
-		<?php if (isset($_SESSION['notice'])) {
-			if ($_SESSION['notice'] == "taken_u") {?>
-				<script>noticeFade("taken_u")</script>
-			<?php } else if ($_SESSION['notice'] == "taken_e") {?>
-				<script>noticeFade("taken_e")</script>
-			<?php } else if ($_SESSION['notice'] == "insert_f") {?>
-				<script>noticeFade("insert_f")</script>
-		<?php }} unset($_SESSION['notice']); ?>
+		<?php 
+		if (isset($_SESSION['notice'])) {
+			if ($_SESSION['notice'] == "taken_u") { ?>
+				<script>noticeFadeIn("taken_u")</script> <?php 
+			} else if ($_SESSION['notice'] == "taken_e") { ?>
+				<script>noticeFadeIn("taken_e")</script> <?php 
+			} else if ($_SESSION['notice'] == "insert_f") { ?>
+				<script>noticeFadeIn("insert_f")</script> <?php 
+			}
+		} unset($_SESSION['notice']); 
+		?>
 		<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="login.php">Log in</a></p>
 	</form>
 </body>

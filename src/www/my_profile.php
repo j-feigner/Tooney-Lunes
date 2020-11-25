@@ -104,6 +104,16 @@
 	</div>
 
 	<div class="social-container" id="socialContainer">
+        <div class="search-area" id="searchArea">
+        <div class="search-by" id="searchBy">
+            <label class="search-by-label">Search By...</label>
+                    <select class="search-by-list" id="searchByList">
+                        <option selected="selected" value="user">User</option>
+                        <option value="genre">Genre</option>
+                        <option value="instrument">Instrument</option>
+                        <option value="experience">Experience</option>
+                    </select>
+        </div>
 		<div class="search-container" id="searchContainer">
 			<table class="search-elements-container">
 				<tr>

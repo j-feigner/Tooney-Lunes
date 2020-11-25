@@ -375,7 +375,7 @@ function searchUser() {
 
     var searchUserReq = new XMLHttpRequest();
     var method = "GET";
-    var url = "searchDBUser.php?search=" + document.getElementById("searchUser").value;
+    var url = "searchDBUser.php?search=" + document.getElementById("searchUser").value + "&searchBy=" + document.getElementById("searchBy").value;
     var asynch = true;
     searchUserReq.open(method, url, asynch);
     searchUserReq.send();

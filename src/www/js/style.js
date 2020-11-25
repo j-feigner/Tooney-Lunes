@@ -37,6 +37,22 @@ function displayUserSearch(searchResults) {
 function setSearchFocusStyle() {
     var searchUserBar = document.getElementById("searchUser");
     var searchContainer = document.getElementById("searchContainer");
+    var searchByList = document.getElementById("searchByList");
+    var searchBy = document.getElementById("searchBy");
+
+    searchByList.onfocus = function () {
+        searchBy.style.boxShadow = "3px 3px 4px black";
+        searchBy.style.transform = "translateX(-2px) translateY(-2px)";
+        searchBy.style.transition = "box-shadow .2s ease-out, transform .2s ease-out, border-color .2s ease-out";
+        searchBy.style.borderColor = "#3cbebe";
+    }
+
+    searchByList.onblur = function () {
+        searchBy.style.boxShadow = "none";
+        searchBy.style.transform = "none";
+        searchBy.style.transition = "box-shadow .5s ease-out, transform .5s ease-out, border-color .2s linear";
+        searchBy.style.borderColor = "black";
+    }
 
     searchUserBar.onfocus = function () {
         searchContainer.style.boxShadow = "3px 3px 4px black";
