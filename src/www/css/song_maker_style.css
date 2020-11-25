@@ -1,21 +1,85 @@
-.stacking-canvas-container {
+.song-maker-prompt {
+    position: absolute;
+    width: 75%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0px;
+    background-color: rgba(25, 25, 25, 0.8);
+    border-radius: 10px;
+    animation-name: fade-in-up;
+    animation-duration: 750ms;
+    animation-fill-mode: forwards;
+    z-index: 1;
+}
+
+.song-maker-prompt-intro {
+    position: absolute;
+    width: 900px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -450px;
+    text-align: center;
+}
+
+.fade-out {
+    animation-name: fade-out-down;
+    animation-duration: 750ms;
+    animation-fill-mode: forwards;
+}
+
+.song-maker-prompt-button {
+    display: inline-block;
+    width: 350px;
+    height: 150px;
+    margin-top: 75px;
+    margin-bottom: 75px;
+    margin-left: 25px;
+    margin-right: 25px;
+    background-color: white;
+    border: none;
+    border-radius: 70px;
+    outline: 5px solid transparent;
+    color: grey;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 150px;
+    cursor: pointer;
+}
+
+.song-maker-prompt-button:hover {
+    background-color: lightgrey;
+}
+
+.track-container {
     position: relative;
     width: 95%;
     height: 30%;
     top: 12%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 5%;
+    margin-bottom: 2%;
+    animation-name: slide-in-left;
+    animation-duration: 750ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease;
 }
 
-.stacking-canvas {
+.grid-canvas {
     position: absolute;
     top: 0px;
     left: 0px;
     cursor: pointer;
 }
 
-.stacking-canvas-label {
+.track-label {
+    display: none;
     position: absolute;
     top: -20px;
     left: 0px;
@@ -24,7 +88,14 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.grid-overlay {
+.track-gain {
+    display: none;
+    position: absolute;
+    top: -22px;
+    right: 0px;
+}
+
+.track-overlay {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -32,34 +103,329 @@
     left: 0px;
     background-color: darkgrey;
     border-radius: 10px;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    vertical-align: middle;
+    text-align: center;
 }
 
-.grid-creation-form {
+.track-creation-form {
     position: relative;
-    width: 75%;
-    height: 20%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
 }
 
-#bottomBar {
-    position: fixed;
+.track-creation-form input[type=text] {
+    display: inline-block;
+    width: 300px;
+    height: 50px;
+    border-radius: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 30px;
+    border: none;
+    outline: none;
 }
 
-#addGridButton {
-    position: relative;
+.track-creation-form select {
+    display: inline-block;
+    width: 300px;
+    height: 50px;
+    border-radius: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 30px;
+    border: none;
+    outline: none;
+}
+
+.track-creation-form button {
+    display: inline-block;
     width: 100px;
-    height: 100px;
-    top: 10%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 25%;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    color: slategrey;
+    font-weight: bold;
+    font-size: 20px;
     cursor: pointer;
 }
 
-#addGridButton :active {
+.track-creation-form button:hover {
+    background-color: grey;
+}
+
+.song-title-container {
+    position: relative;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: xx-large;
+    text-align: center;
+}
+
+.song-title-container p {
+    width: 50%;
+    margin-top: 5%;
+    margin-bottom: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.song-maker-ui {
+    position: fixed;
+    width: 800px;
+    height: 200px;
+    top: 88%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    animation-name: song-maker-ui-slide-in;
+    animation-duration: 800ms;
+    animation-fill-mode: forwards;
+}
+
+.master-volume-container {
+    position: absolute;
+    width: 350px;
+    height: 40px;
+    top: 50px;
+    left: 50px;
+    background-color: #AC3B61; 
+    border-radius: 20px 0px 0px 0px;
+}
+
+.master-volume-container input {
+    position: relative;
+    width: 170px;
+    top: 10px;
+    left: 30px;
+}
+
+.master-volume-label {
+    position: relative;
+    left: 20px;
+    top: 8px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.tempo-container {
+    position: absolute;
+    width: 350px;
+    height: 40px;
+    top: 50px;
+    right: 50px;
+    background-color: #AC3B61; 
+    border-radius: 0px 20px 0px 0px;
+}
+
+.tempo-container input {
+    position: relative;
+    width: 170px;
+    top: 10px;
+    left: 70px;
+}
+
+.tempo-label {
+    position: relative;
+    top: 8px;
+    left: 85px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.add-track-button-container {
+    position: relative;
+    width: 100px;
+    height: 98px;
+    top: 90px;
+    left: 400px;
+    transform: translateX(-50%);
+    border-radius: 60px 60px 0px 0px;
+    background-color: white;
+    animation-name: add-track-button-slide-in;
+    animation-duration: 800ms;
+    animation-fill-mode: forwards;
+    animation-delay: 800ms;
+}
+
+.add-track-button-container img {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    transition: transform 250ms;
+}
+
+.add-track-button-container img:active {
     transform: scale(0.96);
+}
+
+.song-maker-controls {
+    position: relative;
+    width: 800px;
+    height: 100px;
+    top: 40px;
+    left: 400px;
+    transform: translate(-50%, -50%);
+    border: none;
+    border-radius: 100px;
+    background-color: #123C69;
+}
+
+.song-maker-controls .play-song {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    top: 10px;
+    left: 360px;
+    padding: 0px;
+    border: none;
+    border-radius: 40px;
+    background-color: #AC3B61;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 10px;
+    outline: none;
+    cursor: pointer;
+    transition: transform 250ms;
+}
+
+.song-maker-controls .play-song img {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 20px;
+    left: 24px;
+}
+
+.song-maker-controls .play-song:hover {
+    background-color: grey;
+}
+
+.song-maker-controls .play-song:active {
+    transform: scale(0.96);
+}
+
+.song-maker-controls .save-song {
+    position: relative;
+    top: -20px;
+    left: 400px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 30px;
+    background-color: lightgrey;
+    outline: none;
+    cursor: pointer;
+    transition: transform 250ms;
+}
+
+.song-maker-controls .save-song:hover {
+    background: lightslategray;
+}
+
+.song-maker-controls .load-song {
+    position: relative;
+    top: -20px;
+    left: 500px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 30px;
+    background-color: lightgrey;
+    outline: none;
+    cursor: pointer;
+    transition: transform 250ms;
+}
+
+.song-maker-controls .load-song:hover {
+    background: lightslategray;
+}
+
+.song-maker-insert-container {
+    height: 400px;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0.0;
+    } 
+    to {
+        opacity: 1.0;
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0.0;
+        margin-top: 3%;
+    } 
+    to {
+        opacity: 1.0;
+        margin-top: 0%;
+    }
+}
+
+@keyframes fade-out-down {
+    from {
+        opacity: 1.0;
+        margin-top: 0%;
+    }
+    to {
+        opacity: 0.0;
+        margin-top: 3%;
+    }
+}
+
+@keyframes slide-in-left {
+    from {
+        left: -2000px;
+    }
+    to {
+        left: 0px;
+    }
+}
+
+@keyframes song-maker-ui-slide-in {
+    from {
+        top: 120%;
+    }
+    to {
+        top: 88%;
+    }
+}
+
+@keyframes add-track-button-slide-in {
+    from { 
+        top: 90px;
+    }
+    to {
+        top: -10px;
+    }
+}
+
+@keyframes button-shrink-out {
+    0% {
+        font-size: 0px;
+        transform: scale(1.0);
+    }
+    10% {
+        transform: scale(1.15);
+    }
+    100% {
+        font-size: 0px;
+        height: 0px;
+    }
 }
