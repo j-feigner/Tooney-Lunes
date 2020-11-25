@@ -27,11 +27,11 @@
 		<p class="notice" id="error"></p>
 		<?php if (isset($_SESSION['notice'])) {
 			if ($_SESSION['notice'] == "taken_u") {?>
-				<script>noticeFadeIn("taken_u")</script>
+				<script>noticeFade("taken_u")</script>
 			<?php } else if ($_SESSION['notice'] == "taken_e") {?>
-				<script>noticeFadeIn("taken_e")</script>
+				<script>noticeFade("taken_e")</script>
 			<?php } else if ($_SESSION['notice'] == "insert_f") {?>
-				<script>noticeFadeIn("insert_f")</script>
+				<script>noticeFade("insert_f")</script>
 		<?php }} unset($_SESSION['notice']); ?>
 		<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="login.php">Log in</a></p>
 	</form>

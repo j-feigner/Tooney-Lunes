@@ -5,6 +5,7 @@ CREATE TABLE Users (
     email           VARCHAR(40) NOT NULL,
 	password		VARCHAR(255) NOT NULL,
 	exp_id			VARCHAR(20),
+	bio				VARCHAR(200),
     PRIMARY KEY (user_id),
 	FOREIGN KEY (exp_id)
 		REFERENCES Experience(exp_id)

@@ -7,6 +7,7 @@
 		$header = file_get_contents("html\header.html");
         echo $header;
 	?>
+	<script type="text/javascript" src="js\utils.js"></script>
 	<script type="text/javascript" src="js\style.js"></script>
 </head>
 
@@ -31,9 +32,9 @@
 		<p id="success" class="notice"></p>
 		<?php if (isset($_SESSION['notice'])) {
 			if ($_SESSION['notice'] == "inv_log") { ?>
-				<script>noticeFadeIn("inv_log")</script>
+				<script>noticeFade("inv_log")</script>
 			<?php } else if ($_SESSION['notice'] == "reg_succ") {?>
-				<script>noticeFadeIn("reg_succ")</script>
+				<script>noticeFade("reg_succ")</script>
 		<?php }} unset($_SESSION['notice']); ?>
 		<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="register.php">Register here</a></p>
 	</form>

@@ -100,6 +100,13 @@ function createColorGradient(start_color, end_color, steps) {
 
         colors.push(new_color);
     }
-
     return colors;
+}
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    var currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
 }
