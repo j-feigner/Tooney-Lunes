@@ -160,12 +160,12 @@ function SongMaker() {
 
                 // Create and initialize grid values for new track
                 var grid_canvas = track_container.querySelector(".grid-canvas");
-                grid_canvas.height = 325;
+                grid_canvas.height = track_container.offsetHeight;
                 grid_canvas.width = 3500;
 
-                new_track.grid = new Grid(128, 13, grid_canvas, this.ctx, new_track.gain_node);
+                new_track.grid = new Grid(128, 25, grid_canvas, this.ctx, new_track.gain_node);
                 new_track.grid.instrument = new_track.instrument;
-                new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
+                new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 25);
                 new_track.grid.initialize();
                 this.tracks.push(new_track);
             }
@@ -192,7 +192,7 @@ function SongMaker() {
 
                     // Set track label and make visible
                     var track_label = track_container.querySelector(".track-label");
-                    track_label.innerHTML = name;
+                    track_label.innerHTML = track_name;
                     track_label.style.display = "block";
 
                     // Set gain and make visible
@@ -209,7 +209,7 @@ function SongMaker() {
 
                     new_track.grid = new Grid(128, 25, grid_canvas, this.ctx, new_track.gain_node);
                     new_track.grid.instrument = new_track.instrument;
-                    new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
+                    new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 25);
                     new_track.grid.initialize();
                     this.tracks.push(new_track);
                 })
