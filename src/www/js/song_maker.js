@@ -45,6 +45,7 @@ function SongMaker() {
     this.track_adder = null;
     this.play_button = null;
     this.stop_button = null;
+    this.scrollbar = null;
     this.volume = null;
     this.save_button = null;
 
@@ -61,7 +62,7 @@ function SongMaker() {
         this.insert_point = this.container.querySelector(".song-maker-insert-container");
 
         this.initializeAudioContext();
-        this.createTrack("Melody", "piano", "starter");
+        this.createTrack("starter");
         this.createUI();
 
         this.title_card = document.getElementById("songTitle");
@@ -118,10 +119,105 @@ function SongMaker() {
             this.save_button.addEventListener("click", () => {
                 this.saveSongToDatabase();
             })
+
+            this.scrollbar = this.container.querySelector(".song-maker-ui .scrollbar-container input");
+            this.scrollbar.addEventListener("input", () => {
+                this.scrollTracks();
+            })
         }
         req.send();
     }
-    
+
+    // Creates a new track and initializes corresponding grid
+    this.createTrack = function(type_option) {
+        this.loadTrackHTML(track_container => {
+            this.container.insertBefore(track_container, this.insert_point);
+
+            var track_name = "";
+            var track_instrument = "";
+
+            var track_overlay = track_container.querySelector(".track-overlay");
+            if(type_option === "starter") {
+                track_name = "Melody";
+                track_instrument = "piano";
+  
+                // Create new track object
+                var new_track = new SongMakerTrack(track_name, track_instrument, this.ctx, this.gain_node);
+                new_track.createGain();
+                loadInstrument(track_instrument, new_track.sounds);
+
+                // Set track label and make visible
+                var track_label = track_container.querySelector(".track-label");
+                track_label.innerHTML = track_name;
+                track_label.style.display = "block";
+
+                // Set gain and make visible
+                var track_gain = track_container.querySelector(".track-gain");
+                track_gain.addEventListener("input", () => {
+                    new_track.gain_node.gain.value = track_gain.value;
+                })
+                track_gain.style.display = "block";
+
+                // Create and initialize grid values for new track
+                var grid_canvas = track_container.querySelector(".grid-canvas");
+                grid_canvas.height = 325;
+                grid_canvas.width = 3500;
+
+                new_track.grid = new Grid(128, 13, grid_canvas, this.ctx, new_track.gain_node);
+                new_track.grid.instrument = new_track.instrument;
+                new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
+                new_track.grid.initialize();
+                this.tracks.push(new_track);
+            }
+            else {
+                track_overlay.style.display = "block";
+
+                var track_creation_form = track_overlay.querySelector(".track-creation-form");
+                track_creation_form.style.display = "block";
+
+                var name_input = track_creation_form.querySelector("input[type='text']");
+                var instr_input = track_creation_form.querySelector("select");
+                var submit = track_creation_form.querySelector("button");
+
+                submit.addEventListener("click", () => {
+                    track_name = name_input.value;
+                    track_instrument = instr_input.value;
+                    track_creation_form.style.display = "none";
+                    track_overlay.style.display = "none";
+
+                    // Create new track object
+                    var new_track = new SongMakerTrack(track_name, track_instrument, this.ctx, this.gain_node);
+                    new_track.createGain();
+                    loadInstrument(track_instrument, new_track.sounds);
+
+                    // Set track label and make visible
+                    var track_label = track_container.querySelector(".track-label");
+                    track_label.innerHTML = name;
+                    track_label.style.display = "block";
+
+                    // Set gain and make visible
+                    var track_gain = track_container.querySelector(".track-gain");
+                    track_gain.addEventListener("input", () => {
+                        new_track.gain_node.gain.value = track_gain.value;
+                    })
+                    track_gain.style.display = "block";
+
+                    // Create and initialize grid values for new track
+                    var grid_canvas = track_container.querySelector(".grid-canvas");
+                    grid_canvas.height = 325;
+                    grid_canvas.width = 3500;
+
+                    new_track.grid = new Grid(128, 25, grid_canvas, this.ctx, new_track.gain_node);
+                    new_track.grid.instrument = new_track.instrument;
+                    new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
+                    new_track.grid.initialize();
+                    this.tracks.push(new_track);
+                })
+            }
+        });
+    }
+       
+    // Async function called within createTrack() to get track container HTML from server
     this.loadTrackHTML = function(callback) {
         var req = new XMLHttpRequest();
         req.open("GET", "html/song_maker_track.html", true);
@@ -133,42 +229,38 @@ function SongMaker() {
         req.send();
     }
 
-    this.createTrack = function(name, instrument, type) {
-        this.loadTrackHTML(track_container => {
-            this.container.insertBefore(track_container, this.insert_point);
+    this.initializeTrack = function(container, name, instrument, num_notes) {
+        // Create new track object
+        var new_track = new SongMakerTrack(track_name, track_instrument, this.ctx, this.gain_node);
+        new_track.createGain();
+        loadInstrument(track_instrument, new_track.sounds);
 
-            // Create new track object
-            var new_track = new SongMakerTrack(name, instrument, this.ctx, this.gain_node);
-            new_track.createGain();
-            loadInstrument(instrument, new_track.sounds);
+        // Set track label and make visible
+        var track_label = track_container.querySelector(".track-label");
+        track_label.innerHTML = name;
+        track_label.style.display = "block";
 
-            // Set track label and make visible
-            var track_label = track_container.querySelector(".track-label");
-            track_label.innerHTML = name;
-            track_label.style.display = "block";
+        // Set gain and make visible
+        var track_gain = track_container.querySelector(".track-gain");
+        track_gain.addEventListener("input", () => {
+            new_track.gain_node.gain.value = track_gain.value;
+        })
+        track_gain.style.display = "block";
 
-            // Set gain and make visible
-            var track_gain = track_container.querySelector(".track-gain");
-            track_gain.addEventListener("input", () => {
-                new_track.gain_node.gain.value = track_gain.value;
-            })
-            track_gain.style.display = "block";
+        // Create and initialize grid values for new track
+        var grid_canvas = track_container.querySelector(".grid-canvas");
+        grid_canvas.height = 325;
+        grid_canvas.width = 3500;
 
-            // Create and initialize grid values for new track
-            var grid_canvas = track_container.querySelector(".grid-canvas");
-            resizeCanvas2(grid_canvas, track_container);
-            new_track.grid = new Grid(64, 12, grid_canvas, this.ctx, new_track.gain_node);
-            new_track.grid.instrument = new_track.instrument;
-            new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
-            new_track.grid.initialize();
-            this.tracks.push(new_track);
+        new_track.grid = new Grid(64, num_notes, grid_canvas, this.ctx, new_track.gain_node);
+        new_track.grid.instrument = new_track.instrument;
+        new_track.grid.color_seq = createColorGradient("rgb(255, 125, 0)", "rgb(125, 0, 255)", 12);
+        new_track.grid.initialize();
+        this.tracks.push(new_track);
+    }
 
-            // Empty and hide track overlay
-            var track_overlay = track_container.querySelector(".track-overlay");
-            if(type === "starter") {
-                track_overlay.style.display = "none"; 
-            }
-        });
+    this.displayTrackCreationForm = function(track_container) {
+
     }
 
     this.play = function() {
@@ -218,6 +310,17 @@ function SongMaker() {
                 this.title_card.innerHTML = this.song.title;
             }
             req.send();
+        }
+    }
+
+    this.scrollTracks = function() {
+        var grid_containers = document.getElementsByClassName("grid-canvas");
+
+        for(var i = 0; i < grid_containers.length; i++) {
+            var grid = grid_containers.item(i);
+            var scroll_amount = parseFloat(this.scrollbar.value) * 1750;
+            var css_format = "-" + scroll_amount.toString() + "px";
+            grid.style.left = css_format;
         }
     }
 }

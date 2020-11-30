@@ -1,3 +1,7 @@
+body {
+    overflow-x: hidden;
+}
+
 .song-maker-prompt {
     position: absolute;
     width: 75%;
@@ -57,14 +61,20 @@
     background-color: lightgrey;
 }
 
+#topBar {
+    position: fixed;
+    top: 0px;
+    z-index: 5;
+}
+
 .track-container {
     position: relative;
-    width: 95%;
-    height: 30%;
-    top: 12%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2%;
+    width: 90%;
+    height: 325px;
+    top: 20%;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 50px;
     animation-name: slide-in-left;
     animation-duration: 750ms;
     animation-fill-mode: forwards;
@@ -96,6 +106,7 @@
 }
 
 .track-overlay {
+    display: none;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -108,6 +119,7 @@
 }
 
 .track-creation-form {
+    display: none;
     position: relative;
     top: 50%;
     left: 50%;
@@ -161,6 +173,9 @@
 
 .song-title-container {
     position: relative;
+    top: 10%;
+    margin-left: auto;
+    margin-right: auto;
     color: black;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
@@ -179,8 +194,8 @@
 .song-maker-ui {
     position: fixed;
     width: 800px;
-    height: 200px;
-    top: 88%;
+    height: 240px;
+    top: 80%;
     left: 50%;
     transform: translate(-50%, -50%);
     border: none;
@@ -354,6 +369,26 @@
     background: lightslategray;
 }
 
+.song-maker-ui .scrollbar-container {
+    position: absolute;
+    top: 188px;
+    left: 50px;
+    width: 700px;
+    height: 40px;
+    background-color: #AC3B61;
+    border: none;
+    border-radius: 0px 0px 20px 20px;
+}
+
+.song-maker-ui .scrollbar-container input {
+    position: relative;
+    width: 90%;
+    height: 40px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .song-maker-insert-container {
     height: 400px;
 }
@@ -391,7 +426,7 @@
 
 @keyframes slide-in-left {
     from {
-        left: -2000px;
+        left: 2000px;
     }
     to {
         left: 0px;
