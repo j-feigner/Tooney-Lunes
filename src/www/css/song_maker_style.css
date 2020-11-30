@@ -70,7 +70,7 @@ body {
 .track-container {
     position: relative;
     width: 90%;
-    height: 325px;
+    height: 350px;
     top: 20%;
     margin-left: 50px;
     margin-right: 50px;
@@ -300,11 +300,11 @@ body {
 }
 
 .song-maker-controls .play-song {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    top: 10px;
-    left: 360px;
+    position: absolute;
+    width: 76px;
+    height: 76px;
+    top: 12px;
+    left: 362px;
     padding: 0px;
     border: none;
     border-radius: 40px;
@@ -320,9 +320,9 @@ body {
 .song-maker-controls .play-song img {
     position: absolute;
     width: 40px;
-    height: 40px;
-    top: 20px;
-    left: 24px;
+    height: 36px;
+    top: 22px;
+    left: 22px;
 }
 
 .song-maker-controls .play-song:hover {
@@ -334,11 +334,12 @@ body {
 }
 
 .song-maker-controls .save-song {
-    position: relative;
-    top: -20px;
-    left: 400px;
+    position: absolute;
+    top: 20px;
+    right: 275px;
     width: 60px;
     height: 60px;
+    padding: 0px;
     border: none;
     border-radius: 30px;
     background-color: lightgrey;
@@ -351,10 +352,10 @@ body {
     background: lightslategray;
 }
 
-.song-maker-controls .load-song {
-    position: relative;
-    top: -20px;
-    left: 500px;
+.song-maker-controls .song-settings {
+    position: absolute;
+    top: 20px;
+    left: 275px;
     width: 60px;
     height: 60px;
     border: none;
@@ -365,7 +366,7 @@ body {
     transition: transform 250ms;
 }
 
-.song-maker-controls .load-song:hover {
+.song-maker-controls .song-settings:hover {
     background: lightslategray;
 }
 
