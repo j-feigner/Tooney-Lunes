@@ -172,6 +172,20 @@ function createPiano(sounds) {
     }
 }
 
+function createSongMatrix() {
+    var song_block = document.getElementById("songMakerBlock");
+    var song_matrix = new Array(32);
+    for (var i = 0; i < 13; i++) {
+        song_matrix[i] = new Array(32);
+    }
+    var note = 0;
+    for (var i = 0; i < 32; i++){
+        for (var j = 0; j < 13; j++) {
+            
+        }
+    }
+}
+
 // Creates clickListeners for each kit piece in the drum block
 function createDrums(sounds) {
 	var drum_container = document.getElementById("drumBlock");

@@ -18,7 +18,7 @@ function validate($data) {
 
 $identifier = validate($_POST['identifier']);
 $sql = "SELECT username
-		from users
+		FROM users
 		WHERE username = '$identifier' OR email = '$identifier';";
 $result = $conn->query($sql);
 $num_rows = $result->num_rows;
@@ -46,10 +46,16 @@ if ($num_rows == 1) {
 			$_SESSION["user_id"] = $row["user_id"];
 			header('location:my_profile.php');
 		}
+		$_SESSION['searchUserID'] = "";
+		$_SESSION['searchUserUsername'] = "";
+		$_SESSION['searchUserEmail'] = "";
 	} else {
 			$_SESSION['notice'] = "inv_log";
 			header('location:login.php');
 	}
+} else {
+	$_SESSION['notice'] = "inv_log";
+	header('location:login.php');
 }
 $conn->close();
 exit();

@@ -3,9 +3,7 @@ function updateGenres() {
     var checkedGenres = [];
     for (var i = 0; i < genreCheckboxDiv.children.length; i++) {
         var currentCheckbox = genreCheckboxDiv.children[i].firstElementChild;
-        if (currentCheckbox == null) {
-            // pass
-        } else if (currentCheckbox.checked) {
+        if (currentCheckbox != null && currentCheckbox.checked) {
             checkedGenres.push(currentCheckbox.value);
         }
     }
@@ -47,21 +45,26 @@ function populateUserGenres() {
         if (this.readyState == 4 && this.status == 200) {
             var userGenreData = JSON.parse(this.responseText);
             var userGenreDataLength = Object.keys(userGenreData).length
+            var newUserGenreInfo = "";
 
-            if (userGenreDataLength == 0) {
-                newUserGenreInfo = "";
-            } else if (userGenreDataLength == 1) {
+            if (userGenreDataLength == 2) {
                 newUserGenreInfo = userGenreData[0]['genre_title'];
-                document.getElementById(userGenreData[0]['genre_title'].toLowerCase()).checked = true;
-            } else {
+                if (!userGenreData['searched']) {
+                    try {
+                        document.getElementById(userGenreData[0]['genre_title'].toLowerCase()).checked = true;
+                    } catch (err) { location.reload(); }
+                }
+            } else if (userGenreDataLength > 2) {
                 newUserGenreInfo = "";
-                for (var i = 0; i < userGenreDataLength; i++) {
-                    if ((i + 1) == userGenreDataLength) {
-                        newUserGenreInfo += userGenreData[i]['genre_title'];
-                        document.getElementById(userGenreData[i]['genre_title'].toLowerCase()).checked = true;
-                    } else {
-                        newUserGenreInfo += userGenreData[i]['genre_title'] + ", ";
-                        document.getElementById(userGenreData[i]['genre_title'].toLowerCase()).checked = true;
+                for (var i = 0; i < userGenreDataLength - 1; i++) {
+                    newUserGenreInfo += userGenreData[i]['genre_title'];
+                    if ((i + 1) != userGenreDataLength - 1) {
+                        newUserGenreInfo += ", ";
+                    }
+                    if (!userGenreData['searched']) {
+                        try {
+                            document.getElementById(userGenreData[i]['genre_title'].toLowerCase()).checked = true;
+                        } catch (err) { location.reload(); }
                     }
                 }
             }
@@ -115,9 +118,7 @@ function updateInstruments() {
     var checkedInstruments = [];
     for (var i = 0; i < instrCheckboxDiv.children.length; i++) {
         var currentCheckbox = instrCheckboxDiv.children[i].firstElementChild;
-        if (currentCheckbox == null) {
-            // pass
-        } else if (currentCheckbox.checked) {
+        if (currentCheckbox != null && currentCheckbox.checked) {
             checkedInstruments.push(currentCheckbox.value);
         }
     }
@@ -159,21 +160,26 @@ function populateUserInstruments() {
         if (this.readyState == 4 && this.status == 200) {
             var userInstrData = JSON.parse(this.responseText);
             var userInstrDataLength = Object.keys(userInstrData).length
+            var newUserInstrInfo = "";
 
-            if (userInstrDataLength == 0) {
-                newUserInstrInfo = "";
-            } else if (userInstrDataLength == 1) {
+            if (userInstrDataLength == 2) {
                 newUserInstrInfo = userInstrData[0]['instr_name'];
-                document.getElementById(userInstrData[0]["instr_name"].toLowerCase()).checked = true;
-            } else {
+                if (!userInstrData['searched']) {
+                    try {
+                        document.getElementById(userInstrData[0]['instr_name'].toLowerCase()).checked = true;
+                    } catch (err) { location.reload(); }
+                }
+            } else if (userInstrDataLength > 2) {
                 newUserInstrInfo = "";
-                for (var i = 0; i < userInstrDataLength; i++) {
-                    if ((i + 1) == userInstrDataLength) {
-                        newUserInstrInfo += userInstrData[i]['instr_name'];
-                        document.getElementById(userInstrData[i]["instr_name"].toLowerCase()).checked = true;
-                    } else {
-                        newUserInstrInfo += userInstrData[i]['instr_name'] + ", ";
-                        document.getElementById(userInstrData[i]["instr_name"].toLowerCase()).checked = true;
+                for (var i = 0; i < userInstrDataLength - 1; i++) {
+                    newUserInstrInfo += userInstrData[i]['instr_name'];
+                    if ((i + 1) != userInstrDataLength - 1) {
+                        newUserInstrInfo += ", ";
+                    }
+                    if (!userInstrData['searched']) {
+                        try {
+                            document.getElementById(userInstrData[i]['instr_name'].toLowerCase()).checked = true;
+                        } catch (err) { location.reload(); }
                     }
                 }
             }
@@ -227,10 +233,7 @@ function updateExperience() {
     var checkedExperience;
     for (var i = 0; i < expRadiosDiv.children.length; i++) {
         var currentRadio = expRadiosDiv.children[i].firstElementChild;
-        if (currentRadio == null) {
-            console.log(currentRadio.nodeName);
-            // pass
-        } else if (currentRadio.checked) {
+        if (currentRadio != null && currentRadio.checked) {
             checkedExperience = currentRadio.value;
             break;
         }
@@ -267,12 +270,15 @@ function populateUserExperience() {
         if (this.readyState == 4 && this.status == 200) {
             var userExpData = JSON.parse(this.responseText);
             var userExpDataLength = Object.keys(userExpData).length
+            var newUserExpInfo = "";
 
-            if (userExpDataLength == 0) {
-                newUserExpInfo = "";
-            } else {
+            if (userExpDataLength > 1) {
                 newUserExpInfo = userExpData[0]['exp_title'];
-                document.getElementById(userExpData[0]['exp_title'].toLowerCase()).checked = true;
+                if (!userExpData['searched']) {
+                    try {
+                        document.getElementById(userExpData[0]['exp_title'].toLowerCase()).checked = true;
+                    } catch (err) { location.reload(); }
+                }
             }
             document.getElementById("expInfo").innerHTML = newUserExpInfo;
         }
@@ -316,7 +322,52 @@ function populateExperience() {
             }
             expRadioDiv.appendChild(submitButton);
         }
+    };
+}
+
+function updateUserBio() {
+    var bioInput = document.getElementById("bioInput");
+    var newUserBio = bioInput.value;
+
+    var updateBioReq = new XMLHttpRequest();
+    var method = "GET";
+    var url = "updateDBBio.php";
+    if (typeof checkedExperience != "") {
+        url += "?bio=" + encodeURIComponent(newUserBio);
     }
+    var asynch = true;
+    updateBioReq.open(method, url, asynch);
+    updateBioReq.send();
+
+    updateBioReq.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var signal = this.responseText;
+            populateUserBio();
+            document.getElementById("bioSettings").click();
+        }
+    }
+}
+
+function populateUserBio() {
+    var userBioReq = new XMLHttpRequest();
+    var method = "GET";
+    var url = "getUserDBBio.php";
+    var asynch = true;
+    userBioReq.open(method, url, asynch);
+    userBioReq.send();
+
+    userBioReq.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var userBio = JSON.parse(this.responseText);
+            var bioInfo = document.getElementById("bioInfo");
+            bioInfo.innerHTML = userBio[0]['bio'];
+
+            if (!userBio['searched']) {
+                var bioInput = document.getElementById("bioInput");
+                bioInput.innerHTML = userBio[0]['bio'];
+            }
+        }
+    };
 }
 
 function searchUser() {
@@ -324,7 +375,7 @@ function searchUser() {
 
     var searchUserReq = new XMLHttpRequest();
     var method = "GET";
-    var url = "searchDBUser.php?search=" + document.getElementById("searchUser").value;
+    var url = "searchDBUser.php?search=" + document.getElementById("searchUser").value + "&searchBy=" + document.getElementById("searchBy").value;
     var asynch = true;
     searchUserReq.open(method, url, asynch);
     searchUserReq.send();

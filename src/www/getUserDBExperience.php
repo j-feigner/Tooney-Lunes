@@ -12,16 +12,30 @@ if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT exp_title
-		FROM users u, experience e
-		WHERE u.user_id = '". $_SESSION['user_id'] ."'
-			AND u.exp_id = e.exp_id;";
+if ($_SESSION['searchUserID'] != "") { // set in searchDBUser.php
+	$sql = "SELECT exp_title
+			FROM users u, experience e
+			WHERE u.user_id = '". $_SESSION['searchUserID'] ."'
+				AND u.exp_id = e.exp_id;";
+	$result = $conn->query($sql);
 
-$result = $conn->query($sql);
+	$userExpData = array();
+	while ($row = $result->fetch_assoc()) {
+		$userExpData[] = $row;
+	}
+	$userExpData['searched'] = true;
+} else {
+	$sql = "SELECT exp_title
+			FROM users u, experience e
+			WHERE u.user_id = '". $_SESSION['user_id'] ."'
+				AND u.exp_id = e.exp_id;";
+	$result = $conn->query($sql);
 
-$userExpData = array();
-while ($row = $result->fetch_assoc()) {
-	$userExpData[] = $row;
+	$userExpData = array();
+	while ($row = $result->fetch_assoc()) {
+		$userExpData[] = $row;
+	}
+	$userExpData['searched'] = false;
 }
 $conn->close();
 

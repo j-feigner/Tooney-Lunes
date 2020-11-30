@@ -7,6 +7,7 @@
 		$header = file_get_contents("html\header.html");
         echo $header;
 	?>
+	<script type="text/javascript" src="js\utils.js"></script>
 	<script type="text/javascript" src="js\style.js"></script>
 </head>
 

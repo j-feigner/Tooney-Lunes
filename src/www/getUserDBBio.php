@@ -11,26 +11,30 @@ if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "UPDATE users
-		SET exp_id = NULL
-		WHERE user_id = '". $_SESSION['user_id'] ."';";
-$result = $conn->query($sql);
-
-if (!empty($_GET)) {
-	$sql = "SELECT exp_id
-			FROM experience
-			WHERE exp_title = '". rawurldecode($_GET['exp_title']) ."';";
+if ($_SESSION['searchUserID'] != "") {
+	$sql = "SELECT bio
+			FROM users
+			WHERE user_id = '". $_SESSION['searchUserID'] ."';";
 	$result = $conn->query($sql);
 
+	$userBio = array();
 	while ($row = $result->fetch_assoc()) {
-		$newExpID = $row['exp_id'];
+		$userBio[] = $row;
 	}
-
-	$sql = "UPDATE users
-			SET exp_id = '". $newExpID ."'
+	$userBio['searched'] = true;
+} else {
+	$sql = "SELECT bio
+			FROM users
 			WHERE user_id = '". $_SESSION['user_id'] ."';";
 	$result = $conn->query($sql);
+
+	$userBio = array();
+	while ($row = $result->fetch_assoc()) {
+		$userBio[] = $row;
+	}
+	$userBio['searched'] = false;
 }
+echo json_encode($userBio);
 $conn->close();
 exit();
 ?>
