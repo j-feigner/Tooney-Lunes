@@ -40,6 +40,9 @@ function SongMaker() {
 
     this.song = null;
 
+    this.root = 0;
+    this.mode = "major";
+
     this.tracks = [];
 
     this.track_adder = null;
@@ -282,10 +285,10 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
     this.beat_length = 2;
 
     this.sounds = [];
-    this.sound_offset = 0;
 
-    this.mode = "minor";
+    this.mode = "major";
     this.mode_sounds = [];
+    this.octave_offset = 12;
 
     this.gain_node = null;
 
@@ -299,7 +302,7 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
 
             beat.forEach((note) => {
                 var source = audio_ctx.createBufferSource();
-                source.buffer = this.mode_sounds[note + this.sound_offset];
+                source.buffer = this.mode_sounds[note];
                 source.connect(this.gain_node);
                 source.start(current_time + delay);
             })
@@ -318,7 +321,7 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
     this.updateMode = () => {
         var selected_mode = [];
         var scale_counter  = 0;
-        var jump_value = 0;
+        var jump_value = this.octave_offset;
 
         if (this.mode === "major") {
             selected_mode = [2, 2, 1, 2, 2, 2, 1];
@@ -328,7 +331,7 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
 
         this.mode_sounds = [];
 
-        this.mode_sounds[0] = this.sounds[0];
+        this.mode_sounds[0] = this.sounds[jump_value];
         for(var i = 1; i < 15; i++) {
             jump_value += selected_mode[scale_counter];
             this.mode_sounds[i] = this.sounds[jump_value];
