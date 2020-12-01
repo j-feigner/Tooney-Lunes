@@ -1,3 +1,15 @@
+body {
+    overflow: hidden;
+}
+
+#pageContents {
+    position: absolute;
+    top: 7%;
+    height: 93%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 .song-maker-prompt {
     position: absolute;
     width: 75%;
@@ -57,14 +69,18 @@
     background-color: lightgrey;
 }
 
+#topBar {
+    z-index: 5;
+}
+
 .track-container {
     position: relative;
-    width: 95%;
-    height: 30%;
-    top: 12%;
+    width: 94%;
+    height: 350px;
+    top: 20%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 2%;
+    margin-bottom: 50px;
     animation-name: slide-in-left;
     animation-duration: 750ms;
     animation-fill-mode: forwards;
@@ -81,8 +97,8 @@
 .track-label {
     display: none;
     position: absolute;
-    top: -20px;
-    left: 0px;
+    top: -25px;
+    left: 140px;
     color: black;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
@@ -91,11 +107,12 @@
 .track-gain {
     display: none;
     position: absolute;
-    top: -22px;
-    right: 0px;
+    top: -27px;
+    left: 0px;
 }
 
 .track-overlay {
+    display: none;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -108,6 +125,7 @@
 }
 
 .track-creation-form {
+    display: none;
     position: relative;
     top: 50%;
     left: 50%;
@@ -161,6 +179,9 @@
 
 .song-title-container {
     position: relative;
+    top: 5%;
+    margin-left: auto;
+    margin-right: auto;
     color: black;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
@@ -179,8 +200,8 @@
 .song-maker-ui {
     position: fixed;
     width: 800px;
-    height: 200px;
-    top: 88%;
+    height: 240px;
+    top: 80%;
     left: 50%;
     transform: translate(-50%, -50%);
     border: none;
@@ -285,11 +306,11 @@
 }
 
 .song-maker-controls .play-song {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    top: 10px;
-    left: 360px;
+    position: absolute;
+    width: 76px;
+    height: 76px;
+    top: 12px;
+    left: 362px;
     padding: 0px;
     border: none;
     border-radius: 40px;
@@ -305,9 +326,9 @@
 .song-maker-controls .play-song img {
     position: absolute;
     width: 40px;
-    height: 40px;
-    top: 20px;
-    left: 24px;
+    height: 36px;
+    top: 22px;
+    left: 22px;
 }
 
 .song-maker-controls .play-song:hover {
@@ -319,11 +340,12 @@
 }
 
 .song-maker-controls .save-song {
-    position: relative;
-    top: -20px;
-    left: 400px;
+    position: absolute;
+    top: 20px;
+    right: 275px;
     width: 60px;
     height: 60px;
+    padding: 0px;
     border: none;
     border-radius: 30px;
     background-color: lightgrey;
@@ -336,10 +358,10 @@
     background: lightslategray;
 }
 
-.song-maker-controls .load-song {
-    position: relative;
-    top: -20px;
-    left: 500px;
+.song-maker-controls .song-settings {
+    position: absolute;
+    top: 20px;
+    left: 275px;
     width: 60px;
     height: 60px;
     border: none;
@@ -350,8 +372,28 @@
     transition: transform 250ms;
 }
 
-.song-maker-controls .load-song:hover {
+.song-maker-controls .song-settings:hover {
     background: lightslategray;
+}
+
+.song-maker-ui .scrollbar-container {
+    position: absolute;
+    top: 188px;
+    left: 50px;
+    width: 700px;
+    height: 40px;
+    background-color: #AC3B61;
+    border: none;
+    border-radius: 0px 0px 20px 20px;
+}
+
+.song-maker-ui .scrollbar-container input {
+    position: relative;
+    width: 90%;
+    height: 40px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .song-maker-insert-container {
@@ -391,7 +433,7 @@
 
 @keyframes slide-in-left {
     from {
-        left: -2000px;
+        left: 2000px;
     }
     to {
         left: 0px;
