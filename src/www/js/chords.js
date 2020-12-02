@@ -49,18 +49,21 @@ function ChordProgressor() {
     this.tempo_slider = null;
 
     this.chord_structures = {
-        major: [0, 4, 7],
-        minor: [0, 3, 7]
+        major: [0, 4, 7, 12],
+        minor: [0, 3, 7, 12],
+        seventh: [0, 4, 7, 10],
+        major_seventh: [0, 4, 7, 11]
     };
 
     this.play = function(audio_ctx) {
-        var sample_chord = this.chords[0];
-
-        this.chord_structures[sample_chord.mode].forEach((note) => {
-            var source = audio_ctx.createBufferSource();
-            source.buffer = this.sounds[note + 24 - (12 - sample_chord.root)];
-            source.connect(audio_ctx.destination);
-            source.start(0);
+        var time = audio_ctx.currentTime;
+        this.chords.forEach((chord, chord_index) => {
+            this.chord_structures[chord.mode].forEach((note, note_index) => {
+                var source = audio_ctx.createBufferSource();
+                source.buffer = this.sounds[note + 24 - (12 - chord.root)];
+                source.connect(audio_ctx.destination);
+                source.start(time + chord_index);
+            })
         })
     }
 }

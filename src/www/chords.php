@@ -36,6 +36,8 @@
                         <select class="chord-mode-selection">
                             <option value="major">Major</option>
                             <option value="minor">Minor</option>
+                            <option value="seventh">7</option>
+                            <option value="major_seventh">maj7</option>
                         </select>
                     </div>
                 </div>
@@ -59,6 +61,8 @@
                         <select class="chord-mode-selection">
                             <option value="major">Major</option>
                             <option value="minor">Minor</option>
+                            <option value="seventh">7</option>
+                            <option value="major_seventh">maj7</option>
                         </select>
                     </div>
                 </div>
@@ -82,6 +86,8 @@
                         <select class="chord-mode-selection">
                             <option value="major">Major</option>
                             <option value="minor">Minor</option>
+                            <option value="seventh">7</option>
+                            <option value="major_seventh">maj7</option>
                         </select>
                     </div>
                 </div>
@@ -105,6 +111,8 @@
                         <select class="chord-mode-selection">
                             <option value="major">Major</option>
                             <option value="minor">Minor</option>
+                            <option value="seventh">7</option>
+                            <option value="major_seventh">maj7</option>
                         </select>
                     </div>
                 </div>
