@@ -32,18 +32,14 @@ function main() {
     app.tempo_slider = app_container.querySelector(".chords-controls .tempo-container input");
     app.tempo_slider.addEventListener("input", () => {
         app.tempo = app.tempo_slider.value;
-        app.adjusted_tempo = app.tempo * 4;
     })
-
-    var stopper = 0;
 }
 
 function ChordProgressor() {
     this.chords = [];
     this.sounds = [];
 
-    this.tempo = 0;
-    this.adjusted_tempo = 0;
+    this.tempo = 60;
 
     this.start_button = null;
     this.tempo_slider = null;
@@ -57,13 +53,28 @@ function ChordProgressor() {
 
     this.play = function(audio_ctx) {
         var time = audio_ctx.currentTime;
+        var delay_s = 60 / this.tempo * 4;
+        var delay_ms = delay_s * 1000;
+
+        // Loop through all chords
         this.chords.forEach((chord, chord_index) => {
-            this.chord_structures[chord.mode].forEach((note, note_index) => {
-                var source = audio_ctx.createBufferSource();
-                source.buffer = this.sounds[note + 24 - (12 - chord.root)];
-                source.connect(audio_ctx.destination);
-                source.start(time + chord_index);
-            })
+            // Set chord label background color while playing
+            setTimeout(() => {
+                chord.display_element.style.backgroundColor = "#AC3B61";
+                setTimeout(() => {
+                    chord.display_element.style.backgroundColor = "white";
+                }, delay_ms);
+            }, chord_index * delay_ms);
+
+            // Play all notes in given chord's structure 4 times
+            for(var i = 0; i < 4; i++) {
+                this.chord_structures[chord.mode].forEach((note) => {
+                    var source = audio_ctx.createBufferSource();
+                    source.buffer = this.sounds[note + 24 - (12 - chord.root)];
+                    source.connect(audio_ctx.destination);
+                    source.start(time + (chord_index * delay_s) + (i * delay_s / 4));
+                })
+            }
         })
     }
 }

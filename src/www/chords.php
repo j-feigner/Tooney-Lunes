@@ -121,7 +121,7 @@
                 <button type="button" class="start-button">Start</button>
                 <div class="tempo-container">
                     <span class="tempo-label">Tempo</span>
-                    <input type="range" min="60" max="240" step="1" value="120">
+                    <input type="range" min="60" max="240" step="1" value="60">
                 </div>
             </div>
         </div>
