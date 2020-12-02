@@ -4,6 +4,7 @@ var guitar_button = instrument_dropdown.children[2];
 var drum_button = instrument_dropdown.children[3];
 
 var song_maker_button = document.getElementById("songMakerButton");
+var chord_button = document.getElementById("chordButton");
 var profile_button = document.getElementById("userProfileButton");
 var logout_img = document.getElementById("logoutImg");
 
@@ -24,6 +25,11 @@ drum_button.addEventListener("click", function() {
 
 song_maker_button.addEventListener("click", function() {
     var href = "song_maker.php?song=false";
+    window.location = href;
+})
+
+chord_button.addEventListener("click", function() {
+    var href = "chords.php";
     window.location = href;
 })
 

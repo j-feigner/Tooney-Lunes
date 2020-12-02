@@ -327,6 +327,8 @@ body {
     outline: none;
     cursor: pointer;
     transition: transform 250ms;
+    text-align: center;
+    background-color: white;
 }
 
 .settings-menu-submit button:hover {
@@ -488,10 +490,12 @@ body {
     padding: 0px;
     border: none;
     border-radius: 30px;
-    background-color: lightgrey;
+    background-color: grey;
     outline: none;
     cursor: pointer;
     transition: transform 250ms;
+    text-align: center;
+    font-size: 12px;
 }
 
 .song-maker-controls .save-song:hover {
@@ -507,10 +511,12 @@ body {
     padding: 0px;
     border: none;
     border-radius: 30px;
-    background-color: lightgrey;
+    background-color: grey;
     outline: none;
     cursor: pointer;
     transition: transform 250ms;
+    text-align: center;
+    font-size: 12px;
 }
 
 .song-maker-controls .share-song:hover {
@@ -525,10 +531,12 @@ body {
     height: 60px;
     border: none;
     border-radius: 30px;
-    background-color: lightgrey;
+    background-color: grey;
     outline: none;
     cursor: pointer;
     transition: transform 250ms;
+    text-align: center;
+    font-size: 12px;
 }
 
 .song-maker-controls .song-settings:hover {
