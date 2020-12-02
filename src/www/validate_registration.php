@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 require 'DBConnect.php';
 
 function validate($data) {
