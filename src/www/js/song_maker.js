@@ -1,33 +1,36 @@
 window.onload = main;
 
 function main() {
-    var song = new Song();
-
     var app = new SongMaker();
     app.container = document.getElementById("pageContents");
 
     var intro_prompt = document.getElementById("introPrompt");
 
-    var new_song_button = document.getElementById("newSong");
-    new_song_button.addEventListener("click", () => {
-        intro_prompt.classList.add("fade-out");
-        setTimeout(() => {
-            intro_prompt.remove();
-        }, 750);
-
-        // Create starter grid, song, and display song maker controls
-        app.startFromNew();
-    })
-
-    var load_song_button = document.getElementById("loadSong");
-    load_song_button.addEventListener("click", () => {
-        intro_prompt.classList.add("fade-out");
-        setTimeout(() => {
-            intro_prompt.remove();
-        }, 750);
-
-        app.startFromLoad();
-    })
+    if(song_id === false) {
+        var new_song_button = document.getElementById("newSong");
+        new_song_button.addEventListener("click", () => {
+            intro_prompt.classList.add("fade-out");
+            setTimeout(() => {
+                intro_prompt.remove();
+            }, 750);
+    
+            // Create starter grid, song, and display song maker controls
+            app.startFromNew();
+        })
+    
+        var load_song_button = document.getElementById("loadSong");
+        load_song_button.addEventListener("click", () => {
+            intro_prompt.classList.add("fade-out");
+            setTimeout(() => {
+                intro_prompt.remove();
+            }, 750);
+    
+            app.startFromLoad();
+        })
+    } else {
+        intro_prompt.style.display = "none";
+        app.startFromPublicLoad(song_id);
+    }
 }
 
 function SongMaker() {
@@ -53,6 +56,7 @@ function SongMaker() {
     this.scrollbar = null;
     this.volume = null;
     this.settings_button = null;
+    this.share_button = null;
     this.save_button = null;
 
     this.insert_point = null;
@@ -82,6 +86,15 @@ function SongMaker() {
         this.initializeAudioContext();
         this.createUI();
         this.loadSongFromDatabase();
+    }
+    
+    this.startFromPublicLoad = function(song_id) {
+        this.insert_point = this.container.querySelector(".song-maker-insert-container");
+        this.title_card = document.getElementById("songTitle");
+
+        this.initializeAudioContext();
+        this.createUI();
+        this.loadPublicSong(song_id);
     }
 
     this.initializeAudioContext = function() {
@@ -129,6 +142,11 @@ function SongMaker() {
             this.save_button = this.container.querySelector(".song-maker-controls .save-song");
             this.save_button.addEventListener("click", () => {
                 this.saveSongToDatabase();
+            })
+
+            this.share_button = this.container.querySelector(".share-song");
+            this.share_button.addEventListener("click", () => {
+                this.savePublicSong();
             })
 
             this.scrollbar = this.container.querySelector(".song-maker-ui .scrollbar-container input");
@@ -193,6 +211,10 @@ function SongMaker() {
         var new_track = new SongMakerTrack(name, instrument, this.ctx, this.gain_node);
         new_track.createGain();
 
+        if(new_track.instrument === "drum") {
+            new_track.mode = "none";
+        }
+
         // Create and initialize grid values for new track
         var grid_canvas = container.querySelector(".grid-canvas");
         grid_canvas.height = 325;
@@ -239,7 +261,7 @@ function SongMaker() {
     }
 
     this.saveSongToDatabase = function() {
-        var save_title = prompt("Save song as: ", this.song.title);
+        var save_title = prompt("Save song as: ");
 
         if(confirm("Save song in its current state?")) {
             // Song object to save
@@ -295,6 +317,65 @@ function SongMaker() {
             }
             req.send();
         }
+    }
+
+    this.savePublicSong = function() {
+        var save_title = prompt("Save song as: ");
+
+        if(confirm("Save song?")) {
+            // Song object to save
+            var song = {
+                title: save_title,
+                tempo: 120,
+                tracks: []
+            }
+
+            // Fill song tracks array with objects to save 
+            this.tracks.forEach((track, index) => {
+                song.tracks[index] = {
+                    label: track.name,
+                    instrument: track.instrument,
+                    beat_data: track.grid.getData()
+                }
+            })
+
+            var song_json = JSON.stringify(song);
+            
+            var req = new XMLHttpRequest();
+            req.open("GET", "save_public_song.php?song=" + song_json);
+            req.onload = () => {
+                var url_display = this.container.querySelector(".song-maker-share-display");
+                url_display.style.display = "block";
+
+                var url_textbox = url_display.querySelector(".url-container input");
+                url_textbox.value = "http://tooney-lunes/song_maker.php?song=" + req.responseText;
+            }
+            req.send();
+        }
+    }
+
+    this.loadPublicSong = function(song_id) {
+        var req = new XMLHttpRequest();
+        req.open("GET", "load_public_song.php?id=" + song_id, true);
+        req.onload = () => {
+            var song = JSON.parse(req.responseText);
+            this.tracks = [];
+            song.tracks.forEach((track, index) => {
+                this.loadTrackHTML(track_container => {
+                    this.container.insertBefore(track_container, this.insert_point);
+
+                    var track_name = track.name
+                    var track_instrument = track.instrument;
+        
+                    this.initializeTrack(track_container, track_name, track_instrument);
+
+                    this.tracks[index].grid.putData(track.beat_data);
+                    this.tracks[index].grid.draw();
+                })
+            })
+            this.title_card.innerHTML = song.title;
+        }
+        req.send();
     }
 
     this.openSettingsMenu = function() {
@@ -389,6 +470,10 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
             selected_mode = [2, 2, 1, 2, 2, 2, 1];
         } else if (this.mode === "minor") {
             selected_mode = [2, 1, 2, 2, 1, 2, 2];
+        } else if(this.mode === "none") {
+            this.mode_sounds = this.sounds;
+            this.grid.sounds = this.mode_sounds;
+            return;
         }
 
         this.mode_sounds = [];

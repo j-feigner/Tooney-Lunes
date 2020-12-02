@@ -23,7 +23,7 @@ drum_button.addEventListener("click", function() {
 })
 
 song_maker_button.addEventListener("click", function() {
-    var href = "song_maker.php";
+    var href = "song_maker.php?song=false";
     window.location = href;
 })
 
