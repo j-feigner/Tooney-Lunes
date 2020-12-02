@@ -39,9 +39,9 @@
 		<p id="success" class="notice"></p>
 		<?php if (isset($_SESSION['notice'])) {
 			if ($_SESSION['notice'] == "inv_log") { ?>
-				<script>noticeFadeIn("inv_log")</script>
+				<script>noticeFade("inv_log")</script>
 			<?php } else if ($_SESSION['notice'] == "reg_succ") {?>
-				<script>noticeFadeIn("reg_succ")</script>
+				<script>noticeFade("reg_succ")</script>
 		<?php }} unset($_SESSION['notice']); ?>
 				
 		<!-- SIGNUP POPUP -->

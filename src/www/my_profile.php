@@ -101,7 +101,18 @@
 		<div class="info-oval">
 			<p class="info-title">Song Library</p>
 		</div>
+		
+		<div class="card">
+		<h1>Song Name</h1>
+        <img src="/w3images/team2.jpg" alt="Cool Song Icon Screenshot" style="width:100%">
+        <p class="title">Song Info here?</p>
+        <input type="button" id="allowUpload" value="Play">
+        <input type="button" id="allowEdit" value="Edit">
+        <input type="button" id="allowSomething" value="Something 3">
+		</div>
+		
 	</div>
+	
 
 	<div class="social-container" id="socialContainer">
         <div class="search-area" id="searchArea">
