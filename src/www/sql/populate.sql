@@ -1,5 +1,7 @@
 TRUNCATE TABLE Users;
 
+TRUNCATE TABLE Bandmates;
+
 TRUNCATE TABLE Genre;
 
 TRUNCATE TABLE Songs;
@@ -32,18 +34,6 @@ VALUES ('Folk');
 
 
 TRUNCATE TABLE User_Genres;
-
-INSERT INTO User_Genres (user_id, genre_id)
-VALUES (1, 3), (1, 4), (1, 5);
-
-INSERT INTO User_Genres (user_id, genre_id)
-VALUES (2, 1), (2, 2), (2, 3), (2, 7);
-
-INSERT INTO User_Genres (user_id, genre_id)
-VALUES (3, 4), (3, 5);
-
-INSERT INTO User_Genres (user_id, genre_id)
-VALUES (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8);
 
 
 TRUNCATE TABLE Experience;
@@ -84,20 +74,8 @@ VALUES (4, 'Flash in the Pan', 160, 'GM');
 
 TRUNCATE TABLE Instrument;
 
-INSERT INTO Instrument (instr_name)
-VALUES ('piano');
-
-INSERT INTO Instrument (instr_name)
-VALUES ('guitar');
-
-INSERT INTO Instrument (instr_name)
-VALUES ('drum');
-
-INSERT INTO Instrument (instr_name)
-VALUES ('synth_clean_supersaw');
+INSERT INTO Instrument (instr_name, display_name)
+VALUES ('piano', 'Piano'), ('guitar','Guitar'), ('drum','Drum'), ('synth_clean_supersaw','Synth');
 
 
 TRUNCATE TABLE User_Instruments;
-
-INSERT INTO User_Instruments (user_id, instr_id)
-VALUES (1, 1), (2, 2), (2, 3), (3, 3), (4, 1), (4, 4);

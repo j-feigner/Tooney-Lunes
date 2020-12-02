@@ -2,17 +2,9 @@
 
 session_start();
 
-$servername = "tooney-lunes";
-$username = "root";
-$password = "";
-$dbname = "tuneyloonsdb";
+require 'DBConnect.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
-}
-
-$sql = "SELECT instr_name
+$sql = "SELECT display_name
 		FROM instrument;";
 
 $result = $conn->query($sql);

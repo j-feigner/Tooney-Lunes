@@ -3,6 +3,9 @@
 	$_SESSION['searchUserID'] = "";
 	$_SESSION['searchUserUsername'] = "";
 	$_SESSION['searchUserEmail'] = "";
+	/*$_SESSION['mateSearchUserID'] = "";
+	$_SESSION['mateSearchUserUsername'] = "";
+	$_SESSION['mateSearchUserEmail'] = "";*/
 ?>
 
 <!doctype html>
@@ -31,21 +34,7 @@
     <div id="emailContainer" class="profile-details-container">
         <p id="email" class="profile-details"><?=$_SESSION["email"]?></p>
     </div>
-	<div id="profilePictureContainer" class="profile-picture-container" onclick="showProfilePictureForm()">
-		<span id="addPhotoIcon" class="material-icons">add_a_photo</span>
-	</div>
     <script>profileDetailsSlideIn()</script>
-
-	<form action="validate_profile_picture.php" method="POST" id="profilePictureForm" class="form">
-		<span id="cancelProfilePicture" class="material-icons">clear</span>
-		<div id="profilePicturePreview">
-			<img id="picturePreview" src="images\settings.png">
-		</div>
-		<input id="defaultFileInput" type="file" accept="image/*" hidden>
-		<button id="customFileInput" type="button" onclick="showProfilePicturePreview()">Choose a file</button>
-		<input type="submit" class="info-submit" id="profilePictureSubmit">
-	</form>
-
 
     <div class="profile-info-container">
 		<div id="userBioContainer" class="info-container">
@@ -105,29 +94,37 @@
 
 	<div class="social-container" id="socialContainer">
         <div class="search-area" id="searchArea">
-        <div class="search-by" id="searchBy">
-            <label class="search-by-label">Search By...</label>
-                    <select class="search-by-list" id="searchByList">
-                        <option selected="selected" value="user">User</option>
-                        <option value="genre">Genre</option>
-                        <option value="instrument">Instrument</option>
-                        <option value="experience">Experience</option>
-                    </select>
-        </div>
-		<div class="search-container" id="searchContainer">
-			<table class="search-elements-container">
-				<tr>
-					<td class="search-column" id="searchColumn">
-						<input type="text" id="searchUser" class="search-user" placeholder="Search user"></td>
-					<td><a href="#"><span id="clearIcon" class="material-icons">clear</span></a></td>
-					<td><a href="#"><span id="searchIcon" class="material-icons">search</span></a></td>
-					<script>searchUserEventListener(); setSearchFocusStyle()</script>
-				</tr>
-			</table>
+			<div class="search-by" id="searchBy">
+				<label class="search-by-label">Search By...</label>
+				<select class="search-by-list" id="searchByList">
+					<option selected="selected" value="user">User</option>
+					<option value="genre">Genre</option>
+					<option value="instrument">Instrument</option>
+					<option value="experience">Experience</option>
+				</select>
+			</div>
+			<div class="search-container" id="searchContainer">
+				<table class="search-elements-container">
+					<tr>
+						<td class="search-column" id="searchColumn">
+							<input type="text" id="searchUser" class="search-user" placeholder="Search user"></td>
+						<td><a href="#"><span id="clearIcon" class="material-icons">clear</span></a></td>
+						<td><a href="#"><span id="searchIcon" class="material-icons">search</span></a></td>
+						<script>searchUserEventListener()</script>
+						<script>setSearchFocusStyle()</script>
+					</tr>
+				</table>
+			</div>
 		</div>
 		<div id="searchResult" class="social-content" style="display:none;"></div>
 		<div id="otherThings" class="social-content">SOCIAL CONTENT</div>
 	</div>
+
+	<div id="bandmatesMenu">
+		<h1>Your Bandmates</h1>
+	</div>
+	<script>bandmateMenuStyle()</script>
+	<script>populateUserDBBandmates()</script>
 
 </body>
 
