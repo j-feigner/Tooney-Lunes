@@ -74,24 +74,22 @@ CREATE TABLE Songs (
     user_id         INT(6),
     song_title      VARCHAR(30) NOT NULL,
     tempo           SMALLINT UNSIGNED NOT NULL,
-    PRIMARY KEY (user_id, song_id),
-    FOREIGN KEY (user_id)
-		REFERENCES Users(user_id)
+    PRIMARY KEY (song_id, user_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 DROP TABLE IF EXISTS Song_Tracks;
 CREATE TABLE Song_Tracks (
     track_id        INT(16) UNSIGNED AUTO_INCREMENT,
     song_id         INT(8),
+    user_id         INT(6),
     track_name      VARCHAR(20),
     instr_id        INT(6),
     volume          FLOAT(2,1),
     track_data      TEXT,
     PRIMARY KEY (track_id, song_id),
-    FOREIGN KEY (song_id)
-		REFERENCES Songs(song_id),
-    FOREIGN KEY (instr_id)
-		REFERENCES Instrument(instr_id)
+    FOREIGN KEY (song_id, user_id) REFERENCES Songs(song_id, user_id),
+    FOREIGN KEY (instr_id) REFERENCES Instrument(instr_id)
 );
 
 DROP TABLE IF EXISTS Bandmates;
