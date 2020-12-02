@@ -37,6 +37,7 @@
 		
 		<p id="error" class="notice"></p>
 		<p id="success" class="notice"></p>
+
 		<?php if (isset($_SESSION['notice'])) {
 			if ($_SESSION['notice'] == "inv_log") { ?>
 				<script>noticeFade("inv_log")</script>
@@ -60,6 +61,7 @@
 			
 			<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="register.php">Forgot password?</a></p>
 			
+
 
 	</form>
 	
