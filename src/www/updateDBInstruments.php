@@ -1,15 +1,7 @@
 <?php
 session_start();
 
-$servername = "tooney-lunes";
-$username = "root";
-$password = "";
-$dbname = "tuneyloonsdb";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
-}
+require 'DBConnect.php';
 
 $sql = "DELETE FROM user_instruments
 		WHERE user_id = '". $_SESSION['user_id'] ."';";
@@ -20,7 +12,7 @@ if (!empty($_GET)) {
 	foreach ($_GET as $i => $instrName) {
 		$sql = "SELECT instr_id
 				FROM instrument
-				WHERE instr_name = '". rawurldecode($instrName) ."';";
+				WHERE display_name = '". rawurldecode($instrName) ."';";
 		$result = $conn->query($sql);
 
 		while ($row = $result->fetch_assoc()) {
