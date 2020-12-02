@@ -33,7 +33,7 @@ function updateGenres() {
     }
 }
 
-function populateUserGenres(edit_include = true) {
+function populateUserGenres() {
     var userGenreReq = new XMLHttpRequest();
     var method = "GET";
     var url = "getUserDBGenres.php";
@@ -47,21 +47,21 @@ function populateUserGenres(edit_include = true) {
             var userGenreDataLength = Object.keys(userGenreData).length
             var newUserGenreInfo = "";
 
-            if (userGenreDataLength == 1) {
+            if (userGenreDataLength == 2) {
                 newUserGenreInfo = userGenreData[0]['genre_title'];
-                if (edit_include) {
+                if (!userGenreData['searched']) {
                     try {
                         document.getElementById(userGenreData[0]['genre_title'].toLowerCase()).checked = true;
                     } catch (err) { location.reload(); }
                 }
-            } else if (userGenreDataLength > 1) {
+            } else if (userGenreDataLength > 2) {
                 newUserGenreInfo = "";
-                for (var i = 0; i < userGenreDataLength; i++) {
+                for (var i = 0; i < userGenreDataLength - 1; i++) {
                     newUserGenreInfo += userGenreData[i]['genre_title'];
-                    if ((i + 1) != userGenreDataLength) {
+                    if ((i + 1) != userGenreDataLength - 1) {
                         newUserGenreInfo += ", ";
                     }
-                    if (edit_include) {
+                    if (!userGenreData['searched']) {
                         try {
                             document.getElementById(userGenreData[i]['genre_title'].toLowerCase()).checked = true;
                         } catch (err) { location.reload(); }
@@ -148,7 +148,7 @@ function updateInstruments() {
     }
 }
 
-function populateUserInstruments(edit_include = true) {
+function populateUserInstruments() {
     var userInstrReq = new XMLHttpRequest();
     var method = "GET";
     var url = "getUserDBInstruments.php";
@@ -162,23 +162,23 @@ function populateUserInstruments(edit_include = true) {
             var userInstrDataLength = Object.keys(userInstrData).length
             var newUserInstrInfo = "";
 
-            if (userInstrDataLength == 1) {
-                newUserInstrInfo = userInstrData[0]['display_name'];
-                if (edit_include) {
+            if (userInstrDataLength == 2) {
+                newUserInstrInfo = userInstrData[0]['instr_name'];
+                if (!userInstrData['searched']) {
                     try {
-                        document.getElementById(userInstrData[0]['display_name'].toLowerCase()).checked = true;
+                        document.getElementById(userInstrData[0]['instr_name'].toLowerCase()).checked = true;
                     } catch (err) { location.reload(); }
                 }
-            } else if (userInstrDataLength > 1) {
+            } else if (userInstrDataLength > 2) {
                 newUserInstrInfo = "";
-                for (var i = 0; i < userInstrDataLength; i++) {
-                    newUserInstrInfo += userInstrData[i]['display_name'];
-                    if ((i + 1) != userInstrDataLength) {
+                for (var i = 0; i < userInstrDataLength - 1; i++) {
+                    newUserInstrInfo += userInstrData[i]['instr_name'];
+                    if ((i + 1) != userInstrDataLength - 1) {
                         newUserInstrInfo += ", ";
                     }
-                    if (edit_include) {
+                    if (!userInstrData['searched']) {
                         try {
-                            document.getElementById(userInstrData[i]['display_name'].toLowerCase()).checked = true;
+                            document.getElementById(userInstrData[i]['instr_name'].toLowerCase()).checked = true;
                         } catch (err) { location.reload(); }
                     }
                 }
@@ -205,13 +205,13 @@ function populateInstruments() {
             for (var i = 0; i < instrDataLength; i++) {
                 var newInput = document.createElement("input");
                 newInput.setAttribute("type", "checkbox");
-                newInput.id = instrData[i]["display_name"].toLowerCase();
-                newInput.name = instrData[i]["display_name"].toLowerCase();
-                newInput.value = instrData[i]["display_name"];
+                newInput.id = instrData[i]["instr_name"].toLowerCase();
+                newInput.name = instrData[i]["instr_name"].toLowerCase();
+                newInput.value = instrData[i]["instr_name"];
 
                 var newLabel = document.createElement("label");
                 newLabel.setAttribute("for", newInput.id);
-                newLabel.innerHTML = instrData[i]["display_name"];
+                newLabel.innerHTML = instrData[i]["instr_name"];
                 newLabel.appendChild(newInput);
 
                 var submitButton = document.createElement("button");
@@ -258,7 +258,7 @@ function updateExperience() {
     }
 }
 
-function populateUserExperience(edit_include = true) {
+function populateUserExperience() {
     var userExpReq = new XMLHttpRequest();
     var method = "GET";
     var url = "getUserDBExperience.php";
@@ -269,12 +269,12 @@ function populateUserExperience(edit_include = true) {
     userExpReq.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var userExpData = JSON.parse(this.responseText);
-            var userExpDataLength = Object.keys(userExpData).length;
+            var userExpDataLength = Object.keys(userExpData).length
             var newUserExpInfo = "";
 
-            if (userExpDataLength > 0) {
+            if (userExpDataLength > 1) {
                 newUserExpInfo = userExpData[0]['exp_title'];
-                if (edit_include) {
+                if (!userExpData['searched']) {
                     try {
                         document.getElementById(userExpData[0]['exp_title'].toLowerCase()).checked = true;
                     } catch (err) { location.reload(); }
@@ -345,10 +345,10 @@ function updateUserBio() {
             populateUserBio();
             document.getElementById("bioSettings").click();
         }
-    };
+    }
 }
 
-function populateUserBio(edit_include = true) {
+function populateUserBio() {
     var userBioReq = new XMLHttpRequest();
     var method = "GET";
     var url = "getUserDBBio.php";
@@ -362,7 +362,7 @@ function populateUserBio(edit_include = true) {
             var bioInfo = document.getElementById("bioInfo");
             bioInfo.innerHTML = userBio[0]['bio'];
 
-            if (edit_include) {
+            if (!userBio['searched']) {
                 var bioInput = document.getElementById("bioInput");
                 bioInput.innerHTML = userBio[0]['bio'];
             }
@@ -370,49 +370,12 @@ function populateUserBio(edit_include = true) {
     };
 }
 
-function updateUserBandmates() {
-    var newBandmateReq = new XMLHttpRequest();
-    var method = "GET";
-    var addFriendSpan = document.getElementById("addFriendIcon");
-    var url = "updateUserDBBandmates.php?mate_id=" + addFriendSpan.classList[1];
-    var asynch = true;
-    newBandmateReq.open(method, url, asynch);
-    newBandmateReq.send();
-
-    newBandmateReq.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var signal = this.responseText;
-            populateUserDBBandmates();
-        }
-    };
-}
-
-function populateUserDBBandmates() {
-    var getUserBandmates = new XMLHttpRequest();
-    var method = "GET";
-    var url = "getUserDBBandmates.php";
-    var asynch = true;
-    getUserBandmates.open(method, url, asynch);
-    getUserBandmates.send();
-
-    getUserBandmates.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var bandmateUsernames = JSON.parse(this.responseText);
-            displayBandmates(bandmateUsernames);
-        }
-    }
-}
-
-function searchUser(mate_search = false) {
+function searchUser() {
     if (document.getElementById("searchUser").value == "") return;
 
     var searchUserReq = new XMLHttpRequest();
     var method = "GET";
-    if (mate_search == false) {
-        var url = "searchDBUser.php?search=" + document.getElementById("searchUser").value + "&searchBy=" + document.getElementById("searchBy").value;
-    } else {
-        var url = "searchDBUser.php?search=" + document.getElementById("")
-    }
+    var url = "searchDBUser.php?search=" + document.getElementById("searchUser").value + "&searchBy=" + document.getElementById("searchBy").value;
     var asynch = true;
     searchUserReq.open(method, url, asynch);
     searchUserReq.send();
@@ -422,6 +385,7 @@ function searchUser(mate_search = false) {
             var searchResult = JSON.parse(this.responseText);
             var searchResultLength = Object.keys(searchResult).length;
 
+            localStorage.removeItem("userSearchData");
             if (searchResultLength != 0) {
                 var userGenres = [];
                 var userInstruments = [];

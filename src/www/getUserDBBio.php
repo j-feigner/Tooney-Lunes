@@ -1,7 +1,15 @@
 <?php
 session_start();
 
-require 'DBConnect.php';
+$servername = "tooney-lunes";
+$username = "root";
+$password = "";
+$dbname = "tuneyloonsdb";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+	die("Connection failed: " . $conn->connect_error);
+}
 
 if ($_SESSION['searchUserID'] != "") {
 	$sql = "SELECT bio
@@ -13,6 +21,7 @@ if ($_SESSION['searchUserID'] != "") {
 	while ($row = $result->fetch_assoc()) {
 		$userBio[] = $row;
 	}
+	$userBio['searched'] = true;
 } else {
 	$sql = "SELECT bio
 			FROM users
@@ -23,6 +32,7 @@ if ($_SESSION['searchUserID'] != "") {
 	while ($row = $result->fetch_assoc()) {
 		$userBio[] = $row;
 	}
+	$userBio['searched'] = false;
 }
 echo json_encode($userBio);
 $conn->close();

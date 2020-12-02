@@ -1,7 +1,15 @@
 <?php
 session_start();
 
-require 'DBConnect.php';
+$servername = "tooney-lunes";
+$username = "root";
+$password = "";
+$dbname = "tuneyloonsdb";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+	die("Connection failed: " . $conn->connect_error);
+}
 
 function validate($data) {
 	$data = htmlspecialchars(stripslashes(trim($data)));
@@ -41,9 +49,6 @@ if ($num_rows == 1) {
 		$_SESSION['searchUserID'] = "";
 		$_SESSION['searchUserUsername'] = "";
 		$_SESSION['searchUserEmail'] = "";
-		/*$_SESSION['mateSearchUserID'] = "";
-		$_SESSION['mateSearchUserUsername'] = "";
-		$_SESSION['mateSearchUserEmail'] = "";*/
 	} else {
 			$_SESSION['notice'] = "inv_log";
 			header('location:login.php');

@@ -21,11 +21,14 @@
     ?>
 
     <div id="usernameContainer" class="profile-details-container">
-		<p id="username" class="profile-details"><?=$_SESSION["searchUserUsername"]?></p>
+        <p id="username" class="profile-details"><?=$_SESSION["searchUserUsername"]?></p>
     </div>
     <!--<div id="emailContainer" class="profile-details-container">
         <p id="email" class="profile-details"><?=$_SESSION["searchUserEmail"]?></p>
     </div>-->
+	<div id="profilePictureContainer" class="profile-picture-container">
+		<span id="addPhotoIcon" class="material-icons">add_a_photo</span>
+	</div>
     <script>profileDetailsSlideIn()</script>
 
     <div class="profile-info-container">
@@ -34,7 +37,7 @@
 				<p class="info-title">Biography</p>
 			</div>
 			<p id="bioInfo" class="info"><div id="fadeOverlay"></div></p>
-			<script>populateUserBio(false)</script>
+			<script>populateUserBio()</script>
 		</div>
         <div id="genreInfoContainer" class="info-container">
             <div class="info-oval">
@@ -44,7 +47,7 @@
             <div class="multi-select">
                 <div id="genreCheckboxes"></div>
             </div>
-			<script>populateUserGenres(false)</script>
+			<script>populateUserGenres()</script>
         </div>
         <div id="instrInfoContainer" class="info-container">
             <div class="info-oval">
@@ -54,7 +57,7 @@
             <div class="multi-select">
                 <div id="instrCheckboxes"></div>
             </div>
-			<script>populateUserInstruments(false)</script>
+			<script>populateUserInstruments()</script>
         </div>
         <div id="expInfoContainer" class="info-container">
             <div class="info-oval">
@@ -64,7 +67,7 @@
             <div class="multi-select">
                 <div id="expRadios"></div>
             </div>
-			<script>populateUserExperience(false)</script>
+			<script>populateUserExperience()</script>
         </div>
     </div>
 

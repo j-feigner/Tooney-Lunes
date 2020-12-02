@@ -10,7 +10,7 @@ function displayUserSearch(searchResults) {
         usernameA.innerHTML = searchResults[0][0];
         usernameA.id = "userLink";
         usernameA.style.margin = "0";
-        usernameA.href = "other_user_profile.php";
+        usernameA.href = "other_user_profile.php?username=" + searchResults[0][0];
         usernameA.style.color = "black";
         usernameA.style.textDecoration = "none";
 
@@ -21,78 +21,16 @@ function displayUserSearch(searchResults) {
             usernameA.style.textDecoration = "none";
         });
 
+        //var emailP = document.createElement("p");
+        //emailP.innerHTML = searchResults[0][1];
+        //emailP.style.margin = "0";
+        //emailP.style.fontSize = ".7em";
+        //emailP.style.userSelect = "text";
+        //emailP.style.msUserSelect = "text";
+        //emailP.style.webkitUserSelect = "text";
+
         searchResultDiv.appendChild(usernameA);
-    }
-
-    var checkBandmateReq = new XMLHttpRequest();
-    var method = "GET";
-    var url = "checkUserDBBandmates.php?mate_id=" + searchResults[0][2];
-    var asynch = true;
-    checkBandmateReq.open(method, url, asynch);
-    checkBandmateReq.send();
-
-    checkBandmateReq.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var bandmates = JSON.parse(this.responseText);
-            if (bandmates.length == 0) {
-                var addFriendSpan = document.createElement("span");
-                addFriendSpan.id = "addFriendIcon";
-                addFriendSpan.classList.add("material-icons");
-                addFriendSpan.classList.add(searchResults[0][2]);
-                addFriendSpan.innerHTML = "person_add";
-                addFriendSpan.style.position = "absolute";
-                addFriendSpan.style.right = "5%";
-                addFriendSpan.style.color = "black";
-                addFriendSpan.style.cursor = "pointer";
-                addFriendSpan.addEventListener("click",
-                    updateUserBandmates.bind(null, searchResults[0][2]));
-                searchResultDiv.appendChild(addFriendSpan);
-            } else {
-                var addFriendSpan = document.createElement("span");
-                addFriendSpan.id = "remFriendIcon";
-                addFriendSpan.classList.add("material-icons");
-                addFriendSpan.classList.add(searchResults[0][2]);
-                addFriendSpan.innerHTML = "person_remove";
-                addFriendSpan.style.position = "absolute";
-                addFriendSpan.style.right = "5%";
-                addFriendSpan.style.color = "black";
-                addFriendSpan.style.cursor = "pointer";
-                addFriendSpan.addEventListener("click",
-                    updateUserBandmates.bind(null, searchResults[0][2]));
-                searchResultDiv.appendChild(addFriendSpan);
-            }
-        }
-    }
-}
-
-function displayBandmates(bandmates) {
-    var bandmatesMenu = document.getElementById("bandmatesMenu");
-    while (bandmatesMenu.lastChild.nodeName == "div") {
-        bandmatesMenu.removeChild(bandmatesMenu.lastChild);
-    }
-    for (var i = 0; i < bandmates.length; i++) {
-        var nextBandmateDiv = document.createElement("div");
-        nextBandmateDiv.id = bandmates[i]['username'];
-        var username = bandmates[i]['username'];
-        nextBandmateDiv.addEventListener("click", () => {
-            var searchMateReq = new XMLHttpRequest();
-            var method = "GET";
-            var url = "searchDBBandmate.php?mate_search=" + username;
-            var asynch = true;
-            searchMateReq.open(method, url, asynch);
-            searchMateReq.send();
-
-            searchMateReq.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var bandmateDetails = JSON.parse(this.responseText);
-                    window.location.href = "other_user_profile.php";
-                }
-            };
-        });
-        var nextBandmateP = document.createElement("p");
-        nextBandmateP.innerHTML = bandmates[i]['username'];
-        nextBandmateDiv.appendChild(nextBandmateP);
-        bandmatesMenu.appendChild(nextBandmateDiv);
+        //searchResultDiv.appendChild(emailP);
     }
 }
 
@@ -186,7 +124,48 @@ function profileDetailsSlideIn() {
         if (email_width >= username_width - 12)
             email_container.style.borderTopRightRadius = "20px";
     }
+
+    var profilePictureContainer = document.getElementById("profilePictureContainer");
+    if (typeof email_width != "undefined") {
+        if (username_width >= email_width) {
+            profilePictureContainer.style.left = (username_width + 20) + "px";
+        } else {
+            profilePictureContainer.style.left = (email_width + 20) + "px";
+        }
+    } else {
+        profilePictureContainer.style.left = (username_width + 20) + "px";
+    }
 }
+
+function showProfilePictureForm() {
+    var profilePictureForm = document.getElementById("profilePictureForm");
+    profilePictureForm.style.display = "flex";
+}
+
+function showProfilePicturePreview() {
+    var defaultFileInput = document.getElementById("defaultFileInput");
+    var customFileInput = document.getElementById("customFileInput");
+    var picturePreviewImg = document.getElementById("picturePreview");
+
+    defaultFileInput.click();
+    defaultFileInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const result = reader.result;
+                picturePreviewImg.src = result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+//function profilePictureStyle() {
+//    var profilePictureContainer = document.getElementById("profilePictureContainer");
+//    var addPhotoIcon = document.getElementById("addPhotoIcon");
+//    var profilePictureInput = document.getElementById("profilePictureInput");
+//}
 
 var genreExpanded = false;
 function showGenreCheckboxes() {
@@ -282,37 +261,4 @@ function noticeFade(notice_type) {
             noticeElm.style.opacity = currentOpacity -= 0.1;
         }, 30);
     }, 5000);
-}
-
-function bandmateMenuStyle() {
-    document.addEventListener("click", openCloseBandmates);
-}
-
-var menuExpanded = false;
-function openCloseBandmates(event) {
-    var bandmateMenu = document.getElementById("bandmatesMenu");
-    var XY = bandmateMenu.getBoundingClientRect();
-
-    if ((event.clientX > (XY.left - 50) && event.clientX < XY.left) &&
-        (event.clientY > XY.top && event.clientY < (XY.top + 50))) {
-        if (!menuExpanded) {
-            var currentPos = -15;
-            var slideInTimer = setInterval(function () {
-                if (currentPos >= -0.5) {
-                    clearInterval(slideInTimer);
-                }
-                bandmateMenu.style.right = (currentPos += 0.5) + "%";
-            }, 15);
-            menuExpanded = true;
-        } else {
-            var currentPos = 0;
-            var slideOutTimer = setInterval(function () {
-                if (currentPos <= -14.5) {
-                    clearInterval(slideOutTimer);
-                }
-                bandmateMenu.style.right = (currentPos -= 0.5) + "%";
-            }, 15);
-            menuExpanded = false;
-        }
-    }
 }

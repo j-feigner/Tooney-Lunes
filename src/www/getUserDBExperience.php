@@ -2,7 +2,15 @@
 
 session_start();
 
-require 'DBConnect.php';
+$servername = "tooney-lunes";
+$username = "root";
+$password = "";
+$dbname = "tuneyloonsdb";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+	die("Connection failed: " . $conn->connect_error);
+}
 
 if ($_SESSION['searchUserID'] != "") { // set in searchDBUser.php
 	$sql = "SELECT exp_title
@@ -15,6 +23,7 @@ if ($_SESSION['searchUserID'] != "") { // set in searchDBUser.php
 	while ($row = $result->fetch_assoc()) {
 		$userExpData[] = $row;
 	}
+	$userExpData['searched'] = true;
 } else {
 	$sql = "SELECT exp_title
 			FROM users u, experience e
@@ -26,8 +35,10 @@ if ($_SESSION['searchUserID'] != "") { // set in searchDBUser.php
 	while ($row = $result->fetch_assoc()) {
 		$userExpData[] = $row;
 	}
+	$userExpData['searched'] = false;
 }
 $conn->close();
+
 echo json_encode($userExpData);
 exit();
 ?>

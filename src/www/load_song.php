@@ -1,7 +1,16 @@
 <?php
 session_start();
 
-require 'DBConnect.php';
+$servername = "tooney-lunes";
+$username = "root";
+$password = "";
+$dbname = "tuneyloonsdb";
+
+// Connect to tooneylunes database
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+	die("Connection failed: " . $conn->connect_error);
+}
 
 // JSON to be built from DB and echoed to script
 $song_json = array();
