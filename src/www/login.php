@@ -30,14 +30,14 @@
 		<input type="submit" id="login-button" class="submit-button" value="Login">
 		<p id="error" class="notice"></p>
 		<p id="success" class="notice"></p>
-			<?php 
+			<?php
 			if (isset($_SESSION['notice'])) {
 				if ($_SESSION['notice'] == "inv_log") { ?>
-					<script>noticeFadeIn("inv_log")</script> <?php 
+					<script>noticeFade("inv_log")</script> <?php
 				} else if ($_SESSION['notice'] == "reg_succ") { ?>
-					<script>noticeFadeIn("reg_succ")</script> <?php 
+					<script>noticeFade("reg_succ")</script> <?php
 				}
-			} unset($_SESSION['notice']); 
+			} unset($_SESSION['notice']);
 			?>
 		<p id="registerLink" class="reg-or-log"><a class="reg-or-log" href="register.php">Register here</a></p>
 	</form>

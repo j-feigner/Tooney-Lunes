@@ -2,15 +2,7 @@
 
 session_start();
 
-$servername = "tooney-lunes";
-$username = "root";
-$password = "";
-$dbname = "tuneyloonsdb";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
-}
+require 'DBConnect.php';
 
 if ($_SESSION['searchUserID'] != "") { // set in searchDBUser.php
 	$sql = "SELECT genre_title
@@ -25,7 +17,6 @@ if ($_SESSION['searchUserID'] != "") { // set in searchDBUser.php
 	while ($row = $result->fetch_assoc()) {
 		$userGenreData[] = $row;
 	}
-	$userGenreData['searched'] = true;
 } else {
 	$sql = "SELECT genre_title
 			FROM user_genres ug, users u, genre g
@@ -39,7 +30,6 @@ if ($_SESSION['searchUserID'] != "") { // set in searchDBUser.php
 	while ($row = $result->fetch_assoc()) {
 		$userGenreData[] = $row;
 	}
-	$userGenreData['searched'] = false;
 }
 $conn->close();
 

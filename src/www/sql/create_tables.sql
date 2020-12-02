@@ -4,6 +4,7 @@ CREATE TABLE Users (
     username        VARCHAR(20) NOT NULL,
     email           VARCHAR(40) NOT NULL,
 	password		VARCHAR(255) NOT NULL,
+	photo			BLOB,
 	exp_id			VARCHAR(20),
 	bio				VARCHAR(200),
     PRIMARY KEY (user_id),
@@ -52,6 +53,7 @@ DROP TABLE IF EXISTS Instrument;
 CREATE TABLE Instrument (
     instr_id        INT(6) UNSIGNED AUTO_INCREMENT,
     instr_name      VARCHAR(30) NOT NULL,
+	display_name	VARCHAR(30) NOT NULL,
     PRIMARY KEY (instr_id)
 );
 
@@ -73,7 +75,8 @@ CREATE TABLE Songs (
     song_title      VARCHAR(30) NOT NULL,
     tempo           SMALLINT UNSIGNED NOT NULL,
     PRIMARY KEY (user_id, song_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id)
+		REFERENCES Users(user_id)
 );
 
 DROP TABLE IF EXISTS Song_Tracks;
@@ -85,6 +88,19 @@ CREATE TABLE Song_Tracks (
     volume          FLOAT(2,1),
     track_data      TEXT,
     PRIMARY KEY (track_id, song_id),
-    FOREIGN KEY (song_id) REFERENCES Songs(song_id),
-    FOREIGN KEY (instr_id) REFERENCES Instrument(instr_id)
+    FOREIGN KEY (song_id)
+		REFERENCES Songs(song_id),
+    FOREIGN KEY (instr_id)
+		REFERENCES Instrument(instr_id)
+);
+
+DROP TABLE IF EXISTS Bandmates;
+CREATE TABLE Bandmates (
+	user_id			INT(6),
+	mate_id			INT(6),
+	PRIMARY KEY		(user_id, mate_id),
+	FOREIGN KEY (user_id)
+		REFERENCES Users(user_id),
+	FOREIGN KEY (mate_id)
+		REFERENCES Users(mate_id)
 );

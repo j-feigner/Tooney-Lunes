@@ -28,11 +28,11 @@
 		<?php 
 		if (isset($_SESSION['notice'])) {
 			if ($_SESSION['notice'] == "taken_u") { ?>
-				<script>noticeFadeIn("taken_u")</script> <?php 
+				<script>noticeFade("taken_u")</script> <?php 
 			} else if ($_SESSION['notice'] == "taken_e") { ?>
-				<script>noticeFadeIn("taken_e")</script> <?php 
+				<script>noticeFade("taken_e")</script> <?php 
 			} else if ($_SESSION['notice'] == "insert_f") { ?>
-				<script>noticeFadeIn("insert_f")</script> <?php 
+				<script>noticeFade("insert_f")</script> <?php 
 			}
 		} unset($_SESSION['notice']); 
 		?>
