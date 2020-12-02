@@ -46,9 +46,11 @@ $sql = "SELECT *
 $result = $conn->query($sql);
 if($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
+        $track_name = $row["track_name"];
         $instr_name = getInstrumentName($conn, $row["instr_id"]);
         $track_data = unserialize($row["track_data"]);
         $track_json = array(
+            "name" => $track_name,
             "instrument" => $instr_name,
             "beat_data" => $track_data
         );

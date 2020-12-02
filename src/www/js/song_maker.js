@@ -40,6 +40,8 @@ function SongMaker() {
 
     this.song = null;
 
+    this.tempo = 120;
+
     this.root = 0;
     this.mode = "major";
 
@@ -116,7 +118,7 @@ function SongMaker() {
     
             this.tempo_control = this.container.querySelector(".tempo-container input");
             this.tempo_control.addEventListener("input", () => {
-                this.song.tempo = this.tempo_control.value * 4;
+                this.tempo = this.tempo_control.value * 4;
             })
 
             this.settings_button = this.container.querySelector(".song-settings");
@@ -221,13 +223,17 @@ function SongMaker() {
 
     this.play = function() {
         this.tracks.forEach((track) => {
-            track.grid.start(this.song.tempo);
-            track.play(this.song.tempo);
+            track.grid.start(this.tempo);
+            track.play(this.tempo);
         })
     }
 
     this.updateSongFromGrids = function() {
         this.tracks.forEach((track, index) => {
+            this.song.tracks[index] = {
+                instrument: track.instrument,
+                beat_data: []
+            }
             this.song.tracks[index].beat_data = track.grid.getData();
         })
     }
@@ -236,11 +242,23 @@ function SongMaker() {
         var save_title = prompt("Save song as: ", this.song.title);
 
         if(confirm("Save song in its current state?")) {
-            this.song.title = save_title;
+            // Song object to save
+            var song = {
+                title: save_title,
+                tempo: 120,
+                tracks: []
+            }
 
-            this.updateSongFromGrids();
-    
-            var song_json = JSON.stringify(this.song);
+            // Fill song tracks array with objects to save 
+            this.tracks.forEach((track, index) => {
+                song.tracks[index] = {
+                    label: track.name,
+                    instrument: track.instrument,
+                    beat_data: track.grid.getData()
+                }
+            })
+
+            var song_json = JSON.stringify(song);
            
             var req = new XMLHttpRequest();
             req.open("GET", "save_song.php?song=" + song_json);
@@ -258,12 +276,22 @@ function SongMaker() {
             var req = new XMLHttpRequest();
             req.open("GET", "load_song.php?title=" + load_title, true);
             req.onload = () => {
-                this.song = JSON.parse(req.responseText);
+                var song = JSON.parse(req.responseText);
                 this.tracks = [];
-                this.song.tracks.forEach((track) => {
-                    this.createSongMakerTrack(track);
+                song.tracks.forEach((track, index) => {
+                    this.loadTrackHTML(track_container => {
+                        this.container.insertBefore(track_container, this.insert_point);
+
+                        var track_name = track.name
+                        var track_instrument = track.instrument;
+            
+                        this.initializeTrack(track_container, track_name, track_instrument);
+
+                        this.tracks[index].grid.putData(track.beat_data);
+                        this.tracks[index].grid.draw();
+                    })
                 })
-                this.title_card.innerHTML = this.song.title;
+                this.title_card.innerHTML = song.title;
             }
             req.send();
         }

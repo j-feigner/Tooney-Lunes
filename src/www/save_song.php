@@ -41,10 +41,11 @@ $song_tracks = $song_data->tracks;
 for($i = 0; $i < count($song_tracks); $i++) {
     $track = $song_tracks[$i];
     $instr_id = getInstrumentID($conn, $track->instrument);
+    $track_name = $track->label;
     $track_data = serialize($track->beat_data);
 
-    $tracks_insert = "INSERT INTO Song_Tracks(song_id, instr_id, track_data) 
-                      VALUES ('$song_id', '$instr_id', '$track_data');";
+    $tracks_insert = "INSERT INTO Song_Tracks(song_id, user_id, instr_id, track_name, track_data) 
+                      VALUES ('$song_id', '$current_user', '$instr_id', '$track_name', '$track_data');";
 
     if(!$conn->query($tracks_insert)) {
         echo "Error: ".$conn->error;
