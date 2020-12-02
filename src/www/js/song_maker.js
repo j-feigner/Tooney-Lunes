@@ -50,6 +50,7 @@ function SongMaker() {
     this.stop_button = null;
     this.scrollbar = null;
     this.volume = null;
+    this.settings_button = null;
     this.save_button = null;
 
     this.insert_point = null;
@@ -116,6 +117,11 @@ function SongMaker() {
             this.tempo_control = this.container.querySelector(".tempo-container input");
             this.tempo_control.addEventListener("input", () => {
                 this.song.tempo = this.tempo_control.value * 4;
+            })
+
+            this.settings_button = this.container.querySelector(".song-settings");
+            this.settings_button.addEventListener("click", () => {
+                this.openSettingsMenu();
             })
 
             this.save_button = this.container.querySelector(".song-maker-controls .save-song");
@@ -263,6 +269,33 @@ function SongMaker() {
         }
     }
 
+    this.openSettingsMenu = function() {
+        var settings_menu = this.container.querySelector(".song-maker-settings-menu-container");
+        settings_menu.style.display = "block";
+
+        var title_input = settings_menu.querySelector(".setting-song-title input");
+        title_input.value = this.song.title;
+
+        var root_input = settings_menu.querySelector(".setting-root-note select");
+
+        var submit = settings_menu.querySelector(".settings-menu-submit button");
+        submit.addEventListener("click", () => {
+            this.updateSettings(title_input.value, root_input.selectedIndex);
+            settings_menu.style.display = "none";
+        })
+    }
+
+    this.updateSettings = function(new_title, new_root) {
+        this.song.title = new_title;
+        this.title_card.innerHTML = new_title;
+
+        this.root = new_root;
+        this.tracks.forEach((track) => {
+            track.mode_root = this.root;
+            track.updateMode();
+        })
+    }
+
     this.scrollTracks = function() {
         var grid_containers = document.getElementsByClassName("grid-canvas");
 
@@ -288,6 +321,7 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
 
     this.mode = "major";
     this.mode_sounds = [];
+    this.mode_root = 0;
     this.octave_offset = 12;
 
     this.gain_node = null;
@@ -321,7 +355,7 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
     this.updateMode = () => {
         var selected_mode = [];
         var scale_counter  = 0;
-        var jump_value = this.octave_offset;
+        var jump_value = this.octave_offset - (12 - this.mode_root);
 
         if (this.mode === "major") {
             selected_mode = [2, 2, 1, 2, 2, 2, 1];
