@@ -1,6 +1,8 @@
 window.onload = main;
 
 function main() {
+    var ctx = new AudioContext();
+
     var app_container = document.querySelector(".chord-app-container");
     var chords_container = app_container.querySelector(".chords-container");
     var chords_list = chords_container.querySelectorAll(".chord-display-container");
@@ -24,7 +26,7 @@ function main() {
 
     app.start_button = app_container.querySelector(".chords-controls button");
     app.start_button.addEventListener("click", () => {
-        alert("Play");
+        app.play(ctx);
     })
 
     app.tempo_slider = app_container.querySelector(".chords-controls .tempo-container input");
@@ -46,8 +48,20 @@ function ChordProgressor() {
     this.start_button = null;
     this.tempo_slider = null;
 
-    this.play = function() {
+    this.chord_structures = {
+        major: [0, 4, 7],
+        minor: [0, 3, 7]
+    };
 
+    this.play = function(audio_ctx) {
+        var sample_chord = this.chords[0];
+
+        this.chord_structures[sample_chord.mode].forEach((note) => {
+            var source = audio_ctx.createBufferSource();
+            source.buffer = this.sounds[note + 24 - (12 - sample_chord.root)];
+            source.connect(audio_ctx.destination);
+            source.start(0);
+        })
     }
 }
 
