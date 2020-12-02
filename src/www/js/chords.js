@@ -22,12 +22,33 @@ function main() {
         app.chords[i].createEventListeners();
     }
 
+    app.start_button = app_container.querySelector(".chords-controls button");
+    app.start_button.addEventListener("click", () => {
+        alert("Play");
+    })
+
+    app.tempo_slider = app_container.querySelector(".chords-controls .tempo-container input");
+    app.tempo_slider.addEventListener("input", () => {
+        app.tempo = app.tempo_slider.value;
+        app.adjusted_tempo = app.tempo * 4;
+    })
+
     var stopper = 0;
 }
 
 function ChordProgressor() {
     this.chords = [];
     this.sounds = [];
+
+    this.tempo = 0;
+    this.adjusted_tempo = 0;
+
+    this.start_button = null;
+    this.tempo_slider = null;
+
+    this.play = function() {
+
+    }
 }
 
 function Chord() {
