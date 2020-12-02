@@ -193,6 +193,10 @@ function SongMaker() {
         var new_track = new SongMakerTrack(name, instrument, this.ctx, this.gain_node);
         new_track.createGain();
 
+        if(new_track.instrument === "drum") {
+            new_track.mode = "none";
+        }
+
         // Create and initialize grid values for new track
         var grid_canvas = container.querySelector(".grid-canvas");
         grid_canvas.height = 325;
@@ -389,6 +393,10 @@ function SongMakerTrack(track_name, instrument, audio_ctx, ctx_destination) {
             selected_mode = [2, 2, 1, 2, 2, 2, 1];
         } else if (this.mode === "minor") {
             selected_mode = [2, 1, 2, 2, 1, 2, 2];
+        } else if(this.mode === "none") {
+            this.mode_sounds = this.sounds;
+            this.grid.sounds = this.mode_sounds;
+            return;
         }
 
         this.mode_sounds = [];
