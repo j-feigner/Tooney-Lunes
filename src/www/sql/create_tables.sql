@@ -92,6 +92,25 @@ CREATE TABLE Song_Tracks (
     FOREIGN KEY (instr_id) REFERENCES Instrument(instr_id)
 );
 
+DROP TABLE IF EXISTS Public_Songs;
+CREATE TABLE Public_Songs (
+	public_song_id	INT(32) UNSIGNED AUTO_INCREMENT,
+	song_title		VARCHAR(30) NOT NULL,
+	tempo			SMALLINT UNSIGNED NOT NULL,
+	PRIMARY KEY (public_song_id)
+);
+
+DROP TABLE IF EXISTS Public_Song_Tracks;
+CREATE TABLE Public_Song_Tracks (
+	public_track_id		INT(64) UNSIGNED AUTO_INCREMENT,
+	public_song_id		INT(32),
+	track_name			VARCHAR(20),
+	instr_id			INT(6),
+	track_data			TEXT,
+	PRIMARY KEY (public_track_id, public_song_id),
+	FOREIGN KEY (public_song_id) REFERENCES Public_Songs
+);
+
 DROP TABLE IF EXISTS Bandmates;
 CREATE TABLE Bandmates (
 	user_id			INT(6),

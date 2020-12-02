@@ -75,7 +75,7 @@ VALUES (4, 'Flash in the Pan', 160, 'GM');
 TRUNCATE TABLE Instrument;
 
 INSERT INTO Instrument (instr_name, display_name)
-VALUES ('piano', 'Piano'), ('guitar','Guitar'), ('drum','Drum'), ('synth_clean_supersaw','Synth');
+VALUES ('piano', 'Piano'), ('guitar','Guitar'), ('drum','Drum'), ('synth_wobbly', 'Synth Wobbly'), ('synth_clean_supersaw','Synth Lead');
 
 
 TRUNCATE TABLE User_Instruments;

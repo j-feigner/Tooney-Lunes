@@ -55,10 +55,23 @@
             </div>
         </div>
 
+        <div class="song-maker-share-display">
+            <div class="url-container">
+                <label for="song-url">URL:</label>
+                <input type="text" id="song-url">
+            </div>
+        </div>
+
         <div class="song-maker-insert-container"></div>
-        
-        <script src="js/song.js"></script>
+
+        <?php
+            $song_id = $_GET["song"];
+        ?>
+        <script>
+            var song_id = <?php echo $song_id; ?>
+        </script>
         <script src="js/song_maker.js"></script>
+        <script src="js/song.js"></script>
         <script src="js/database.js"></script>
         <script src="js/utils.js"></script>
     </div>
